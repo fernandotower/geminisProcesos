@@ -37,22 +37,22 @@ class CoordinadorFlujo implements ICoordinarFlujo {
 		
 	}
 	public function ejecutarTareaEnviarMensaje($valor) {
-		return $this->miFlujo->ejecutar ( $valor );
+	
 	}
 	public function ejecutarTareaScript($valor) {
-		return $this->miFlujo->ejecutar ( $valor );
+		
 	}
 	public function ejecutarTareaTemporizador($valor) {
-		return $this->miFlujo->ejecutar ( $valor );
+	
 	}
 	public function ejecutarCompuertaOr($valor) {
-		return $this->miFlujo->ejecutar ( $valor );
+		
 	}
 	public function ejecutarCompuertaXor($valor) {
-		return $this->miFlujo->ejecutar ( $valor );
+		
 	}
 	public function ejecutarCompuertaAnd($valor) {
-		return $this->miFlujo->ejecutar ( $valor );
+		
 	}
 	
 	/**
