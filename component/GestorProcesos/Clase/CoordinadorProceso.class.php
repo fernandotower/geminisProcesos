@@ -1,6 +1,6 @@
 <?php
 
-namespace component\GestorProcesos\clase;
+namespace component\GestorProcesos\Clase;
 
 use component\GestorUsuarios\interfaz\IGestionarUsuarios;
 use component\GestorUsuarios\Sql;
@@ -8,7 +8,7 @@ use component\GestorUsuarios\Sql;
 include_once ('component/GestorUsuarios/Interfaz/IGestorUsuarios.php');
 include_once ("core/manager/Configurador.class.php");
 include_once ("component/GestorUsuarios/Sql.class.php");
-class GestorUsuarios implements IGestionarUsuarios {
+class CoordinadorProceso implements ICoordiandorProceso {
 	var $miSql;
 	
 	/**

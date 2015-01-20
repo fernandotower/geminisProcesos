@@ -1,7 +1,7 @@
 <?php
-namespace component\GestorProcesos\interfaz;
+namespace component\gestorprocesos\interfaz;
 
-interface IGestionarProcesos{
+interface ICoordinarProceso{
     /**
      *  Realiza el registo de un nuevo calendarioR
      *  nombre_calendario,
