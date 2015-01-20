@@ -1,0 +1,876 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.3.5
+-- Dumped by pg_dump version 9.3.5
+-- Started on 2014-11-05 18:14:54 COT
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+--
+-- TOC entry 2107 (class 1262 OID 18587)
+-- Dependencies: 2106
+-- Name: ecosiis; Type: COMMENT; Schema: -; Owner: luis
+--
+
+COMMENT ON DATABASE ecosiis IS 'prefijo diferentre';
+
+
+--
+-- TOC entry 190 (class 3079 OID 11789)
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- TOC entry 2110 (class 0 OID 0)
+-- Dependencies: 190
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET search_path = public, pg_catalog;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- TOC entry 171 (class 1259 OID 18960)
+-- Name: core_bloque; Type: TABLE; Schema: public; Owner: luis; Tablespace: 
+--
+
+CREATE TABLE core_bloque (
+    id_bloque integer NOT NULL,
+    nombre character(50) NOT NULL,
+    descripcion character(255) DEFAULT NULL::bpchar,
+    grupo character(200) NOT NULL
+);
+
+
+ALTER TABLE public.core_bloque OWNER TO luis;
+
+--
+-- TOC entry 170 (class 1259 OID 18958)
+-- Name: core_bloque_id_bloque_seq; Type: SEQUENCE; Schema: public; Owner: luis
+--
+
+CREATE SEQUENCE core_bloque_id_bloque_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.core_bloque_id_bloque_seq OWNER TO luis;
+
+--
+-- TOC entry 2111 (class 0 OID 0)
+-- Dependencies: 170
+-- Name: core_bloque_id_bloque_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: luis
+--
+
+ALTER SEQUENCE core_bloque_id_bloque_seq OWNED BY core_bloque.id_bloque;
+
+
+--
+-- TOC entry 173 (class 1259 OID 18972)
+-- Name: core_bloque_pagina; Type: TABLE; Schema: public; Owner: luis; Tablespace: 
+--
+
+CREATE TABLE core_bloque_pagina (
+    idrelacion integer NOT NULL,
+    id_pagina integer DEFAULT 0 NOT NULL,
+    id_bloque integer DEFAULT 0 NOT NULL,
+    seccion character(1) NOT NULL,
+    posicion integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE public.core_bloque_pagina OWNER TO luis;
+
+--
+-- TOC entry 172 (class 1259 OID 18970)
+-- Name: core_bloque_pagina_idrelacion_seq; Type: SEQUENCE; Schema: public; Owner: luis
+--
+
+CREATE SEQUENCE core_bloque_pagina_idrelacion_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.core_bloque_pagina_idrelacion_seq OWNER TO luis;
+
+--
+-- TOC entry 2112 (class 0 OID 0)
+-- Dependencies: 172
+-- Name: core_bloque_pagina_idrelacion_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: luis
+--
+
+ALTER SEQUENCE core_bloque_pagina_idrelacion_seq OWNED BY core_bloque_pagina.idrelacion;
+
+
+--
+-- TOC entry 175 (class 1259 OID 18983)
+-- Name: core_configuracion; Type: TABLE; Schema: public; Owner: luis; Tablespace: 
+--
+
+CREATE TABLE core_configuracion (
+    id_parametro integer NOT NULL,
+    parametro character(255) NOT NULL,
+    valor character(255) NOT NULL
+);
+
+
+ALTER TABLE public.core_configuracion OWNER TO luis;
+
+--
+-- TOC entry 174 (class 1259 OID 18981)
+-- Name: core_configuracion_id_parametro_seq; Type: SEQUENCE; Schema: public; Owner: luis
+--
+
+CREATE SEQUENCE core_configuracion_id_parametro_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.core_configuracion_id_parametro_seq OWNER TO luis;
+
+--
+-- TOC entry 2113 (class 0 OID 0)
+-- Dependencies: 174
+-- Name: core_configuracion_id_parametro_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: luis
+--
+
+ALTER SEQUENCE core_configuracion_id_parametro_seq OWNED BY core_configuracion.id_parametro;
+
+
+--
+-- TOC entry 177 (class 1259 OID 18994)
+-- Name: core_dbms; Type: TABLE; Schema: public; Owner: luis; Tablespace: 
+--
+
+CREATE TABLE core_dbms (
+    idconexion integer NOT NULL,
+    nombre character varying(50) NOT NULL,
+    dbms character varying(20) NOT NULL,
+    servidor character varying(50) NOT NULL,
+    puerto integer NOT NULL,
+    conexionssh character varying(50) NOT NULL,
+    db character varying(100) NOT NULL,
+    esquema character varying(100) NOT NULL,
+    usuario character varying(100) NOT NULL,
+    password character varying(200) NOT NULL
+);
+
+
+ALTER TABLE public.core_dbms OWNER TO luis;
+
+--
+-- TOC entry 176 (class 1259 OID 18992)
+-- Name: core_dbms_idconexion_seq; Type: SEQUENCE; Schema: public; Owner: luis
+--
+
+CREATE SEQUENCE core_dbms_idconexion_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.core_dbms_idconexion_seq OWNER TO luis;
+
+--
+-- TOC entry 2114 (class 0 OID 0)
+-- Dependencies: 176
+-- Name: core_dbms_idconexion_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: luis
+--
+
+ALTER SEQUENCE core_dbms_idconexion_seq OWNED BY core_dbms.idconexion;
+
+
+--
+-- TOC entry 178 (class 1259 OID 19003)
+-- Name: core_estilo; Type: TABLE; Schema: public; Owner: luis; Tablespace: 
+--
+
+CREATE TABLE core_estilo (
+    usuario character(50) DEFAULT '0'::bpchar NOT NULL,
+    estilo character(50) NOT NULL
+);
+
+
+ALTER TABLE public.core_estilo OWNER TO luis;
+
+--
+-- TOC entry 180 (class 1259 OID 19011)
+-- Name: core_logger; Type: TABLE; Schema: public; Owner: luis; Tablespace: 
+--
+
+CREATE TABLE core_logger (
+    id integer NOT NULL,
+    evento character(255) NOT NULL,
+    fecha character(50) NOT NULL
+);
+
+
+ALTER TABLE public.core_logger OWNER TO luis;
+
+--
+-- TOC entry 179 (class 1259 OID 19009)
+-- Name: core_logger_id_seq; Type: SEQUENCE; Schema: public; Owner: luis
+--
+
+CREATE SEQUENCE core_logger_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.core_logger_id_seq OWNER TO luis;
+
+--
+-- TOC entry 2115 (class 0 OID 0)
+-- Dependencies: 179
+-- Name: core_logger_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: luis
+--
+
+ALTER SEQUENCE core_logger_id_seq OWNED BY core_logger.id;
+
+
+--
+-- TOC entry 182 (class 1259 OID 19017)
+-- Name: core_pagina; Type: TABLE; Schema: public; Owner: luis; Tablespace: 
+--
+
+CREATE TABLE core_pagina (
+    id_pagina integer NOT NULL,
+    nombre character(50) DEFAULT ''::bpchar NOT NULL,
+    descripcion character(250) DEFAULT ''::bpchar NOT NULL,
+    modulo character(50) DEFAULT ''::bpchar NOT NULL,
+    nivel integer DEFAULT 0 NOT NULL,
+    parametro character(255) NOT NULL
+);
+
+
+ALTER TABLE public.core_pagina OWNER TO luis;
+
+--
+-- TOC entry 181 (class 1259 OID 19015)
+-- Name: core_pagina_id_pagina_seq; Type: SEQUENCE; Schema: public; Owner: luis
+--
+
+CREATE SEQUENCE core_pagina_id_pagina_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.core_pagina_id_pagina_seq OWNER TO luis;
+
+--
+-- TOC entry 2116 (class 0 OID 0)
+-- Dependencies: 181
+-- Name: core_pagina_id_pagina_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: luis
+--
+
+ALTER SEQUENCE core_pagina_id_pagina_seq OWNED BY core_pagina.id_pagina;
+
+
+--
+-- TOC entry 187 (class 1259 OID 19058)
+-- Name: core_subsistema; Type: TABLE; Schema: public; Owner: luis; Tablespace: 
+--
+
+CREATE TABLE core_subsistema (
+    id_subsistema integer NOT NULL,
+    nombre character varying(250) NOT NULL,
+    etiqueta character varying(100) NOT NULL,
+    id_pagina integer DEFAULT 0 NOT NULL,
+    observacion text
+);
+
+
+ALTER TABLE public.core_subsistema OWNER TO luis;
+
+--
+-- TOC entry 186 (class 1259 OID 19056)
+-- Name: core_subsistema_id_subsistema_seq; Type: SEQUENCE; Schema: public; Owner: luis
+--
+
+CREATE SEQUENCE core_subsistema_id_subsistema_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.core_subsistema_id_subsistema_seq OWNER TO luis;
+
+--
+-- TOC entry 2117 (class 0 OID 0)
+-- Dependencies: 186
+-- Name: core_subsistema_id_subsistema_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: luis
+--
+
+ALTER SEQUENCE core_subsistema_id_subsistema_seq OWNED BY core_subsistema.id_subsistema;
+
+
+--
+-- TOC entry 188 (class 1259 OID 19068)
+-- Name: core_tempformulario; Type: TABLE; Schema: public; Owner: luis; Tablespace: 
+--
+
+CREATE TABLE core_tempformulario (
+    id_sesion character(32) NOT NULL,
+    formulario character(100) NOT NULL,
+    campo character(100) NOT NULL,
+    valor text NOT NULL,
+    fecha character(50) NOT NULL
+);
+
+
+ALTER TABLE public.core_tempformulario OWNER TO luis;
+
+--
+-- TOC entry 184 (class 1259 OID 19032)
+-- Name: core_usuario; Type: TABLE; Schema: public; Owner: luis; Tablespace: 
+--
+
+CREATE TABLE core_usuario (
+    id_usuario integer NOT NULL,
+    nombre character varying(50) DEFAULT ''::character varying NOT NULL,
+    apellido character varying(50) DEFAULT ''::character varying NOT NULL,
+    correo character varying(100) DEFAULT ''::character varying NOT NULL,
+    telefono character varying(50) DEFAULT ''::character varying NOT NULL,
+    imagen character(255) NOT NULL,
+    clave character varying(100) DEFAULT ''::character varying NOT NULL,
+    tipo character varying(255) DEFAULT ''::character varying NOT NULL,
+    estilo character varying(50) DEFAULT 'basico'::character varying NOT NULL,
+    idioma character varying(50) DEFAULT 'es_es'::character varying NOT NULL,
+    estado integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE public.core_usuario OWNER TO luis;
+
+--
+-- TOC entry 183 (class 1259 OID 19030)
+-- Name: core_usuario_id_usuario_seq; Type: SEQUENCE; Schema: public; Owner: luis
+--
+
+CREATE SEQUENCE core_usuario_id_usuario_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.core_usuario_id_usuario_seq OWNER TO luis;
+
+--
+-- TOC entry 2118 (class 0 OID 0)
+-- Dependencies: 183
+-- Name: core_usuario_id_usuario_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: luis
+--
+
+ALTER SEQUENCE core_usuario_id_usuario_seq OWNED BY core_usuario.id_usuario;
+
+
+--
+-- TOC entry 185 (class 1259 OID 19050)
+-- Name: core_usuario_subsistema; Type: TABLE; Schema: public; Owner: luis; Tablespace: 
+--
+
+CREATE TABLE core_usuario_subsistema (
+    id_usuario integer DEFAULT 0 NOT NULL,
+    id_subsistema integer DEFAULT 0 NOT NULL,
+    estado integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE public.core_usuario_subsistema OWNER TO luis;
+
+--
+-- TOC entry 189 (class 1259 OID 19074)
+-- Name: core_valor_sesion; Type: TABLE; Schema: public; Owner: luis; Tablespace: 
+--
+
+CREATE TABLE core_valor_sesion (
+    sesionid character(32) NOT NULL,
+    variable character(20) NOT NULL,
+    valor character(255) NOT NULL,
+    expiracion bigint DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE public.core_valor_sesion OWNER TO luis;
+
+--
+-- TOC entry 1926 (class 2604 OID 18963)
+-- Name: id_bloque; Type: DEFAULT; Schema: public; Owner: luis
+--
+
+ALTER TABLE ONLY core_bloque ALTER COLUMN id_bloque SET DEFAULT nextval('core_bloque_id_bloque_seq'::regclass);
+
+
+--
+-- TOC entry 1928 (class 2604 OID 18975)
+-- Name: idrelacion; Type: DEFAULT; Schema: public; Owner: luis
+--
+
+ALTER TABLE ONLY core_bloque_pagina ALTER COLUMN idrelacion SET DEFAULT nextval('core_bloque_pagina_idrelacion_seq'::regclass);
+
+
+--
+-- TOC entry 1932 (class 2604 OID 18986)
+-- Name: id_parametro; Type: DEFAULT; Schema: public; Owner: luis
+--
+
+ALTER TABLE ONLY core_configuracion ALTER COLUMN id_parametro SET DEFAULT nextval('core_configuracion_id_parametro_seq'::regclass);
+
+
+--
+-- TOC entry 1933 (class 2604 OID 18997)
+-- Name: idconexion; Type: DEFAULT; Schema: public; Owner: luis
+--
+
+ALTER TABLE ONLY core_dbms ALTER COLUMN idconexion SET DEFAULT nextval('core_dbms_idconexion_seq'::regclass);
+
+
+--
+-- TOC entry 1935 (class 2604 OID 19014)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: luis
+--
+
+ALTER TABLE ONLY core_logger ALTER COLUMN id SET DEFAULT nextval('core_logger_id_seq'::regclass);
+
+
+--
+-- TOC entry 1936 (class 2604 OID 19020)
+-- Name: id_pagina; Type: DEFAULT; Schema: public; Owner: luis
+--
+
+ALTER TABLE ONLY core_pagina ALTER COLUMN id_pagina SET DEFAULT nextval('core_pagina_id_pagina_seq'::regclass);
+
+
+--
+-- TOC entry 1954 (class 2604 OID 19061)
+-- Name: id_subsistema; Type: DEFAULT; Schema: public; Owner: luis
+--
+
+ALTER TABLE ONLY core_subsistema ALTER COLUMN id_subsistema SET DEFAULT nextval('core_subsistema_id_subsistema_seq'::regclass);
+
+
+--
+-- TOC entry 1941 (class 2604 OID 19035)
+-- Name: id_usuario; Type: DEFAULT; Schema: public; Owner: luis
+--
+
+ALTER TABLE ONLY core_usuario ALTER COLUMN id_usuario SET DEFAULT nextval('core_usuario_id_usuario_seq'::regclass);
+
+
+--
+-- TOC entry 2083 (class 0 OID 18960)
+-- Dependencies: 171
+-- Data for Name: core_bloque; Type: TABLE DATA; Schema: public; Owner: luis
+--
+
+COPY core_bloque (id_bloque, nombre, descripcion, grupo) FROM stdin;
+-1	menuLateral                                       	Menú lateral módulo de desarrollo.                                                                                                                                                                                                                             	development                                                                                                                                                                                             
+-2	pie                                               	Pie de página módulo de desarrollo.                                                                                                                                                                                                                            	development                                                                                                                                                                                             
+-3	banner                                            	Banner módulo de desarrollo.                                                                                                                                                                                                                                   	development                                                                                                                                                                                             
+-4	cruder                                            	Módulo para crear módulos CRUD.                                                                                                                                                                                                                                	development                                                                                                                                                                                             
+-5	desenlace                                         	Módulo de gestión de desenlace.                                                                                                                                                                                                                                	development                                                                                                                                                                                             
+-6	registro                                          	Módulo para registrar páginas o módulos.                                                                                                                                                                                                                       	development                                                                                                                                                                                             
+-7	constructor                                       	Módulo para diseñar páginas.                                                                                                                                                                                                                                   	development                                                                                                                                                                                             
+-8	contenidoCentral                                  	Contenido página principal de desarrollo.                                                                                                                                                                                                                      	development                                                                                                                                                                                             
+-9	codificador                                       	Módulo para decodificar cadenas.                                                                                                                                                                                                                               	development                                                                                                                                                                                             
+1	menuLateral                                       	menu                                                                                                                                                                                                                                                           	calendario                                                                                                                                                                                              
+2	calendarioLista                                   	Presenta los calendario de un usuario                                                                                                                                                                                                                          	calendario                                                                                                                                                                                              
+3	plantillaCalendarioLista                          	Presenta las plantillas de calendario                                                                                                                                                                                                                          	calendario                                                                                                                                                                                              
+4	menuHorizontal                                    	Menu hor¡zontal de calendarios                                                                                                                                                                                                                                 	calendario                                                                                                                                                                                              
+5	registroUsuario                                   	Pagina de registro de usuario                                                                                                                                                                                                                                  	usuario                                                                                                                                                                                                 
+6	permisoCalendario                                 	Pagina para administración de permisos de objetos del calendario                                                                                                                                                                                               	calendario                                                                                                                                                                                              
+\.
+
+
+--
+-- TOC entry 2119 (class 0 OID 0)
+-- Dependencies: 170
+-- Name: core_bloque_id_bloque_seq; Type: SEQUENCE SET; Schema: public; Owner: luis
+--
+
+SELECT pg_catalog.setval('core_bloque_id_bloque_seq', 2, true);
+
+
+--
+-- TOC entry 2085 (class 0 OID 18972)
+-- Dependencies: 173
+-- Data for Name: core_bloque_pagina; Type: TABLE DATA; Schema: public; Owner: luis
+--
+
+COPY core_bloque_pagina (idrelacion, id_pagina, id_bloque, seccion, posicion) FROM stdin;
+1	-1	-1	B	1
+2	-1	-2	E	1
+3	-1	-3	A	1
+4	-1	-8	C	1
+5	-2	-1	B	1
+6	-2	-2	E	1
+7	-2	-3	A	1
+8	-2	-4	C	1
+9	-3	-1	B	1
+10	-3	-2	E	1
+11	-3	-3	A	1
+12	-3	-5	C	1
+13	-4	-1	B	1
+14	-4	-2	E	1
+15	-4	-3	A	1
+16	-4	-9	C	1
+17	-5	-1	B	1
+18	-5	-2	E	1
+19	-5	-3	A	1
+20	-5	-6	C	1
+21	-6	-1	B	1
+22	-6	-2	E	1
+23	-6	-3	A	1
+24	-6	-7	C	1
+28	2	1	B	1
+30	3	1	B	1
+31	2	4	C	1
+27	2	2	C	2
+26	1	5	C	1
+29	3	3	C	2
+32	3	4	C	1
+33	4	2	C	2
+35	4	1	B	1
+36	4	4	C	1
+40	6	4	C	1
+42	6	1	B	1
+41	6	3	C	2
+38	5	4	C	1
+43	5	6	C	2
+45	5	1	B	1
+\.
+
+
+--
+-- TOC entry 2120 (class 0 OID 0)
+-- Dependencies: 172
+-- Name: core_bloque_pagina_idrelacion_seq; Type: SEQUENCE SET; Schema: public; Owner: luis
+--
+
+SELECT pg_catalog.setval('core_bloque_pagina_idrelacion_seq', 45, true);
+
+
+--
+-- TOC entry 2087 (class 0 OID 18983)
+-- Dependencies: 175
+-- Data for Name: core_configuracion; Type: TABLE DATA; Schema: public; Owner: luis
+--
+
+COPY core_configuracion (id_parametro, parametro, valor) FROM stdin;
+1	dbesquema                                                                                                                                                                                                                                                      	public                                                                                                                                                                                                                                                         
+2	prefijo                                                                                                                                                                                                                                                        	core_                                                                                                                                                                                                                                                          
+3	nombreAplicativo                                                                                                                                                                                                                                               	Ecosiis                                                                                                                                                                                                                                                        
+4	raizDocumento                                                                                                                                                                                                                                                  	/opt/lampp/htdocs/ecosiis                                                                                                                                                                                                                                      
+5	host                                                                                                                                                                                                                                                           	http://localhost                                                                                                                                                                                                                                               
+6	site                                                                                                                                                                                                                                                           	/ecosiis                                                                                                                                                                                                                                                       
+7	nombreAdministrador                                                                                                                                                                                                                                            	administrador                                                                                                                                                                                                                                                  
+8	claveAdministrador                                                                                                                                                                                                                                             	Ovlupu6KGD1d62SeMNr2Ytjlzz_ZxD3GuYybrgFMxYI                                                                                                                                                                                                                    
+9	correoAdministrador                                                                                                                                                                                                                                            	fernandotower@gmail.com                                                                                                                                                                                                                                        
+10	enlace                                                                                                                                                                                                                                                         	data                                                                                                                                                                                                                                                           
+12	moduloDesarrollo                                                                                                                                                                                                                                               	moduloDesarrollo                                                                                                                                                                                                                                               
+13	googlemaps                                                                                                                                                                                                                                                     	                                                                                                                                                                                                                                                               
+14	recatchapublica                                                                                                                                                                                                                                                	                                                                                                                                                                                                                                                               
+15	recatchaprivada                                                                                                                                                                                                                                                	                                                                                                                                                                                                                                                               
+16	expiracion                                                                                                                                                                                                                                                     	5                                                                                                                                                                                                                                                              
+17	instalado                                                                                                                                                                                                                                                      	true                                                                                                                                                                                                                                                           
+18	debugMode                                                                                                                                                                                                                                                      	false                                                                                                                                                                                                                                                          
+19	dbPrincipal                                                                                                                                                                                                                                                    	ecosiis                                                                                                                                                                                                                                                        
+20	hostSeguro                                                                                                                                                                                                                                                     	https://localhost                                                                                                                                                                                                                                              
+11	estiloPredeterminado                                                                                                                                                                                                                                           	cupertino                                                                                                                                                                                                                                                      
+\.
+
+
+--
+-- TOC entry 2121 (class 0 OID 0)
+-- Dependencies: 174
+-- Name: core_configuracion_id_parametro_seq; Type: SEQUENCE SET; Schema: public; Owner: luis
+--
+
+SELECT pg_catalog.setval('core_configuracion_id_parametro_seq', 20, true);
+
+
+--
+-- TOC entry 2089 (class 0 OID 18994)
+-- Dependencies: 177
+-- Data for Name: core_dbms; Type: TABLE DATA; Schema: public; Owner: luis
+--
+
+COPY core_dbms (idconexion, nombre, dbms, servidor, puerto, conexionssh, db, esquema, usuario, password) FROM stdin;
+1	estructura	pgsql	localhost	5432		ecosiis	public	luis	Ovlupu6KGD1d62SeMNr2Ytjlzz_ZxD3GuYybrgFMxYI
+2	academica	pgsql	localhost	5432		academica	public	luis	Ovlupu6KGD1d62SeMNr2Ytjlzz_ZxD3GuYybrgFMxYI
+\.
+
+
+--
+-- TOC entry 2122 (class 0 OID 0)
+-- Dependencies: 176
+-- Name: core_dbms_idconexion_seq; Type: SEQUENCE SET; Schema: public; Owner: luis
+--
+
+SELECT pg_catalog.setval('core_dbms_idconexion_seq', 1, true);
+
+
+--
+-- TOC entry 2090 (class 0 OID 19003)
+-- Dependencies: 178
+-- Data for Name: core_estilo; Type: TABLE DATA; Schema: public; Owner: luis
+--
+
+COPY core_estilo (usuario, estilo) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2092 (class 0 OID 19011)
+-- Dependencies: 180
+-- Data for Name: core_logger; Type: TABLE DATA; Schema: public; Owner: luis
+--
+
+COPY core_logger (id, evento, fecha) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2123 (class 0 OID 0)
+-- Dependencies: 179
+-- Name: core_logger_id_seq; Type: SEQUENCE SET; Schema: public; Owner: luis
+--
+
+SELECT pg_catalog.setval('core_logger_id_seq', 1, false);
+
+
+--
+-- TOC entry 2094 (class 0 OID 19017)
+-- Dependencies: 182
+-- Data for Name: core_pagina; Type: TABLE DATA; Schema: public; Owner: luis
+--
+
+COPY core_pagina (id_pagina, nombre, descripcion, modulo, nivel, parametro) FROM stdin;
+-1	development                                       	Index módulo de desarrollo.                                                                                                                                                                                                                               	development                                       	0	jquery=true                                                                                                                                                                                                                                                    
+-2	cruder                                            	Generador módulos CRUD.                                                                                                                                                                                                                                   	development                                       	0	jquery=true                                                                                                                                                                                                                                                    
+-3	desenlace                                         	Analizar enlaces.                                                                                                                                                                                                                                         	development                                       	0	jquery=true                                                                                                                                                                                                                                                    
+-4	codificador                                       	Codificar/decodificar cadenas.                                                                                                                                                                                                                            	development                                       	0	jquery=true                                                                                                                                                                                                                                                    
+-5	registro                                          	Registrar páginas o módulos.                                                                                                                                                                                                                              	development                                       	0	jquery=true                                                                                                                                                                                                                                                    
+-6	constructor                                       	Diseñar páginas.                                                                                                                                                                                                                                          	development                                       	0	jquery=true                                                                                                                                                                                                                                                    
+1	index                                             	index                                                                                                                                                                                                                                                     	general                                           	0	jquery=true                                                                                                                                                                                                                                                    
+3	plantillaCalendarioLista                          	Presenta las plantilla del calendario                                                                                                                                                                                                                     	calendario                                        	0	jquery=true                                                                                                                                                                                                                                                    
+2	calendarioLista                                   	Presenta los calendarios                                                                                                                                                                                                                                  	calendario                                        	0	jquery=true                                                                                                                                                                                                                                                    
+4	calendario                                        	Presenta toda la informacoón de un calendario incluyendo sus eventos                                                                                                                                                                                      	calendario                                        	0	jquery=true                                                                                                                                                                                                                                                    
+5	permisoCalendario                                 	Presenta la interfaz para asignación de permisos de los objetos de calendario (calendario, evento, plantilla, evento cal)                                                                                                                                 	calendario                                        	0	jquery=true                                                                                                                                                                                                                                                    
+6	plantilla                                         	Presenta toda la información de una plantilla de calendario incluyendo sus evento y las relaciones                                                                                                                                                        	calendario                                        	0	jquery=true                                                                                                                                                                                                                                                    
+\.
+
+
+--
+-- TOC entry 2124 (class 0 OID 0)
+-- Dependencies: 181
+-- Name: core_pagina_id_pagina_seq; Type: SEQUENCE SET; Schema: public; Owner: luis
+--
+
+SELECT pg_catalog.setval('core_pagina_id_pagina_seq', 6, true);
+
+
+--
+-- TOC entry 2099 (class 0 OID 19058)
+-- Dependencies: 187
+-- Data for Name: core_subsistema; Type: TABLE DATA; Schema: public; Owner: luis
+--
+
+COPY core_subsistema (id_subsistema, nombre, etiqueta, id_pagina, observacion) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2125 (class 0 OID 0)
+-- Dependencies: 186
+-- Name: core_subsistema_id_subsistema_seq; Type: SEQUENCE SET; Schema: public; Owner: luis
+--
+
+SELECT pg_catalog.setval('core_subsistema_id_subsistema_seq', 1, false);
+
+
+--
+-- TOC entry 2100 (class 0 OID 19068)
+-- Dependencies: 188
+-- Data for Name: core_tempformulario; Type: TABLE DATA; Schema: public; Owner: luis
+--
+
+COPY core_tempformulario (id_sesion, formulario, campo, valor, fecha) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2096 (class 0 OID 19032)
+-- Dependencies: 184
+-- Data for Name: core_usuario; Type: TABLE DATA; Schema: public; Owner: luis
+--
+
+COPY core_usuario (id_usuario, nombre, apellido, correo, telefono, imagen, clave, tipo, estilo, idioma, estado) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2126 (class 0 OID 0)
+-- Dependencies: 183
+-- Name: core_usuario_id_usuario_seq; Type: SEQUENCE SET; Schema: public; Owner: luis
+--
+
+SELECT pg_catalog.setval('core_usuario_id_usuario_seq', 1, false);
+
+
+--
+-- TOC entry 2097 (class 0 OID 19050)
+-- Dependencies: 185
+-- Data for Name: core_usuario_subsistema; Type: TABLE DATA; Schema: public; Owner: luis
+--
+
+COPY core_usuario_subsistema (id_usuario, id_subsistema, estado) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2101 (class 0 OID 19074)
+-- Dependencies: 189
+-- Data for Name: core_valor_sesion; Type: TABLE DATA; Schema: public; Owner: luis
+--
+
+COPY core_valor_sesion (sesionid, variable, valor, expiracion) FROM stdin;
+\.
+
+
+--
+-- TOC entry 1960 (class 2606 OID 18980)
+-- Name: core_bloque_pagina_pkey; Type: CONSTRAINT; Schema: public; Owner: luis; Tablespace: 
+--
+
+ALTER TABLE ONLY core_bloque_pagina
+    ADD CONSTRAINT core_bloque_pagina_pkey PRIMARY KEY (idrelacion);
+
+
+--
+-- TOC entry 1958 (class 2606 OID 18969)
+-- Name: core_bloque_pkey; Type: CONSTRAINT; Schema: public; Owner: luis; Tablespace: 
+--
+
+ALTER TABLE ONLY core_bloque
+    ADD CONSTRAINT core_bloque_pkey PRIMARY KEY (id_bloque);
+
+
+--
+-- TOC entry 1962 (class 2606 OID 18991)
+-- Name: core_configuracion_pkey; Type: CONSTRAINT; Schema: public; Owner: luis; Tablespace: 
+--
+
+ALTER TABLE ONLY core_configuracion
+    ADD CONSTRAINT core_configuracion_pkey PRIMARY KEY (id_parametro);
+
+
+--
+-- TOC entry 1964 (class 2606 OID 19002)
+-- Name: core_dbms_pkey; Type: CONSTRAINT; Schema: public; Owner: luis; Tablespace: 
+--
+
+ALTER TABLE ONLY core_dbms
+    ADD CONSTRAINT core_dbms_pkey PRIMARY KEY (idconexion);
+
+
+--
+-- TOC entry 1966 (class 2606 OID 19008)
+-- Name: core_estilo_pkey; Type: CONSTRAINT; Schema: public; Owner: luis; Tablespace: 
+--
+
+ALTER TABLE ONLY core_estilo
+    ADD CONSTRAINT core_estilo_pkey PRIMARY KEY (usuario, estilo);
+
+
+--
+-- TOC entry 1968 (class 2606 OID 19029)
+-- Name: core_pagina_pkey; Type: CONSTRAINT; Schema: public; Owner: luis; Tablespace: 
+--
+
+ALTER TABLE ONLY core_pagina
+    ADD CONSTRAINT core_pagina_pkey PRIMARY KEY (id_pagina);
+
+
+--
+-- TOC entry 1972 (class 2606 OID 19067)
+-- Name: core_subsistema_pkey; Type: CONSTRAINT; Schema: public; Owner: luis; Tablespace: 
+--
+
+ALTER TABLE ONLY core_subsistema
+    ADD CONSTRAINT core_subsistema_pkey PRIMARY KEY (id_subsistema);
+
+
+--
+-- TOC entry 1970 (class 2606 OID 19049)
+-- Name: core_usuario_pkey; Type: CONSTRAINT; Schema: public; Owner: luis; Tablespace: 
+--
+
+ALTER TABLE ONLY core_usuario
+    ADD CONSTRAINT core_usuario_pkey PRIMARY KEY (id_usuario);
+
+
+--
+-- TOC entry 1974 (class 2606 OID 19079)
+-- Name: core_valor_sesion_pkey; Type: CONSTRAINT; Schema: public; Owner: luis; Tablespace: 
+--
+
+ALTER TABLE ONLY core_valor_sesion
+    ADD CONSTRAINT core_valor_sesion_pkey PRIMARY KEY (sesionid, variable);
+
+
+--
+-- TOC entry 2109 (class 0 OID 0)
+-- Dependencies: 5
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+-- Completed on 2014-11-05 18:14:54 COT
+
+--
+-- PostgreSQL database dump complete
+--
+

@@ -1,0 +1,840 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.3.5
+-- Dumped by pg_dump version 9.3.5
+-- Started on 2014-10-27 22:53:57 COT
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+--
+-- TOC entry 2064 (class 1262 OID 16632)
+-- Dependencies: 2063
+-- Name: academica; Type: COMMENT; Schema: -; Owner: luis
+--
+
+COMMENT ON DATABASE academica IS 'Bases de datos del negocio academica';
+
+
+--
+-- TOC entry 186 (class 3079 OID 11789)
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- TOC entry 2067 (class 0 OID 0)
+-- Dependencies: 186
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET search_path = public, pg_catalog;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- TOC entry 183 (class 1259 OID 17174)
+-- Name: calendario; Type: TABLE; Schema: public; Owner: luis; Tablespace: 
+--
+
+CREATE TABLE calendario (
+    id_calendario integer NOT NULL,
+    nombre_calendario character varying(1000),
+    descripcion_calendario character varying(1000),
+    propietario integer,
+    zona_horaria character varying(100),
+    estado numeric(1,0) NOT NULL,
+    id_plantilla integer,
+    id_proceso integer
+);
+
+
+ALTER TABLE public.calendario OWNER TO luis;
+
+--
+-- TOC entry 2068 (class 0 OID 0)
+-- Dependencies: 183
+-- Name: COLUMN calendario.id_plantilla; Type: COMMENT; Schema: public; Owner: luis
+--
+
+COMMENT ON COLUMN calendario.id_plantilla IS 'Numero de la plantilla que generó el calendario, en caso de ser generado por plantilla';
+
+
+--
+-- TOC entry 2069 (class 0 OID 0)
+-- Dependencies: 183
+-- Name: COLUMN calendario.id_proceso; Type: COMMENT; Schema: public; Owner: luis
+--
+
+COMMENT ON COLUMN calendario.id_proceso IS 'Identit¡ficador del proceso';
+
+
+--
+-- TOC entry 182 (class 1259 OID 17172)
+-- Name: calendario_id_calendario_seq; Type: SEQUENCE; Schema: public; Owner: luis
+--
+
+CREATE SEQUENCE calendario_id_calendario_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.calendario_id_calendario_seq OWNER TO luis;
+
+--
+-- TOC entry 2070 (class 0 OID 0)
+-- Dependencies: 182
+-- Name: calendario_id_calendario_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: luis
+--
+
+ALTER SEQUENCE calendario_id_calendario_seq OWNED BY calendario.id_calendario;
+
+
+--
+-- TOC entry 185 (class 1259 OID 27310)
+-- Name: calendario_permiso_id_calendario_permiso_seq; Type: SEQUENCE; Schema: public; Owner: luis
+--
+
+CREATE SEQUENCE calendario_permiso_id_calendario_permiso_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.calendario_permiso_id_calendario_permiso_seq OWNER TO luis;
+
+--
+-- TOC entry 184 (class 1259 OID 27305)
+-- Name: calendario_permiso; Type: TABLE; Schema: public; Owner: luis; Tablespace: 
+--
+
+CREATE TABLE calendario_permiso (
+    id_calendario_permiso integer DEFAULT nextval('calendario_permiso_id_calendario_permiso_seq'::regclass) NOT NULL,
+    tipo_objeto integer,
+    id_objeto integer,
+    id_usuario integer,
+    permiso character varying(10)
+);
+
+
+ALTER TABLE public.calendario_permiso OWNER TO luis;
+
+--
+-- TOC entry 2071 (class 0 OID 0)
+-- Dependencies: 184
+-- Name: TABLE calendario_permiso; Type: COMMENT; Schema: public; Owner: luis
+--
+
+COMMENT ON TABLE calendario_permiso IS 'Se relacionan los permisos de los usuarios sobre 1. calendarios, 2. eventos, 3. plantilla y 4. eventos de plantillas. los permisos son: 1. lectuta 2. escritura 3 ejecución.';
+
+
+--
+-- TOC entry 2072 (class 0 OID 0)
+-- Dependencies: 184
+-- Name: COLUMN calendario_permiso.tipo_objeto; Type: COMMENT; Schema: public; Owner: luis
+--
+
+COMMENT ON COLUMN calendario_permiso.tipo_objeto IS '1 calendario,
+2 evento
+3 plantilla
+4 eventoPlantilla';
+
+
+--
+-- TOC entry 2073 (class 0 OID 0)
+-- Dependencies: 184
+-- Name: COLUMN calendario_permiso.id_objeto; Type: COMMENT; Schema: public; Owner: luis
+--
+
+COMMENT ON COLUMN calendario_permiso.id_objeto IS '1 calendario,
+2 evento
+3 plantilla
+4 eventoPlantilla';
+
+
+--
+-- TOC entry 2074 (class 0 OID 0)
+-- Dependencies: 184
+-- Name: COLUMN calendario_permiso.id_usuario; Type: COMMENT; Schema: public; Owner: luis
+--
+
+COMMENT ON COLUMN calendario_permiso.id_usuario IS 'Identificador del usuario en el sistema';
+
+
+--
+-- TOC entry 2075 (class 0 OID 0)
+-- Dependencies: 184
+-- Name: COLUMN calendario_permiso.permiso; Type: COMMENT; Schema: public; Owner: luis
+--
+
+COMMENT ON COLUMN calendario_permiso.permiso IS 'P. propietario
+R lectura
+W escritura
+X ejecucion
+D. eliminar';
+
+
+--
+-- TOC entry 170 (class 1259 OID 16641)
+-- Name: calendario_usuario_id_calendario_usuario_seq; Type: SEQUENCE; Schema: public; Owner: luis
+--
+
+CREATE SEQUENCE calendario_usuario_id_calendario_usuario_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.calendario_usuario_id_calendario_usuario_seq OWNER TO luis;
+
+--
+-- TOC entry 171 (class 1259 OID 16643)
+-- Name: calendario_usuario; Type: TABLE; Schema: public; Owner: luis; Tablespace: 
+--
+
+CREATE TABLE calendario_usuario (
+    id_usuario_calendario integer DEFAULT nextval('calendario_usuario_id_calendario_usuario_seq'::regclass) NOT NULL,
+    id_usuario integer,
+    id_calendario integer,
+    privilegio numeric(1,0),
+    id_proceso integer,
+    estado numeric(1,0)
+);
+
+
+ALTER TABLE public.calendario_usuario OWNER TO luis;
+
+--
+-- TOC entry 2076 (class 0 OID 0)
+-- Dependencies: 171
+-- Name: TABLE calendario_usuario; Type: COMMENT; Schema: public; Owner: luis
+--
+
+COMMENT ON TABLE calendario_usuario IS 'Se relacionan los usuarios, calendarios, procesos permisos sobre el calendario';
+
+
+--
+-- TOC entry 2077 (class 0 OID 0)
+-- Dependencies: 171
+-- Name: COLUMN calendario_usuario.id_usuario_calendario; Type: COMMENT; Schema: public; Owner: luis
+--
+
+COMMENT ON COLUMN calendario_usuario.id_usuario_calendario IS 'Valor de la relacion';
+
+
+--
+-- TOC entry 2078 (class 0 OID 0)
+-- Dependencies: 171
+-- Name: COLUMN calendario_usuario.privilegio; Type: COMMENT; Schema: public; Owner: luis
+--
+
+COMMENT ON COLUMN calendario_usuario.privilegio IS '1. Escritura
+2. Lectura';
+
+
+--
+-- TOC entry 2079 (class 0 OID 0)
+-- Dependencies: 171
+-- Name: COLUMN calendario_usuario.estado; Type: COMMENT; Schema: public; Owner: luis
+--
+
+COMMENT ON COLUMN calendario_usuario.estado IS '0 inactivo
+1 activo';
+
+
+--
+-- TOC entry 173 (class 1259 OID 16653)
+-- Name: evento_id_evento_seq; Type: SEQUENCE; Schema: public; Owner: luis
+--
+
+CREATE SEQUENCE evento_id_evento_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.evento_id_evento_seq OWNER TO luis;
+
+--
+-- TOC entry 172 (class 1259 OID 16647)
+-- Name: evento; Type: TABLE; Schema: public; Owner: luis; Tablespace: 
+--
+
+CREATE TABLE evento (
+    id_evento integer DEFAULT nextval('evento_id_evento_seq'::regclass) NOT NULL,
+    id_calendario integer NOT NULL,
+    nombre_evento character varying(1000),
+    descripcion_evento character varying(1000),
+    tipo character(3),
+    fecha_inicio date,
+    fecha_fin date,
+    ubicacion character varying(1000),
+    estado numeric(1,0) NOT NULL
+);
+
+
+ALTER TABLE public.evento OWNER TO luis;
+
+--
+-- TOC entry 2080 (class 0 OID 0)
+-- Dependencies: 172
+-- Name: COLUMN evento.id_calendario; Type: COMMENT; Schema: public; Owner: luis
+--
+
+COMMENT ON COLUMN evento.id_calendario IS 'Llave foranea con el calendario';
+
+
+--
+-- TOC entry 2081 (class 0 OID 0)
+-- Dependencies: 172
+-- Name: COLUMN evento.estado; Type: COMMENT; Schema: public; Owner: luis
+--
+
+COMMENT ON COLUMN evento.estado IS '0 inactivo
+1 activo';
+
+
+--
+-- TOC entry 175 (class 1259 OID 17048)
+-- Name: plantillacalendario; Type: TABLE; Schema: public; Owner: luis; Tablespace: 
+--
+
+CREATE TABLE plantillacalendario (
+    id_plantilla integer NOT NULL,
+    nombre_plantilla character varying(1000),
+    descripcion_plantilla character varying(1000),
+    propietario integer,
+    estado numeric(1,0) NOT NULL
+);
+
+
+ALTER TABLE public.plantillacalendario OWNER TO luis;
+
+--
+-- TOC entry 2082 (class 0 OID 0)
+-- Dependencies: 175
+-- Name: COLUMN plantillacalendario.estado; Type: COMMENT; Schema: public; Owner: luis
+--
+
+COMMENT ON COLUMN plantillacalendario.estado IS '0 inactivo, 1 activo';
+
+
+--
+-- TOC entry 174 (class 1259 OID 17046)
+-- Name: plantillacalendario_id_plantillacalendario_seq; Type: SEQUENCE; Schema: public; Owner: luis
+--
+
+CREATE SEQUENCE plantillacalendario_id_plantillacalendario_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.plantillacalendario_id_plantillacalendario_seq OWNER TO luis;
+
+--
+-- TOC entry 2083 (class 0 OID 0)
+-- Dependencies: 174
+-- Name: plantillacalendario_id_plantillacalendario_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: luis
+--
+
+ALTER SEQUENCE plantillacalendario_id_plantillacalendario_seq OWNED BY plantillacalendario.id_plantilla;
+
+
+--
+-- TOC entry 178 (class 1259 OID 17129)
+-- Name: plantillacalendario_usuario_id_plantillacalendario_usuario_seq; Type: SEQUENCE; Schema: public; Owner: luis
+--
+
+CREATE SEQUENCE plantillacalendario_usuario_id_plantillacalendario_usuario_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.plantillacalendario_usuario_id_plantillacalendario_usuario_seq OWNER TO luis;
+
+--
+-- TOC entry 179 (class 1259 OID 17131)
+-- Name: plantillacalendario_usuario; Type: TABLE; Schema: public; Owner: luis; Tablespace: 
+--
+
+CREATE TABLE plantillacalendario_usuario (
+    id_usuario_plantilla integer DEFAULT nextval('plantillacalendario_usuario_id_plantillacalendario_usuario_seq'::regclass) NOT NULL,
+    id_usuario integer,
+    id_plantilla integer,
+    privilegio numeric(1,0),
+    id_proceso integer,
+    estado numeric(1,0)
+);
+
+
+ALTER TABLE public.plantillacalendario_usuario OWNER TO luis;
+
+--
+-- TOC entry 2084 (class 0 OID 0)
+-- Dependencies: 179
+-- Name: TABLE plantillacalendario_usuario; Type: COMMENT; Schema: public; Owner: luis
+--
+
+COMMENT ON TABLE plantillacalendario_usuario IS 'Se relacionan los usuarios, plantilla_calendarios, procesos permisos sobre el plantilla_calendario';
+
+
+--
+-- TOC entry 2085 (class 0 OID 0)
+-- Dependencies: 179
+-- Name: COLUMN plantillacalendario_usuario.id_usuario_plantilla; Type: COMMENT; Schema: public; Owner: luis
+--
+
+COMMENT ON COLUMN plantillacalendario_usuario.id_usuario_plantilla IS 'Valor de la relacion';
+
+
+--
+-- TOC entry 2086 (class 0 OID 0)
+-- Dependencies: 179
+-- Name: COLUMN plantillacalendario_usuario.privilegio; Type: COMMENT; Schema: public; Owner: luis
+--
+
+COMMENT ON COLUMN plantillacalendario_usuario.privilegio IS '1. Escritura
+2. Lectura';
+
+
+--
+-- TOC entry 2087 (class 0 OID 0)
+-- Dependencies: 179
+-- Name: COLUMN plantillacalendario_usuario.estado; Type: COMMENT; Schema: public; Owner: luis
+--
+
+COMMENT ON COLUMN plantillacalendario_usuario.estado IS '0 inactivo
+1 activo';
+
+
+--
+-- TOC entry 176 (class 1259 OID 17111)
+-- Name: plantillaevento_id_plantillaevento_seq; Type: SEQUENCE; Schema: public; Owner: luis
+--
+
+CREATE SEQUENCE plantillaevento_id_plantillaevento_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.plantillaevento_id_plantillaevento_seq OWNER TO luis;
+
+--
+-- TOC entry 177 (class 1259 OID 17113)
+-- Name: plantillaevento; Type: TABLE; Schema: public; Owner: luis; Tablespace: 
+--
+
+CREATE TABLE plantillaevento (
+    id_plantillaevento integer DEFAULT nextval('plantillaevento_id_plantillaevento_seq'::regclass) NOT NULL,
+    id_plantilla integer NOT NULL,
+    nombre_plantillaevento character varying(1000),
+    descripcion_plantillaevento character varying(1000),
+    tipo character(3),
+    estado numeric(1,0) NOT NULL
+);
+
+
+ALTER TABLE public.plantillaevento OWNER TO luis;
+
+--
+-- TOC entry 2088 (class 0 OID 0)
+-- Dependencies: 177
+-- Name: COLUMN plantillaevento.id_plantilla; Type: COMMENT; Schema: public; Owner: luis
+--
+
+COMMENT ON COLUMN plantillaevento.id_plantilla IS 'Llave foranea con el plantilla_calendario';
+
+
+--
+-- TOC entry 2089 (class 0 OID 0)
+-- Dependencies: 177
+-- Name: COLUMN plantillaevento.estado; Type: COMMENT; Schema: public; Owner: luis
+--
+
+COMMENT ON COLUMN plantillaevento.estado IS '0 inactivo
+1 activo';
+
+
+--
+-- TOC entry 180 (class 1259 OID 17148)
+-- Name: plantillaevento_orden_id_plantillaevento_orden_seq; Type: SEQUENCE; Schema: public; Owner: luis
+--
+
+CREATE SEQUENCE plantillaevento_orden_id_plantillaevento_orden_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.plantillaevento_orden_id_plantillaevento_orden_seq OWNER TO luis;
+
+--
+-- TOC entry 181 (class 1259 OID 17150)
+-- Name: plantillaevento_orden; Type: TABLE; Schema: public; Owner: luis; Tablespace: 
+--
+
+CREATE TABLE plantillaevento_orden (
+    id_plantillaevento_orden integer DEFAULT nextval('plantillaevento_orden_id_plantillaevento_orden_seq'::regclass) NOT NULL,
+    id_plantilla integer NOT NULL,
+    posicion integer NOT NULL,
+    id_evento1 integer NOT NULL,
+    id_evento2 integer NOT NULL,
+    intervalo character varying(2000)
+);
+
+
+ALTER TABLE public.plantillaevento_orden OWNER TO luis;
+
+--
+-- TOC entry 2090 (class 0 OID 0)
+-- Dependencies: 181
+-- Name: COLUMN plantillaevento_orden.intervalo; Type: COMMENT; Schema: public; Owner: luis
+--
+
+COMMENT ON COLUMN plantillaevento_orden.intervalo IS 'Almacena el objeto de PHP DataIntervar serializado con json';
+
+
+--
+-- TOC entry 1915 (class 2604 OID 17177)
+-- Name: id_calendario; Type: DEFAULT; Schema: public; Owner: luis
+--
+
+ALTER TABLE ONLY calendario ALTER COLUMN id_calendario SET DEFAULT nextval('calendario_id_calendario_seq'::regclass);
+
+
+--
+-- TOC entry 1911 (class 2604 OID 17142)
+-- Name: id_plantilla; Type: DEFAULT; Schema: public; Owner: luis
+--
+
+ALTER TABLE ONLY plantillacalendario ALTER COLUMN id_plantilla SET DEFAULT nextval('plantillacalendario_id_plantillacalendario_seq'::regclass);
+
+
+--
+-- TOC entry 2056 (class 0 OID 17174)
+-- Dependencies: 183
+-- Data for Name: calendario; Type: TABLE DATA; Schema: public; Owner: luis
+--
+
+COPY calendario (id_calendario, nombre_calendario, descripcion_calendario, propietario, zona_horaria, estado, id_plantilla, id_proceso) FROM stdin;
+179	Primero	Primero desc	79709508	America/Bogota	1	-1	2
+180	Primero	Primero desc	79709508	America/Bogota	1	-1	2
+181	Primero	Primero desc	79709508	America/Bogota	1	-1	2
+182	Primero	Primero desc	79709508	America/Bogota	1	-1	2
+183	Primero	Primero desc	79709508	America/Bogota	1	-1	2
+184	Primero	Primero desc	79709508	America/Bogota	1	-1	2
+185	ee	ee	79709508	America/Bogota	1	-1	1
+186	ee	ee	79709508	America/Bogota	1	-1	1
+187	ee	ee	79709508	America/Bogota	1	-1	1
+188	ee	ee	79709508	America/Bogota	1	-1	1
+189	ee	ee	79709508	America/Bogota	1	-1	1
+190	ee	ee	79709508	America/Bogota	1	-1	1
+191	ee	ee	79709508	America/Bogota	1	-1	1
+192	ee	ee	79709508	America/Bogota	1	-1	1
+193	ee	ee	79709508	America/Bogota	1	-1	1
+194	ee	ee	79709508	America/Bogota	1	-1	1
+195	ee	ee	79709508	America/Bogota	1	-1	1
+196	ee	ee	79709508	America/Bogota	1	-1	1
+197	ee	ee	79709508	America/Bogota	1	-1	1
+198	Este es un calendario con el nuevo formato	Descripción	79709508	America/Bogota	1	-1	1
+199	Calendaio 5	descripción	79709508	America/Bogota	1	-1	2
+\.
+
+
+--
+-- TOC entry 2091 (class 0 OID 0)
+-- Dependencies: 182
+-- Name: calendario_id_calendario_seq; Type: SEQUENCE SET; Schema: public; Owner: luis
+--
+
+SELECT pg_catalog.setval('calendario_id_calendario_seq', 199, true);
+
+
+--
+-- TOC entry 2057 (class 0 OID 27305)
+-- Dependencies: 184
+-- Data for Name: calendario_permiso; Type: TABLE DATA; Schema: public; Owner: luis
+--
+
+COPY calendario_permiso (id_calendario_permiso, tipo_objeto, id_objeto, id_usuario, permiso) FROM stdin;
+3	1	193	79709508	p
+4	1	194	79709508	p
+5	1	195	79709508	p
+6	1	196	79709508	p
+7	1	197	79709508	p
+8	1	198	79709508	p
+9	1	199	79709508	p
+\.
+
+
+--
+-- TOC entry 2092 (class 0 OID 0)
+-- Dependencies: 185
+-- Name: calendario_permiso_id_calendario_permiso_seq; Type: SEQUENCE SET; Schema: public; Owner: luis
+--
+
+SELECT pg_catalog.setval('calendario_permiso_id_calendario_permiso_seq', 9, true);
+
+
+--
+-- TOC entry 2044 (class 0 OID 16643)
+-- Dependencies: 171
+-- Data for Name: calendario_usuario; Type: TABLE DATA; Schema: public; Owner: luis
+--
+
+COPY calendario_usuario (id_usuario_calendario, id_usuario, id_calendario, privilegio, id_proceso, estado) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2093 (class 0 OID 0)
+-- Dependencies: 170
+-- Name: calendario_usuario_id_calendario_usuario_seq; Type: SEQUENCE SET; Schema: public; Owner: luis
+--
+
+SELECT pg_catalog.setval('calendario_usuario_id_calendario_usuario_seq', 371, true);
+
+
+--
+-- TOC entry 2045 (class 0 OID 16647)
+-- Dependencies: 172
+-- Data for Name: evento; Type: TABLE DATA; Schema: public; Owner: luis
+--
+
+COPY evento (id_evento, id_calendario, nombre_evento, descripcion_evento, tipo, fecha_inicio, fecha_fin, ubicacion, estado) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2094 (class 0 OID 0)
+-- Dependencies: 173
+-- Name: evento_id_evento_seq; Type: SEQUENCE SET; Schema: public; Owner: luis
+--
+
+SELECT pg_catalog.setval('evento_id_evento_seq', 208, true);
+
+
+--
+-- TOC entry 2048 (class 0 OID 17048)
+-- Dependencies: 175
+-- Data for Name: plantillacalendario; Type: TABLE DATA; Schema: public; Owner: luis
+--
+
+COPY plantillacalendario (id_plantilla, nombre_plantilla, descripcion_plantilla, propietario, estado) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2095 (class 0 OID 0)
+-- Dependencies: 174
+-- Name: plantillacalendario_id_plantillacalendario_seq; Type: SEQUENCE SET; Schema: public; Owner: luis
+--
+
+SELECT pg_catalog.setval('plantillacalendario_id_plantillacalendario_seq', 45, true);
+
+
+--
+-- TOC entry 2052 (class 0 OID 17131)
+-- Dependencies: 179
+-- Data for Name: plantillacalendario_usuario; Type: TABLE DATA; Schema: public; Owner: luis
+--
+
+COPY plantillacalendario_usuario (id_usuario_plantilla, id_usuario, id_plantilla, privilegio, id_proceso, estado) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2096 (class 0 OID 0)
+-- Dependencies: 178
+-- Name: plantillacalendario_usuario_id_plantillacalendario_usuario_seq; Type: SEQUENCE SET; Schema: public; Owner: luis
+--
+
+SELECT pg_catalog.setval('plantillacalendario_usuario_id_plantillacalendario_usuario_seq', 39, true);
+
+
+--
+-- TOC entry 2050 (class 0 OID 17113)
+-- Dependencies: 177
+-- Data for Name: plantillaevento; Type: TABLE DATA; Schema: public; Owner: luis
+--
+
+COPY plantillaevento (id_plantillaevento, id_plantilla, nombre_plantillaevento, descripcion_plantillaevento, tipo, estado) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2097 (class 0 OID 0)
+-- Dependencies: 176
+-- Name: plantillaevento_id_plantillaevento_seq; Type: SEQUENCE SET; Schema: public; Owner: luis
+--
+
+SELECT pg_catalog.setval('plantillaevento_id_plantillaevento_seq', 306, true);
+
+
+--
+-- TOC entry 2054 (class 0 OID 17150)
+-- Dependencies: 181
+-- Data for Name: plantillaevento_orden; Type: TABLE DATA; Schema: public; Owner: luis
+--
+
+COPY plantillaevento_orden (id_plantillaevento_orden, id_plantilla, posicion, id_evento1, id_evento2, intervalo) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2098 (class 0 OID 0)
+-- Dependencies: 180
+-- Name: plantillaevento_orden_id_plantillaevento_orden_seq; Type: SEQUENCE SET; Schema: public; Owner: luis
+--
+
+SELECT pg_catalog.setval('plantillaevento_orden_id_plantillaevento_orden_seq', 168, true);
+
+
+--
+-- TOC entry 1934 (class 2606 OID 27309)
+-- Name: calendario_permiso_pkey; Type: CONSTRAINT; Schema: public; Owner: luis; Tablespace: 
+--
+
+ALTER TABLE ONLY calendario_permiso
+    ADD CONSTRAINT calendario_permiso_pkey PRIMARY KEY (id_calendario_permiso);
+
+
+--
+-- TOC entry 1932 (class 2606 OID 17182)
+-- Name: calendario_pkey; Type: CONSTRAINT; Schema: public; Owner: luis; Tablespace: 
+--
+
+ALTER TABLE ONLY calendario
+    ADD CONSTRAINT calendario_pkey PRIMARY KEY (id_calendario);
+
+
+--
+-- TOC entry 1918 (class 2606 OID 16760)
+-- Name: calendario_usuario_pkey; Type: CONSTRAINT; Schema: public; Owner: luis; Tablespace: 
+--
+
+ALTER TABLE ONLY calendario_usuario
+    ADD CONSTRAINT calendario_usuario_pkey PRIMARY KEY (id_usuario_calendario);
+
+
+--
+-- TOC entry 1920 (class 2606 OID 16762)
+-- Name: evento_pkey; Type: CONSTRAINT; Schema: public; Owner: luis; Tablespace: 
+--
+
+ALTER TABLE ONLY evento
+    ADD CONSTRAINT evento_pkey PRIMARY KEY (id_evento);
+
+
+--
+-- TOC entry 1930 (class 2606 OID 17155)
+-- Name: id_plantillaevento_orden; Type: CONSTRAINT; Schema: public; Owner: luis; Tablespace: 
+--
+
+ALTER TABLE ONLY plantillaevento_orden
+    ADD CONSTRAINT id_plantillaevento_orden PRIMARY KEY (id_plantillaevento_orden);
+
+
+--
+-- TOC entry 1923 (class 2606 OID 17056)
+-- Name: plantilla_calendario_pkey; Type: CONSTRAINT; Schema: public; Owner: luis; Tablespace: 
+--
+
+ALTER TABLE ONLY plantillacalendario
+    ADD CONSTRAINT plantilla_calendario_pkey PRIMARY KEY (id_plantilla);
+
+
+--
+-- TOC entry 1928 (class 2606 OID 17136)
+-- Name: plantilla_calendario_usuario_pkey; Type: CONSTRAINT; Schema: public; Owner: luis; Tablespace: 
+--
+
+ALTER TABLE ONLY plantillacalendario_usuario
+    ADD CONSTRAINT plantilla_calendario_usuario_pkey PRIMARY KEY (id_usuario_plantilla);
+
+
+--
+-- TOC entry 1926 (class 2606 OID 17160)
+-- Name: plantillaevento_pkey; Type: CONSTRAINT; Schema: public; Owner: luis; Tablespace: 
+--
+
+ALTER TABLE ONLY plantillaevento
+    ADD CONSTRAINT plantillaevento_pkey PRIMARY KEY (id_plantillaevento);
+
+
+--
+-- TOC entry 1921 (class 1259 OID 16777)
+-- Name: fki_evento_fkey_calendar_id_calendar; Type: INDEX; Schema: public; Owner: luis; Tablespace: 
+--
+
+CREATE INDEX fki_evento_fkey_calendar_id_calendar ON evento USING btree (id_calendario);
+
+
+--
+-- TOC entry 1924 (class 1259 OID 17121)
+-- Name: fki_plantilla_evento_fkey_calendar_id_calendar; Type: INDEX; Schema: public; Owner: luis; Tablespace: 
+--
+
+CREATE INDEX fki_plantilla_evento_fkey_calendar_id_calendar ON plantillaevento USING btree (id_plantilla);
+
+
+--
+-- TOC entry 1935 (class 2606 OID 17137)
+-- Name: plantilla_calendario_usuario_id_plantilla_fkey; Type: FK CONSTRAINT; Schema: public; Owner: luis
+--
+
+ALTER TABLE ONLY plantillacalendario_usuario
+    ADD CONSTRAINT plantilla_calendario_usuario_id_plantilla_fkey FOREIGN KEY (id_plantilla) REFERENCES plantillacalendario(id_plantilla);
+
+
+--
+-- TOC entry 2066 (class 0 OID 0)
+-- Dependencies: 6
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+-- Completed on 2014-10-27 22:53:57 COT
+
+--
+-- PostgreSQL database dump complete
+--
+
