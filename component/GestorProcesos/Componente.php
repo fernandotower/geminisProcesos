@@ -35,19 +35,51 @@ class Componente extends Component implements ICoordinarFlujo, ICoordinarProceso
 	public function ejecutar($valor) {
 		return $this->miFlujo->ejecutar ( $valor );
 	}
+	public function ejecutarEventoInicio($valor) {
+		return $this->miFlujo->ejecutar ( $valor );
+	}
+	public function ejecutarEventoIntermedio($valor) {
+		return $this->miFlujo->ejecutar ( $valor );
+	}
+	public function ejecutarEventoFin($valor) {
+		return $this->miFlujo->ejecutar ( $valor );
+	}
+	public function ejecutarTareaHumana($valor) {
+		return $this->miFlujo->ejecutar ( $valor );
+	}
+	public function ejecutarTareaServicio($valor) {
+		return $this->miFlujo->ejecutar ( $valor );
+	}
+	public function ejecutarTareaLlamada($valor) {
+		return $this->miFlujo->ejecutar ( $valor );
+	}
+	public function ejecutarTareaRecibirMensaje($valor) {
+		return $this->miFlujo->ejecutar ( $valor );
+	}
+	public function ejecutarTareaEnviarMensaje($valor) {
+		return $this->miFlujo->ejecutar ( $valor );
+	}
+	public function ejecutarTareaScript($valor) {
+		return $this->miFlujo->ejecutar ( $valor );
+	}
+	public function ejecutarTareaTemporizador($valor) {
+		return $this->miFlujo->ejecutar ( $valor );
+	}
+	public function ejecutarCompuertaOr($valor) {
+		return $this->miFlujo->ejecutar ( $valor );
+	}
+	public function ejecutarCompuertaXor($valor) {
+		return $this->miFlujo->ejecutar ( $valor );
+	}
+	public function ejecutarCompuertaAnd($valor) {
+		return $this->miFlujo->ejecutar ( $valor );
+	}
 	
 	// ////////////////// METODOS COORDINADOR DE PROCESO///////////////////////////////////////
 	
-	
-	
 	// ////////////////// METODOS REGISTRADOR///////////////////////////////////////
 	
-	
-	
 	// ////////////////// METODOS MODELADOR DE PROCESO///////////////////////////////////////
-	
-	
-	
 }
 
 

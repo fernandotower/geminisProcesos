@@ -12,15 +12,56 @@ class CoordinadorFlujo implements ICoordinarFlujo {
 	var $miSql;
 	
 
+	public function ejecutar($valor) {
+		
+	}
+	public function ejecutarEventoInicio($valor) {
+		
+	}
+	public function ejecutarEventoIntermedio($valor) {
+		
+	}
+	public function ejecutarEventoFin($valor) {
+	
+	}
+	public function ejecutarTareaHumana($valor) {
+		
+	}
+	public function ejecutarTareaServicio($valor) {
+		
+	}
+	public function ejecutarTareaLlamada($valor) {
+		
+	}
+	public function ejecutarTareaRecibirMensaje($valor) {
+		
+	}
+	public function ejecutarTareaEnviarMensaje($valor) {
+		return $this->miFlujo->ejecutar ( $valor );
+	}
+	public function ejecutarTareaScript($valor) {
+		return $this->miFlujo->ejecutar ( $valor );
+	}
+	public function ejecutarTareaTemporizador($valor) {
+		return $this->miFlujo->ejecutar ( $valor );
+	}
+	public function ejecutarCompuertaOr($valor) {
+		return $this->miFlujo->ejecutar ( $valor );
+	}
+	public function ejecutarCompuertaXor($valor) {
+		return $this->miFlujo->ejecutar ( $valor );
+	}
+	public function ejecutarCompuertaAnd($valor) {
+		return $this->miFlujo->ejecutar ( $valor );
+	}
+	
 	/**
-	 * 
-	 * @param unknown $valor
-	 */
+
 	function ejecutar($valor) {
 		
 		echo 'Este método inicia la ejecución del flujo';
 		
-		/**
+		
 		 * Conexión a la base de datos
 		 *
 		 * $this->miConfigurador = \Configurador::singleton ();
@@ -39,8 +80,8 @@ class CoordinadorFlujo implements ICoordinarFlujo {
 		 * }
 		 *
 		 * return $resultado;
-		 */
-	}
+		 
+	}*/
 	
 	
 	
