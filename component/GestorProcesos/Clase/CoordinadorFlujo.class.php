@@ -37,7 +37,7 @@ class CoordinadorFlujo implements ICoordinarFlujo {
 	 * @return integer , $idTrabajo
 	 * 
 	 */
-	public function ejecutarProceso($idProceso) {
+	public function ejecutarProceso($idProceso,$ejecucionAutomatica) {
 		return 1;
 	}
 	

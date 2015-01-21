@@ -11,7 +11,7 @@ interface ICoordinarFlujo {
 	 * @return bool
 	 *
 	 */
-	public function ejecutarActividad($idActividad);
+	public function ejecutarActividad($idActividad,$ejecucionAutomatica);
 	
 	/**
 	 *
