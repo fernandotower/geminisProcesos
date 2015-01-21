@@ -3,20 +3,27 @@
 namespace component\GestorProcesos\interfaz;
 
 interface ICoordinarFlujo {
-	public function ejecutar($valor);
-	public function ejecutarEventoInicio($valor);
-	public function ejecutarEventoIntermedio($valor);	
-	public function ejecutarEventoFin($valor);
-	public function ejecutarTareaHumana($valor);
-	public function ejecutarTareaServicio($valor);
-	public function ejecutarTareaLlamada($valor);
-	public function ejecutarTareaRecibirMensaje($valor);
-	public function ejecutarTareaEnviarMensaje($valor);
-	public function ejecutarTareaScript($valor);
-	public function ejecutarTareaTemporizador($valor);
-	public function ejecutarCompuertaOr($valor);
-	public function ejecutarCompuertaXor($valor);
-	public function ejecutarCompuertaAnd($valor);
+	
+	/**
+	 *
+	 * Ejecuta una actividad, true: se ejcuto con exito, falso: se ejecuto con errores o no se pudo ejecutar
+	 * @param $idActividad
+	 * @return bool
+	 *
+	 */
+	public function ejecutarActividad($idActividad);
+	
+	/**
+	 *
+	 * Crea un trabajo ,
+	 * envia señal de ejecucion del paso de inicio y
+	 * y retorna el id del trabajo
+	 * @param $idProceso , integer id del proceso del cual se quiere ejecutar el flujo
+	 * @param $ejecucionAutomatica , bool true:comienza a ejecutar actividades hasta que se encuentre con un paso manual , false:solo ejecuta la actividad de inicio.
+	 * @return integer , $idTrabajo
+	 *
+	 */
+	public function ejecutarProceso($idProceso);
 }
 
 

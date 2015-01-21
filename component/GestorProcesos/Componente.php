@@ -32,54 +32,110 @@ class Componente extends Component implements ICoordinarFlujo, ICoordinarProceso
 	}
 	
 	// ////////////////// METODOS COORDINADOR DE FLUJO///////////////////////////////////////
-	public function ejecutar($valor) {
-		return $this->miFlujo->ejecutar ( $valor );
-	}
-	public function ejecutarEventoInicio($valor) {
-		return $this->miFlujo->ejecutar ( $valor );
-	}
-	public function ejecutarEventoIntermedio($valor) {
-		return $this->miFlujo->ejecutar ( $valor );
-	}
-	public function ejecutarEventoFin($valor) {
-		return $this->miFlujo->ejecutar ( $valor );
-	}
-	public function ejecutarTareaHumana($valor) {
-		return $this->miFlujo->ejecutar ( $valor );
-	}
-	public function ejecutarTareaServicio($valor) {
-		return $this->miFlujo->ejecutar ( $valor );
-	}
-	public function ejecutarTareaLlamada($valor) {
-		return $this->miFlujo->ejecutar ( $valor );
-	}
-	public function ejecutarTareaRecibirMensaje($valor) {
-		return $this->miFlujo->ejecutar ( $valor );
-	}
-	public function ejecutarTareaEnviarMensaje($valor) {
-		return $this->miFlujo->ejecutar ( $valor );
-	}
-	public function ejecutarTareaScript($valor) {
-		return $this->miFlujo->ejecutar ( $valor );
-	}
-	public function ejecutarTareaTemporizador($valor) {
-		return $this->miFlujo->ejecutar ( $valor );
-	}
-	public function ejecutarCompuertaOr($valor) {
-		return $this->miFlujo->ejecutar ( $valor );
-	}
-	public function ejecutarCompuertaXor($valor) {
-		return $this->miFlujo->ejecutar ( $valor );
-	}
-	public function ejecutarCompuertaAnd($valor) {
-		return $this->miFlujo->ejecutar ( $valor );
+	
+	
+	/**
+	 * 
+	 * Ejecuta una actividad, true: se ejcuto con exito, falso: se ejecuto con errores o no se pudo ejecutar
+	 * @param $idActividad
+	 * @return bool
+	 * 
+	 */
+	public function ejecutarActividad($idActividad) {
+		return $this->miFlujo->ejecutarActividad ( $idActividad );
 	}
 	
+	/**
+	 * 
+	 * Crea un trabajo , 
+	 * envia señal de ejecucion del paso de inicio y  
+	 * y retorna el id del trabajo
+	 * @param $idProceso , integer id del proceso del cual se quiere ejecutar el flujo
+	 * @param $ejecucionAutomatica , bool true:comienza a ejecutar actividades hasta que se encuentre con un paso manual , false:solo ejecuta la actividad de inicio.   
+	 * @return integer , $idTrabajo
+	 * 
+	 */
+	public function ejecutarProceso($idProceso) {
+		return $this->miFlujo->ejecutarProceso ( $idProceso );
+	}
+	
+		
 	// ////////////////// METODOS COORDINADOR DE PROCESO///////////////////////////////////////
 	
 	// ////////////////// METODOS REGISTRADOR///////////////////////////////////////
 	
+	/**
+	 *
+	 * Actualiza el estado de un paso
+	 * @param $idTrabajo , integer obligatorio
+	 * @param $idActividad , integer obligatorio
+	 * @param $idEstadoPaso , integer obligatorio
+	 * @return bool
+	 *
+	 */
+	public function actualizarEstadoPaso($idTrabajo, $idActividad ,$idEstadoPaso) {
+		return $this->miRegistro->actualizarEstadoPaso($idTrabajo, $idActividad ,$idEstadoPaso);
+	}
+	
+	/**
+	 *
+	 * Crea un trabajo
+	 * @param $idProceso
+	 * @return integer , $idTrabajo
+	 *
+	 */
+	public function crearTrabajo($idProceso) {
+		return $this->miRegistro->crearTrabajo($idProceso);
+	}
+	
+	/**
+	 *
+	 * Consulta pasos , es decir lo que se ha ejecutado y que no en el trabajo
+	 * @param $idTrabajo , integer obligatorio
+	 * @param $idActividad , integer opcional
+	 * @param $idEstadoPaso , integer opcional
+	 * @param $idEstadoRegistro , integer opcional
+	 * @param $fechaRegistro , string opcional
+	 * @return array , array de la consulta 
+	 *
+	 */
+	public function consultarPasos($idTrabajo, $idActividad, $idEstadoPaso, $idEstadoRegistro, $fechaRegistro) {
+		$idEstadoRegistro = 1;
+		return $this->miRegistro->consultarPasos($idTrabajo, $idActividad, $idEstadoPaso, $idEstadoRegistro, $fechaRegistro);
+		
+	}
+	
+	
+	
 	// ////////////////// METODOS MODELADOR DE PROCESO///////////////////////////////////////
+	
+	/**
+	 *
+	 * consulta el flujo asociado a un proceso
+	 * @param $idProceso, integer obligatorio
+	 * @return array , array de la consulta 
+	 *
+	 */
+	public function consultarFlujo($idProceso) {
+		$this->miModeloProceso->consultarFlujo($idProceso);
+	}
+	
+	/**
+	 *
+	 * Crea un trabajo
+	 * @param $idActividad , integer obligatorio
+	 * @param $nombreActividad , string opcional
+	 * @param $aliasActividad , string opcional
+	 * @param $idElementoBpmn , integer opcional
+	 * @param $idTipoEjecucion , integer opcional
+	 * @param $estadoRegistroId , integer opcional
+	 * @param $fechaRegistro , string opcional
+	 * @return array , consulta
+	 *
+	 */
+	public function consultarActividad($idActividad,$nombreActividad, $aliasActividad, $idElementoBpmn, $idTipoEjecucion, $estadoRegistroId, $fechaRegistro) {
+		$this->miModeloProceso->consultarActividad($idActividad,$nombreActividad, $aliasActividad, $idElementoBpmn, $idTipoEjecucion, $estadoRegistroId, $fechaRegistro);
+	}
 }
 
 
