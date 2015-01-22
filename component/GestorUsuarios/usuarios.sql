@@ -132,34 +132,34 @@ CREATE TABLE usuarios.relaciones
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE reglas.relaciones
+ALTER TABLE usuarios.relaciones
   OWNER TO ecosiis;
   
   --se agrega un usuario como administrador para poder probar
-INSERT INTO reglas.relaciones (usuario_id , objetos_id ,rel_registro, rel_permiso , rel_estado)
-                          VALUES ( 11 , 0 , 0 , 5 , 1);
+----INSERT INTO reglas.relaciones (usuario_id , objetos_id ,rel_registro, rel_permiso , rel_estado)
+    ----                      VALUES ( 11 , 0 , 0 , 5 , 1);
  
  
-CREATE TABLE reglas.relaciones_h
+CREATE TABLE usuarios.relaciones_h
 (
   
-  rel_hid serial NOT NULL,
+  rel_h_id serial NOT NULL,
   rel_id_h integer NOT NULL,
-  rel_usuario_h integer NOT NULL,
-  rel_objeto_h integer NOT NULL,
+  usuario_id_h integer NOT NULL,
+  objeto_id_h integer NOT NULL,
   rel_registro_h integer NOT NULL,
-  rel_permiso_h integer NOT NULL,
-  rel_estado_h	 integer NOT NULL ,
-  rel_fecha_registro_h date NOT NULL DEFAULT ('now'::text)::date,
-  rel_fecha_h date NOT NULL DEFAULT ('now'::text)::date,
-  rel_usuario text NOT NULL,
-  rel_justificacion text NOT NULL DEFAULT 0,
-  CONSTRAINT relaciones_h_pk PRIMARY KEY (rel_hid)
+  permiso_id_h integer NOT NULL,
+  estado_registro_id_h	 integer NOT NULL ,
+  rel_fecha_registro_h date NOT NULL ,
+  rel_h_fecha_registro date NOT NULL DEFAULT ('now'::text)::date,
+  rel_h_usuario text NOT NULL,
+  rel_h_justificacion text NOT NULL DEFAULT 0,
+  CONSTRAINT relaciones_h_pk PRIMARY KEY (rel_h_id)
 )
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE reglas.relaciones_h
+ALTER TABLE usuarios.relaciones_h
   OWNER TO ecosiis;
   
 

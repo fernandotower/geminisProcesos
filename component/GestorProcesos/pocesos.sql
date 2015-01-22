@@ -1,3 +1,7 @@
+ --Crea esquema y asigna permisos
+CREATE SCHEMA proceso
+  AUTHORIZATION ecosiis;
+
 --------Tabla grupo_elemento_bpmn
 CREATE TABLE proceso.grupo_elemento_bpmn
 (
