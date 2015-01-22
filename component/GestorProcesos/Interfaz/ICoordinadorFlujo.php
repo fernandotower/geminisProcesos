@@ -16,7 +16,7 @@ interface ICoordinarFlujo {
 	/**
 	 *
 	 * Crea un trabajo ,
-	 * envia señal de ejecucion del paso de inicio y
+	 * envia seï¿½al de ejecucion del paso de inicio y
 	 * y retorna el id del trabajo
 	 * @param $idProceso , integer id del proceso del cual se quiere ejecutar el flujo
 	 * @param $ejecucionAutomatica , bool true:comienza a ejecutar actividades hasta que se encuentre con un paso manual , false:solo ejecuta la actividad de inicio.
