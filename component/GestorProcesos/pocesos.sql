@@ -1,28 +1,3 @@
---Crea esquema y asigna permisos
-CREATE SCHEMA proceso
-  AUTHORIZATION ecosiis;
-
---Tabla estado_registro 
-CREATE TABLE proceso.estado_registro
-(
-  estado_registro_id serial NOT NULL,
-  estado_registro_nombre text NOT NULL,
-  estado_registro_alias text NOT NULL,
-  estado_registro_descripcion text NOT NULL,
-  CONSTRAINT estado_registro_pk PRIMARY KEY (estado_registro_id)
-)
-WITH (
-  OIDS=FALSE
-);
-ALTER TABLE proceso.estado_registro
-  OWNER TO ecosiis;
-
-insert into proceso.estado_registro (estado_registro_nombre,estado_registro_alias,estado_registro_descripcion)
-VALUES
-('activo','Activo','Estado que indica que el registro es usable'),
-('inactivo','Inactivo','Estado que indica que el registro no es usable');
-
-
 --------Tabla grupo_elemento_bpmn
 CREATE TABLE proceso.grupo_elemento_bpmn
 (
@@ -130,7 +105,7 @@ CREATE TABLE proceso.actividad
       REFERENCES proceso.elemento_bpmn (elemento_bpmn_id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE SET NULL,
   CONSTRAINT estado_registro_fk FOREIGN KEY (estado_registro_id)
-      REFERENCES proceso.estado_registro (estado_registro_id) MATCH SIMPLE
+      REFERENCES core.core_estado_registro (estado_registro_id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE SET NULL,
   CONSTRAINT actividad_pk PRIMARY KEY (actividad_id)
 )
@@ -154,56 +129,15 @@ CREATE TABLE proceso.actividad_h
   actividad_ruta_ejecucion_h text NOT NULL,
   estado_registro_id_h integer NOT NULL,
   actividad_fecha_registro_h DATE NOT NULL,
-  actividad_h_fecha_registro DATE NOT NULL DEFAULT ('now'::text)::date,
   actividad_h_justificacion text,
+  actividad_h_usuario text,
+  actividad_h_fecha_registro DATE NOT NULL DEFAULT ('now'::text)::date,
   CONSTRAINT actividad_h_pk PRIMARY KEY (actividad_h_id)
 )
 WITH (
   OIDS=FALSE
 );
 ALTER TABLE proceso.actividad_h
-  OWNER TO ecosiis;
-
---------------Tabla permiso
-CREATE TABLE proceso.permiso
-(
-  permiso_id serial NOT NULL,
-  permiso_nombre text NOT NULL,
-  permiso_alias text NOT NULL,
-  permiso_descripcion text NOT NULL,
-  CONSTRAINT permiso_pk PRIMARY KEY (permiso_id)
-)
-WITH (
-  OIDS=FALSE
-);
-ALTER TABLE proceso.permiso
-  OWNER TO ecosiis;
-
-insert into proceso.permiso
-(permiso_id,permiso_nombre, permiso_alias, permiso_descripcion)
-values
-(0,'propietario','Propietario','Propietario del elemento'),
-(1,'crear','Crear','Crea el elemento'),
-(2,'consultar','Consultar','Consulta el elemento'),
-(3,'actualizar','Actualizar','Actualiza el elemento'),
-(4,'eliminar','Eliminar','Elimina el elemento'),
-(5,'administrador','Administrador','Administrador'),
-(6,'ejecutar','Ejecutar','Ejecutar accion del elemento');
-
-
-------Tabla Rol
-CREATE TABLE proceso.rol
-(
-  rol_id serial NOT NULL,
-  rol_nombre text NOT NULL,
-  rol_alias text NOT NULL,
-  rol_descripcion text NOT NULL,
-  CONSTRAINT rol_pk PRIMARY KEY (rol_id)
-)
-WITH (
-  OIDS=FALSE
-);
-ALTER TABLE proceso.rol
   OWNER TO ecosiis;
 
 
@@ -217,16 +151,16 @@ CREATE TABLE proceso.actividad_rol
   estado_registro_id integer NOT NULL,
   actividad_rol_fecha_registro DATE NOT NULL DEFAULT ('now'::text)::date,
   CONSTRAINT permisos_fk FOREIGN KEY (permiso_id)
-      REFERENCES proceso.permiso (permiso_id) MATCH SIMPLE
+      REFERENCES usuarios.permiso (permiso_id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE SET NULL,
   CONSTRAINT rol_fk FOREIGN KEY (rol_id)
-      REFERENCES proceso.rol (rol_id) MATCH SIMPLE
+      REFERENCES usuarios.rol (rol_id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE SET NULL,
   CONSTRAINT actividad_fk FOREIGN KEY (actividad_id)
       REFERENCES proceso.actividad (actividad_id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE SET NULL,
   CONSTRAINT estado_registro_fk FOREIGN KEY (estado_registro_id)
-      REFERENCES proceso.estado_registro (estado_registro_id) MATCH SIMPLE
+      REFERENCES core.core_estado_registro (estado_registro_id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE SET NULL,
   CONSTRAINT actividad_rol_pk PRIMARY KEY (actividad_rol_id)
 )
@@ -268,7 +202,7 @@ CREATE TABLE proceso.proceso
   estado_registro_id integer NOT NULL,
   proceso_fecha_registro DATE NOT NULL DEFAULT ('now'::text)::date,
   CONSTRAINT estado_registro_fk FOREIGN KEY (estado_registro_id)
-      REFERENCES proceso.estado_registro (estado_registro_id) MATCH SIMPLE
+      REFERENCES core.core_estado_registro (estado_registro_id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE SET NULL,
   CONSTRAINT proceso_pk PRIMARY KEY (proceso_id)
 )
@@ -288,8 +222,9 @@ CREATE TABLE proceso.proceso_h
   proceso_descripcion_h text NOT NULL,
   estado_registro_id_h integer NOT NULL,
   proceso_fecha_registro_h DATE NOT NULL,
-  proceso_h_fecha_registro DATE NOT NULL DEFAULT ('now'::text)::date,
   proceso_h_justificacion text NOT NULL,
+  proceso_h_usuario text NOT NULL,
+  proceso_h_fecha_registro DATE NOT NULL DEFAULT ('now'::text)::date,
   CONSTRAINT proceso_h_pk PRIMARY KEY (proceso_h_id)
 )
 WITH (
@@ -321,7 +256,7 @@ CREATE TABLE proceso.flujo_proceso
       REFERENCES proceso.proceso (proceso_id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE SET NULL,
   CONSTRAINT estado_registro_fk FOREIGN KEY (estado_registro_id)
-      REFERENCES proceso.estado_registro (estado_registro_id) MATCH SIMPLE
+      REFERENCES core.core_estado_registro (estado_registro_id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE SET NULL,
   CONSTRAINT flujo_proceso_pk PRIMARY KEY (flujo_proceso_id)
 )
@@ -346,8 +281,9 @@ CREATE TABLE proceso.flujo_proceso_h
   flujo_proceso_ruta_ejecucion_condicion_h text NOT NULL,
   estado_registro_id_h integer NOT NULL,
   flujo_proceso_fecha_registro_h DATE NOT NULL,
-  flujo_proceso_h_fecha_registro DATE NOT NULL DEFAULT ('now'::text)::date,
   flujo_proceso_h_justificacion text NOT NULL,
+  flujo_proceso_h_usuario text NOT NULL,
+  flujo_proceso_h_fecha_registro DATE NOT NULL DEFAULT ('now'::text)::date,
   CONSTRAINT flujo_proceso_h_pk PRIMARY KEY (flujo_proceso_h_id)
 )
 WITH (
@@ -367,7 +303,7 @@ CREATE TABLE proceso.trabajo
       REFERENCES proceso.proceso (proceso_id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE SET NULL,
   CONSTRAINT estado_registro_fk FOREIGN KEY (estado_registro_id)
-      REFERENCES proceso.estado_registro (estado_registro_id) MATCH SIMPLE
+      REFERENCES core.core_estado_registro (estado_registro_id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE SET NULL,
   CONSTRAINT trabajo_pk PRIMARY KEY (trabajo_id)
 )
@@ -385,8 +321,9 @@ CREATE TABLE proceso.trabajo_h
   proceso_id_h integer NOT NULL,
   estado_registro_id_h integer NOT NULL,
   trabajo_fecha_registro_h DATE NOT NULL,
-  trabajo_h_fecha_registro DATE NOT NULL DEFAULT ('now'::text)::date,
   trabajo_h_justificacion text NOT NULL,
+  trabajo_h_usuario text NOT NULL,
+  trabajo_h_fecha_registro DATE NOT NULL DEFAULT ('now'::text)::date,
   CONSTRAINT trabajo_h_pk PRIMARY KEY (trabajo_h_id)
 )
 WITH (
@@ -395,21 +332,7 @@ WITH (
 ALTER TABLE proceso.trabajo_h
   OWNER TO ecosiis;
 
-------------tabla usuario
 
-CREATE TABLE proceso.usuario
-(
-  usuario_id serial NOT NULL,
-  usuario_nombre text NOT NULL,
-  usuario_alias text NOT NULL,
-  usuario_descripcion text NOT NULL,
-  CONSTRAINT usuario_pk PRIMARY KEY (usuario_id)
-)
-WITH (
-  OIDS=FALSE
-);
-ALTER TABLE proceso.usuario
-  OWNER TO ecosiis;
 
 -----------tabla estado_paso
 CREATE TABLE proceso.estado_paso
@@ -435,27 +358,7 @@ values
 ('completado','Completado','indica que un paso se completado'),
 ('deshabilitado','Deshabilitado','indica que un paso esta deshabilitado, es decir no se puede ejecutar');
 
------------------tabla rol_usuario
 
-CREATE TABLE proceso.rol_usuario
-(
-  rol_usuario_id serial NOT NULL,
-  rol_id integer NOT NULL,
-  usuario_id integer NOT NULL,
-  estado_paso_id integer NOT NULL,
-  CONSTRAINT rol_fk FOREIGN KEY (rol_id)
-      REFERENCES proceso.rol (rol_id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE SET NULL,
-  CONSTRAINT usuario_fk FOREIGN KEY (usuario_id)
-      REFERENCES proceso.usuario (usuario_id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE SET NULL,
-  CONSTRAINT rol_usuario_pk PRIMARY KEY (rol_usuario_id)
-)
-WITH (
-  OIDS=FALSE
-);
-ALTER TABLE proceso.trabajo
-  OWNER TO ecosiis;
 
 
 ---------------tabla pasos_trabajo
@@ -478,7 +381,7 @@ CREATE TABLE proceso.pasos_trabajo
       REFERENCES proceso.estado_paso (estado_paso_id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE SET NULL,
   CONSTRAINT estado_registro_fk FOREIGN KEY (estado_registro_id)
-      REFERENCES proceso.estado_registro (estado_registro_id) MATCH SIMPLE
+      REFERENCES core.core_estado_registro (estado_registro_id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE SET NULL,
   CONSTRAINT pasos_trabajo_pk PRIMARY KEY (pasos_trabajo_id)
 )
@@ -500,8 +403,9 @@ CREATE TABLE proceso.pasos_trabajo_h
   estado_paso_id_h integer NOT NULL,
   estado_registro_id_h integer NOT NULL,
   pasos_trabajo_fecha_registro_h DATE NOT NULL ,
-  pasos_trabajo_h_fecha_registro DATE NOT NULL DEFAULT ('now'::text)::date,
   pasos_trabajo_h_justificacion serial NOT NULL,
+  pasos_trabajo_h_usuario serial NOT NULL,
+  pasos_trabajo_h_fecha_registro DATE NOT NULL DEFAULT ('now'::text)::date,
   CONSTRAINT pasos_trabajo_h_pk PRIMARY KEY (pasos_trabajo_h_id)
 )
 WITH (
@@ -523,10 +427,10 @@ CREATE TABLE proceso.trabajo_usuario
       REFERENCES proceso.trabajo (trabajo_id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE SET NULL,
   CONSTRAINT usuario_fk FOREIGN KEY (usuario_id)
-      REFERENCES proceso.usuario (usuario_id) MATCH SIMPLE
+      REFERENCES usuarios.usuario (usuario_id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE SET NULL,
   CONSTRAINT estado_registro_fk FOREIGN KEY (estado_registro_id)
-      REFERENCES proceso.estado_registro (estado_registro_id) MATCH SIMPLE
+      REFERENCES core.core_estado_registro (estado_registro_id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE SET NULL,
   CONSTRAINT trabajo_usuario_pk PRIMARY KEY (trabajo_usuario_id)
 )
@@ -546,8 +450,9 @@ CREATE TABLE proceso.trabajo_usuario_h
   usuario_id_h integer NOT NULL,
   estado_registro_id_h integer NOT NULL,
   trabajo_usuario_fecha_registro_h DATE NOT NULL ,
-  trabajo_usuario_h_fecha_registro DATE NOT NULL DEFAULT ('now'::text)::date,
   trabajo_usuario_h_justificacion text NOT NULL,
+  trabajo_usuario_h_usuario text NOT NULL,
+  trabajo_usuario_h_fecha_registro DATE NOT NULL DEFAULT ('now'::text)::date,
   CONSTRAINT trabajo_usuario_h_pk PRIMARY KEY (trabajo_usuario_h_id)
 )
 WITH (
@@ -570,13 +475,13 @@ CREATE TABLE proceso.proceso_rol
       REFERENCES proceso.proceso (proceso_id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE SET NULL,
   CONSTRAINT rol_fk FOREIGN KEY (rol_id)
-      REFERENCES proceso.rol (rol_id) MATCH SIMPLE
+      REFERENCES usuarios.rol (rol_id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE SET NULL,
   CONSTRAINT permiso_fk FOREIGN KEY (permiso_id)
-      REFERENCES proceso.permiso (permiso_id) MATCH SIMPLE
+      REFERENCES usuarios.permiso (permiso_id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE SET NULL,
   CONSTRAINT estado_registro_fk FOREIGN KEY (estado_registro_id)
-      REFERENCES proceso.estado_registro (estado_registro_id) MATCH SIMPLE
+      REFERENCES core.core_estado_registro (estado_registro_id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE SET NULL,
   CONSTRAINT proceso_rol_pk PRIMARY KEY (proceso_rol_id)
 )
@@ -597,8 +502,9 @@ CREATE TABLE proceso.proceso_rol_h
   permiso_id_h integer NOT NULL,
   estado_registro_id_h integer NOT NULL,
   proceso_rol_fecha_registro_h DATE NOT NULL,
-  proceso_rol_h_fecha_registro DATE NOT NULL DEFAULT ('now'::text)::date,
   proceso_rol_h_justificacion text NOT NULL,
+  proceso_rol_h_usuario text NOT NULL,
+  proceso_rol_h_fecha_registro DATE NOT NULL DEFAULT ('now'::text)::date,
   CONSTRAINT proceso_rol_h_pk PRIMARY KEY (proceso_rol_h_id)
 )
 WITH (
@@ -606,3 +512,6 @@ WITH (
 );
 ALTER TABLE proceso.proceso_rol_h
   OWNER TO ecosiis;
+
+  
+  

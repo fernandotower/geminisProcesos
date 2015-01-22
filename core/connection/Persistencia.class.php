@@ -1,6 +1,9 @@
 <?php
 
-
+if (! isset ( $GLOBALS ["autorizado"] )) {
+	include ("../index.php");
+	exit ();
+}
 
 include_once ("core/manager/Configurador.class.php");
 include_once ("core/builder/Mensaje.class.php");
@@ -10,8 +13,6 @@ include_once ("core/builder/Mensaje.class.php");
 // Esta clase contiene la logica de negocio del bloque y extiende a la clase funcion general la cual encapsula los
 // metodos mas utilizados en la aplicacion
 
-// Para evitar redefiniciones de clases el nombre de la clase del archivo funcion debe corresponder al nombre del bloque
-// en camel case precedido por la palabra Funcion
 
 class Persistencia {
     
@@ -432,7 +433,8 @@ class Persistencia {
     	
     	$this->tablaNombre = $tabla;
     	$this->prefijoH = $this->tablaNombre."_h"; 
-    	$this->prefijoColumna = substr($this->tablaNombre,0,3);
+    	$this->prefijoColumna = $this->tablaNombre;
+    	$this->prefijoColumnaH = $this->tablaNombre.'_h';
     	$this->esquema = $esquema;
     }
     
@@ -545,12 +547,20 @@ class Persistencia {
     	
     }
     
-    public function getprefijoColumna(){
+    public function getPrefijoColumna(){
     	$this->recuperarTablaEsquema();
     	return $this->tablaNombre;
     }
     
-    public function getprefijoColumnaH(){
+    public function setPrefijoColumna($prefijo = ''){
+    	$this->prefijoColumna = prefijo;
+    }
+    
+    public function setPrefijoColumnaH($prefijo = ''){
+    	$this->prefijoColumnaH = prefijo;
+    }
+    
+    public function getPrefijoColumnaH(){
     	$this->recuperarTablaEsquema();
     	return $this->tablaNombre."_h";
     }

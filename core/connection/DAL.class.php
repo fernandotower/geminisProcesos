@@ -1,6 +1,9 @@
 <?php
 
-
+if (! isset ( $GLOBALS ["autorizado"] )) {
+	include ("../index.php");
+	exit ();
+}
 
 
 include_once ("core/builder/Mensaje.class.php");
@@ -35,6 +38,7 @@ class DAL{
 	public $mensaje;
 	public $conexion;
 	private $historico;
+	private $prefijoPorDefecto;
 	
 	function __construct($tabla = null, $esquema = 'public',$conexion = '') {
 	
@@ -64,11 +68,11 @@ class DAL{
 		$nombre = $this->getObjeto($idObjeto,'id','nombre');
 		$this->persistencia =  new Persistencia($this->conexion,$nombre);
 		$listaColumnas = $this->persistencia->getListaColumnas();
-		$prefijo = $this->persistencia->getprefijoColumna();
+		$prefijo = $this->getPrefijoColumna();
 		 
 		$resultado =  array();
 		foreach ($listaColumnas as $columna){
-			$resultado[] =  str_replace ($prefijo.'_','',$columna);;
+			$resultado[] =  str_replace ($prefijo,'',$columna);;
 		}
 		
 		return $resultado;
@@ -79,14 +83,19 @@ class DAL{
 		$this->usuario = $usuario;
 	}
 	
-	private function setAmbiente($tabla){
+	
+	
+	public function setAmbiente($tabla= '', $estadoHistorico = self::estadoHistorico ,$prefijo = null , $excluidos = '' ){
 		if(!is_null($tabla)&&$tabla!='');{
 			//crea persistencia
 			$this->setTabla($tabla);
-			$this->setEstadoHistorico(self::estadoHistorico);
+			$this->setEstadoHistorico($estadoHistorico);
 			$this->crearPersistencia();
-			$this->getprefijoColumna();
-			$this->setExcluidos();
+			
+			if(!is_null($prefijo)) $this->setPrefijoColumna($prefijo);
+			else $this->setPrefijoColumna($this->persistencia->getPrefijoColumna().'_');
+			
+			$this->setExcluidos($excluidos);
 			$this->recuperarColumnas();
 		}return false;
 	}
@@ -107,12 +116,16 @@ class DAL{
 	
 	private function crearPersistencia(){
 		if(is_null($this->usuario)||$this->usuario=='') $this->usuario = '__indefinido__';
-		$this->persistencia =  new Persistencia($this->conexion,$this->tabla, HISTORICO,"'".$this->usuario."'");
+		$this->persistencia =  new Persistencia($this->conexion,$this->tabla, $this->historico,"'".$this->usuario."'");
 	}
 	
-	//private 
-	private function getprefijoColumna(){
-		$this->prefijoColumnas = $this->persistencia->getprefijoColumna().'_';
+	 
+	private function getPrefijoColumna(){
+		return $this->prefijoColumnas;
+	}
+	
+	public function setPrefijoColumna($prefijo = ''){
+		$this->prefijoColumnas = $prefijo;
 	}
 	
 	private	function recuperarColumnas(){
@@ -122,10 +135,17 @@ class DAL{
 			$this->columnasNoPrefijo[] = str_replace($this->prefijoColumnas, "", $columna);
 	}
 	
-	public function setExcluidos(){
-		//$this->excluidos = array("'".$this->prefijoColumnas."_id'","'".$this->prefijoColumnas."_fecha_registro'");
-		//$this->excluidos = array("'".$this->prefijoColumnas."fecha_registro'");
-		$this->excluidos = array("'".$this->prefijoColumnas."'");
+	public function setExcluidos($excluidos = ''){
+
+		if(is_array($excluidos)){
+			foreach ($excluidos as $fila){
+				$this->excluidos[] =  "'".$this->prefijoColumnas."'";
+			}
+		}else $this->excluidos = ''; 
+	}
+	
+	public function getExcluidos(){
+		return $this->excluidos;
 	}
 	
 	
@@ -134,6 +154,7 @@ class DAL{
 	*/
 	
 	private function recuperarColumnasTabla(){
+		
 		//popula $this->columnas
 		$this->persistencia =  new Persistencia($this->conexion,'reglas.columnas');
 		$listaColumnas = $this->persistencia->getListaColumnas();
@@ -512,7 +533,10 @@ class DAL{
 		$this->indexado = array();
 		$valor = '';
 		
-		
+		//_______________________________________________________________
+		//esto se reemplaza por una consulta a la tabla de columnas
+		//_______________________________________________________________
+		 
 		foreach($parametros as $a=>$b){
 			
 			switch($a){
@@ -618,7 +642,7 @@ class DAL{
 	
 	private function recuperarUltimoId(){
 		
-		$maxId = 'max('.$this->persistencia->getprefijoColumna().'_id)';
+		$maxId = 'max('.$this->getPrefijoColumna().'id)';
 		$leido = $this->persistencia->read(array($maxId));
 		 
 		
@@ -661,8 +685,45 @@ class DAL{
 		 return false;
 		
 	}
+	
+	
+	/**
+	 * 
+	 * AGREGAR USUARIO EN LAS TABLAS H
+	 * 
+	 * REALIZAR UN OVERWRITE DEL METODO CALL Y AGREGAR UN GENERAL PARA LOS SIGUEINTES PREFIJOS DE METODOS
+	 *++getLista ej: getListaObjetos() , retornara un select * de la tabla Objetos, "Objetos" es el alias del objeto
+	 *    getLista($idObjeto) return array
+	 *++get ej: getTipoDato($idTipoDato,'id','nombre') , retorna el nombre segun el id dado, (TipoDato es una tabla registrada como Objeto) 
+	 *  ej2: getTipoDato($idTipoDato,'id','id'), 
+	 *  retorna true si el id existe
+	 *  get($idObjeto,$idTipoDato, $idIngreso, $idComparacion) return texto o bool  
+	 *++crear, actualizar, consultar, duplicar, cambiarEstado , eliminar   
+	 *ej crearTipoDato($parametros), hace un llamado a ejecutar(<id_objeto_tipo_dato>,$parametros,$idCrear)
+	 *
+	 * 
+	 * crear tabla de Objetos  en cada esquema que representa un subsistema
+	 * crear tabla de columnas en cada esquema que representa un subsistema
+	 *   adaptar columnas_deshabilitado boolean NOT NULL DEFAULT false,
+                 columnas_autocompletar boolean NOT NULL DEFAULT false,
+                 
+                 para que soportye para ej1: columnas_deshabilitado_crear, ej2: columnas_autocompletar_consultar
+                 se deben registrar las fks en esta tabla
+                 
+                 una tabla con la lista de eventos html
+                 una tabla que relaciona columnas_eventos id_columnas con id_eventos_html texto
+                   ademas de los eventos mas usados con sus respectivas acciones ej: on_change_crear
+                   los mas usados son....
+  
+	 * 
+	 * @param string $idObjeto
+	 * @param unknown $parametros
+	 * @param string $operacion
+	 * @return boolean|multitype:Ambigous <boolean, unknown>
+	 */
+	
 		
-	public function ejecutar($idObjeto = null, $parametros = array(), $operacion = null){
+	public function ejecutar($idObjeto = null, $parametros = array(), $operacion = null, $opciones){
 		
 		
 		if(isset($parametros['justificacion'])){
@@ -682,9 +743,10 @@ class DAL{
 		
 		
 		//Estado historico
-		$this->persistencia->setHistorico(self::estadoHistorico);
+		$this->persistencia->setHistorico($this->historico);
 		
 		switch($operacion){
+			
 			case 1:
 				//crear
 				unset($parametros['id']);
@@ -755,15 +817,17 @@ class DAL{
 				if(!$this->procesarParametros($parametros)||!$this->setWhere('id')){
 				  return false;
 				}else{
+					
 					//1. Leer
 					$columnas = $this->columnas;
 					$parametros = array();
 					unset($columnas[0]);
 					$leido = $this->persistencia->read($columnas,$this->where);
 					if(!$leido) return false;
+					
 					//2. Crear
 						$parametros = $this->procesarLeido($leido[0]);
-						$parametros['estado'] = 3;
+						//$parametros['estado'] = 3;
 						$nombre = $parametros['nombre'];
 						$creacion =  false;
 						$i = 0;
