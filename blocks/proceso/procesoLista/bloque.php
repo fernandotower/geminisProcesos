@@ -14,6 +14,8 @@ include_once ("core/builder/Bloque.interface.php");
 include_once ("core/manager/Configurador.class.php");
 include_once ("core/connection/DAL.class.php");
 include_once ("core/connection/Persistencia.class.php");
+include_once ("core/general/Rango.class.php");
+include_once ("core/general/Tipos.class.php");
 include_once ("component/GestorProcesos/Componente.php");
 
 // Elementos que constituyen un bloque típico CRUD.
@@ -68,12 +70,21 @@ if (!class_exists ( '\\proceso\\procesoLista\\Bloque' )) {
 		}
 		public function bloque() {
 			
-			var_dump($_REQUEST);
+			//var_dump($_REQUEST);
 			$dal = new \DAL();
 			$dal->setEstadoHistorico(true);
-			var_dump($dal->getEstadoHistorico());
-			$per = new \Persistencia('estructura','core.core_objetos');
-			var_dump($per->getListaColumnas());
+			//var_dump(\Tipos::validarTipo(3.3,3));
+			//var_dump(\Tipos::validarTipo('',6));
+			//var_dump(\Tipos::evaluarTipo('hhh',6));
+			var_dump(\Rango::validarRango(10.6,3,"0,10"));
+			//var_dump($dal->getEstadoHistorico());
+			//var_dump($dal->getListaColumnas());
+            //var_dump($dal->getListaPermiso());
+			//var_dump($dal->getListaObjetos());
+			//var_dump($dal->getEstadoRegistro(1,'id','uuid'));
+			//var_dump($dal->getTipoDato(1,'id','alias'));
+			//$per = new \Persistencia('estructura','core.core_objetos');
+			//var_dump($per->getListaColumnas());
 			exit;
 			
 			if (isset ( $_REQUEST ['botonCancelar'] ) && $_REQUEST ['botonCancelar'] == "true") {

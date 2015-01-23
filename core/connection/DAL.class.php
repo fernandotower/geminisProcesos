@@ -8,6 +8,7 @@ if (! isset ( $GLOBALS ["autorizado"] )) {
 
 include_once ("core/builder/Mensaje.class.php");
 include_once ("core/connection/Persistencia.class.php");
+include_once ("core/manager/Configurador.class.php");
 
 class DAL{
 	
@@ -42,7 +43,7 @@ class DAL{
 	
 	function __construct($tabla = null, $esquema = 'public',$conexion = '') {
 	
-		//$this->miConfigurador = \Configurador::singleton ();
+		$this->miConfigurador = \Configurador::singleton ();
 		$this->mensaje =   \Mensaje::singleton();
 		
 		if($conexion!='') $this->conexion=$conexion;
@@ -54,7 +55,7 @@ class DAL{
 		//Recupera parametros de la base de datos
 		
 	    $this->recuperarObjetos();
-	    $this->recuperarPermisos();
+	    
 	    
 	    
 	    if(!is_null($tabla)&&$tabla!="") $this->setAmbiente($tabla);
@@ -188,44 +189,6 @@ class DAL{
 		return $lista;
 	}
 	
-	/*
-	 * procesos
-	*/
-	
-	private function recuperarProcesos(){
-		//popula $this->operadores
-		$this->persistencia =  new Persistencia($this->conexion,'reglas.procesos');
-		$listaColumnas = $this->persistencia->getListaColumnas();
-		if(is_array($listaColumnas)){
-			$this->procesos = $this->persistencia->read($listaColumnas);
-			return true;
-		}
-		$this->operadores = false;
-		$this->mensaje->addMensaje("100","errorRecuperarOperadores",'error');
-		return false;
-	
-	
-	}
-	
-	public function getListaProcesos(){
-		
-		$this->recuperarProcesos();
-	
-		$lista = array();
-		$prefijo = 'pro_';
-		foreach ($this->procesos as $proceso){
-			$fila = array();
-			foreach ($proceso as $a => $b){
-				if(strpos($a,$prefijo)!==false){
-					$indice = str_replace ($prefijo,"",$a);
-					$fila[$indice] =  $b;
-				}
-					
-			}
-			if(count($fila)>0)$lista[] = $fila;
-		}
-		return $lista;
-	}
 	
 	
 	
@@ -234,65 +197,13 @@ class DAL{
 	
 	
 	
-	/*
-	 * permisos
-	 */
 	
-	private function recuperarPermisos(){
-		//popula $this->permisos
-		$this->persistencia =  new Persistencia($this->conexion,'reglas.permisos');
-		$listaColumnas = $this->persistencia->getListaColumnas();
-		if(is_array($listaColumnas)){
-			$this->permisos = $this->persistencia->read($listaColumnas);
-			return true;
-		}
-		$this->permisos = false;
-		$this->mensaje->addMensaje("100","errorRecuperarPermisos",'error');
-		return false;
-	
-	
-	}
-	
-	public function getListaPermisos(){
-		
-		$this->recuperarPermisos();
-		$lista = array();
-		$prefijo = 'permisos_';
-		foreach ($this->permisos as $permiso){
-			$fila = array();
-			foreach ($permiso as $a => $b){
-				if(strpos($a,$prefijo)!==false){
-					$indice = str_replace ($prefijo,"",$a);
-					$fila[$indice] =  $b;
-				}
-					
-			}
-			if(count($fila)>0)$lista[] = $fila;
-		}
-		return $lista;
-	}
-	
-	public function getPermiso($var = null,$tipo = null , $seleccion = null){
-		
-		if(!$this->validarEntradaSeleccion($var,$tipo,$seleccion)) return false;
-		$prefijo = "permisos_";
-		$listado = $this->permisos;
-		$nombre = $this->selectTipo($prefijo,$tipo);
-		$nombreS = $this->selectTipo($prefijo,$seleccion);
-	
-		foreach($listado as $lista){
-			if(strtolower ($var)==strtolower ($lista[$nombre]))
-				return $lista[$nombreS];
-		}
-		$this->mensaje->addMensaje("103","permisoNoEncontrado",'information');
-		return false;
-	}
 	
 	
 	/*
 	 * objetos
 	 */
-	
+	/*
 	private function recuperarObjetos(){
 		//popula $this->objetos
 		$this->persistencia =  new Persistencia($this->conexion,'reglas.objetos');
@@ -306,24 +217,62 @@ class DAL{
 		return false;
 	
 	
-	}
+	}*/
 	
-	public function getListaObjetos(){
-		$this->recuperarObjetos();
-		$lista = array();
-		$prefijo = 'objetos_';
-		foreach ($this->objetos as $objeto){
-			$fila = array();
-			foreach ($objeto as $a => $b){
-				if(strpos($a,$prefijo)!==false){
-					$indice = str_replace ($prefijo,"",$a);
-					$fila[$indice] =  $b;
-				}
-				
-			}
-			if(count($fila)>0)$lista[] = $fila;
+	
+	
+	
+	/**
+	 * 
+	 *
+	 * 
+	 * REALIZAR UN OVERWRITE DEL METODO CALL Y AGREGAR UN GENERAL PARA LOS SIGUEINTES PREFIJOS DE METODOS
+	 *++getLista ej: getListaObjetos() , retornara un select * de la tabla Objetos, "Objetos" es el alias del objeto
+	 *    getLista($idObjeto) return array
+	 *++get ej: getTipoDato($idTipoDato,'id','nombre') , retorna el nombre segun el id dado, (TipoDato es una tabla registrada como Objeto) 
+	 *  ej2: getTipoDato($idTipoDato,'id','id'), 
+	 *  retorna true si el id existe
+	 *  get($idObjeto,$idTipoDato, $idIngreso, $idComparacion) return texto o bool  
+	 *++crear, actualizar, consultar, duplicar, cambiarEstado , eliminar   
+	 *ej crearTipoDato($parametros), hace un llamado a ejecutar(<id_objeto_tipo_dato>,$parametros,$idCrear)
+	 *
+	 * 
+	 * @param string $prefijo
+	 * @param string $tipo
+	 * @return boolean|string
+	 *
+	 */
+	
+	private function recuperarObjetos(){
+		
+		//recupera esquema
+		$esquema = $this->miConfigurador->getVariableConfiguracion ( "dbesquema" );
+		
+		//recupera prefijo
+		$prefijoTabla = $this->miConfigurador->getVariableConfiguracion ( "prefijo" );
+		
+		//nombre tabla de objetos
+		
+		$nombreTabla = 'objetos';
+		
+		//nombre final
+		if(!is_null($esquema)&&$esquema!='')
+		  $nombreFinal = $esquema.".".$prefijoTabla.$nombreTabla ;
+		else $nombreFinal = $prefijoTabla.$nombreTabla ;
+		
+		//popula $this->objetos
+		$this->persistencia =  new Persistencia(self::CONEXION,$nombreFinal);
+		$listaColumnas = $this->persistencia->getListaColumnas();
+		if(is_array($listaColumnas)){
+			$this->objetos = $this->persistencia->read($listaColumnas);
+			return true;
 		}
-		return $lista;
+		
+		$this->objetos = false;
+		$this->mensaje->addMensaje("100","errorRecuperarObjetos",'error');
+		return false;
+	
+	
 	}
 	
 	public function getObjeto($var = null,$tipo = null,$seleccion = null){
@@ -341,25 +290,128 @@ class DAL{
 		return false;
 	}
 	
+	private function getLista($nombre,$prefijo){
+		$lista_obj = $this->recuperarListado($nombre,$prefijo);
+		 
+		$lista = array();
+		$prefijo = $prefijo;
+		foreach ($lista_obj as $objeto){
+			$fila = array();
+			foreach ($objeto as $a => $b){
+				//if(strpos($a,$prefijo)!==false){
+					$indice = str_replace ($prefijo,"",$a);
+					$fila[$indice] =  $b;
+				//}
+	
+			}
+			if(count($fila)>0)$lista[] = $fila;
+		}
+		return $lista;
+	}
+	
+	private function recuperarListado($nombre,$prefijo){
+		
+		$lista=  array();
+		$this->persistencia =  new Persistencia($this->conexion,$nombre);
+		$listaColumnas = $this->persistencia->getListaColumnas();
+		
+		if(is_array($listaColumnas)){
+			$lista = $this->persistencia->read($listaColumnas);
+			return $lista;
+		}
+		
+		$lista = false;
+		$this->mensaje->addMensaje("100","errorRecuperarObjetos",'error');
+		return false;
+		
+	}
+	
+	private function get($prefijo='',$listado = '',$var = null,$tipo = null,$seleccion = null){
+		if(!$this->validarEntradaSeleccion($var,$tipo,$seleccion)) return false;
+		$prefijo = $prefijo;
+		$nombre = $this->selectTipo($prefijo,$tipo);
+		$nombreS = $this->selectTipo($prefijo,$seleccion);
+		
+		foreach($listado as $lista){
+			if(strtolower ($var)==strtolower ($lista[$nombre]))
+				return @is_null($lista[$nombreS])?false:$lista[$nombreS];
+		}
+		$this->mensaje->addMensaje("103","objetoNoEncontrado",'information');
+		return false;
+	}
+	
+	private function setBool($valor = ''){
+    	if($valor=='t') return true;
+    	return false;
+    }
+	
+	
+	public function __call($method_name, $arguments){
+		
+		
+		
+		if($method_name=='recuperarObjetos'||$method_name=='getObjeto')
+			return call_user_func_array(array($this , $method_name), $arguments);
+		
+		
+		//Verifica si se solicitó getLista
+
+		if (strpos($method_name,'getLista') !== false) {
+			
+			$objeto = str_replace('getLista','',$method_name);
+			$idObjeto = $this->getObjeto($objeto,'ejecutar','id'); 
+			$listar = (bool) $this->setBool($this->getObjeto($idObjeto,'id','listar'));
+			if(!$listar) return false;
+				
+			
+			if(!$idObjeto) {
+				$this->mensaje->addMensaje("103","objetoNoEncontrado",'information');
+				return false;
+			}
+			
+			$alias = $this->getObjeto($idObjeto,'id','alias');
+			$prefijo = $this->getObjeto($idObjeto,'id','prefijo_columna');
+			$nombre = $this->getObjeto($idObjeto,'id','nombre');
+			return $this->getLista($nombre,$prefijo);
+			
+		}
+		
+		//verifica si se solicito get
+		if (strpos($method_name,'get') !== false) {
+				
+			$objeto = str_replace('get','',$method_name);
+			$idObjeto = $this->getObjeto($objeto,'ejecutar','id');
+			$listar = (bool) $this->setBool($this->getObjeto($idObjeto,'id','listar'));
+			if(!$listar) return false;
+			
+			if(!$idObjeto) {
+				$this->mensaje->addMensaje("103","objetoNoEncontrado",'information');
+				return false;
+			}
+				
+			$alias = $this->getObjeto($idObjeto,'id','alias');
+			$prefijo = $this->getObjeto($idObjeto,'id','prefijo_columna');
+			$nombre = $this->getObjeto($idObjeto,'id','nombre');
+			$listado = $this->recuperarListado($nombre,$prefijo);
+			
+			return $this->get($prefijo,$listado,$arguments[0],$arguments[1],$arguments[2]);
+				
+		}
+		
+		
+		
+		
+		return call_user_func_array(array($this , $method_name), $arguments);
+		 
+	}
+		 
+		 
+	
 	private function selectTipo($prefijo='',$tipo = ''){
 		
 		if($prefijo==''||$tipo=='') return false;
 
-		switch(strtolower ($tipo)){
-			case 'id':
-				return $prefijo.'id';
-				break;
-			case 'nombre':
-				return $prefijo.'nombre';
-				break;
-			case 'alias':
-				return $prefijo.'alias';
-				break;
-			default:
-				$this->mensaje->addMensaje("101","errorTipoNoExiste",'error');
-				return false;
-				break;
-		}
+		return $prefijo.$tipo;
 	}
 	
 	private function validarEntradaSeleccion($var = null,$tipo = null,$seleccion=null){
@@ -689,32 +741,7 @@ class DAL{
 	
 	/**
 	 * 
-	 * AGREGAR USUARIO EN LAS TABLAS H
-	 * 
-	 * REALIZAR UN OVERWRITE DEL METODO CALL Y AGREGAR UN GENERAL PARA LOS SIGUEINTES PREFIJOS DE METODOS
-	 *++getLista ej: getListaObjetos() , retornara un select * de la tabla Objetos, "Objetos" es el alias del objeto
-	 *    getLista($idObjeto) return array
-	 *++get ej: getTipoDato($idTipoDato,'id','nombre') , retorna el nombre segun el id dado, (TipoDato es una tabla registrada como Objeto) 
-	 *  ej2: getTipoDato($idTipoDato,'id','id'), 
-	 *  retorna true si el id existe
-	 *  get($idObjeto,$idTipoDato, $idIngreso, $idComparacion) return texto o bool  
-	 *++crear, actualizar, consultar, duplicar, cambiarEstado , eliminar   
-	 *ej crearTipoDato($parametros), hace un llamado a ejecutar(<id_objeto_tipo_dato>,$parametros,$idCrear)
 	 *
-	 * 
-	 * crear tabla de Objetos  en cada esquema que representa un subsistema
-	 * crear tabla de columnas en cada esquema que representa un subsistema
-	 *   adaptar columnas_deshabilitado boolean NOT NULL DEFAULT false,
-                 columnas_autocompletar boolean NOT NULL DEFAULT false,
-                 
-                 para que soportye para ej1: columnas_deshabilitado_crear, ej2: columnas_autocompletar_consultar
-                 se deben registrar las fks en esta tabla
-                 
-                 una tabla con la lista de eventos html
-                 una tabla que relaciona columnas_eventos id_columnas con id_eventos_html texto
-                   ademas de los eventos mas usados con sus respectivas acciones ej: on_change_crear
-                   los mas usados son....
-  
 	 * 
 	 * @param string $idObjeto
 	 * @param unknown $parametros
@@ -723,7 +750,7 @@ class DAL{
 	 */
 	
 		
-	public function ejecutar($idObjeto = null, $parametros = array(), $operacion = null, $opciones){
+	public function ejecutar($idObjeto = null, $parametros = array(), $operacion = null, $opciones= ''){
 		
 		
 		if(isset($parametros['justificacion'])){
