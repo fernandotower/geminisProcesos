@@ -43,7 +43,7 @@ class DAL{
 	function __construct($tabla = null, $esquema = 'public',$conexion = '') {
 	
 		//$this->miConfigurador = \Configurador::singleton ();
-		$this->mensaje =  new Mensaje();
+		$this->mensaje =   \Mensaje::singleton();
 		
 		if($conexion!='') $this->conexion=$conexion;
 		else	$this->conexion=self::CONEXION;

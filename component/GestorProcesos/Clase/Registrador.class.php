@@ -2,12 +2,11 @@
 
 namespace component\GestorProcesos\Clase;
 
-use component\GestorUsuarios\interfaz\IGestionarUsuarios;
-use component\GestorUsuarios\Sql;
 
-include_once ('component/GestorUsuarios/Interfaz/IGestorUsuarios.php');
-include_once ("core/manager/Configurador.class.php");
-include_once ("component/GestorUsuarios/Sql.class.php");
+include_once ('component/GestorProcesos/Interfaz/IRegistrador.php');
+use  component\GestorProcesos\Interfaz\IRegistrar as IRegistrar;
+
+
 class Registrador implements IRegistrar {
 	var $miSql;
 	

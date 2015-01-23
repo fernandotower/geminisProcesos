@@ -38,7 +38,7 @@
  * echo Mensaje->getLastMensaje();//retornara el mensaje en formato html o el predefinido en la creación del objeto
  */
 
-use SoapFault;
+use \SoapFault;
 
 include_once ("core/builder/FormularioHtml.class.php");
 include_once ("core/locale/Lenguaje.class.php");
@@ -71,7 +71,7 @@ function __construct($salidaTipo = '', $lenguaje = '') {
 		$this->debug =  false;
 	
 	
-		if(!is_object($lenguaje))$this->lenguaje = new Lenguaje ();
+		if(!is_object($lenguaje))$this->lenguaje = \Lenguaje::singleton();
 		else $this->lenguaje = $lenguaje;
         
 		$this->formulario = new \FormularioHtml ();

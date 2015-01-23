@@ -2,7 +2,7 @@
 
 namespace component\GestorProcesos\interfaz;
 
-interface ICoordinarFlujo {
+interface ICoordinadorFlujo {
 	
 	/**
 	 *
@@ -11,7 +11,7 @@ interface ICoordinarFlujo {
 	 * @return bool
 	 *
 	 */
-	public function ejecutarActividad($idActividad,$ejecucionAutomatica);
+	public function ejecutarActividad($idActividad);
 	
 	/**
 	 *
@@ -23,7 +23,7 @@ interface ICoordinarFlujo {
 	 * @return integer , $idTrabajo
 	 *
 	 */
-	public function ejecutarProceso($idProceso);
+	public function ejecutarProceso($idProceso,$ejecucionAutomatica);
 }
 
 

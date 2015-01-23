@@ -43,7 +43,7 @@ class Persistencia {
     	$this->historico =  $historico;
     	if($usuario==''||is_null($usuario)) $this->usuario = '_indefinido_';
     	else $this->usuario =  $usuario;
-    	$this->mensaje =  new Mensaje();
+    	$this->mensaje =  Mensaje::singleton();
     	$this->saltarHistorico = false;
     	$this->justificacion = '';
     	if (! $this->miRecursoDB) {
@@ -51,6 +51,8 @@ class Persistencia {
     		$this->mensaje->addMensaje("1","errorConexion",'error');
     		return false;
     	}
+    	
+    	$this->recuperarTablaEsquema();
     
     	
     }
@@ -344,7 +346,7 @@ class Persistencia {
     	
     	if($this->probarTabla()){
     		
-    		$this->recuperarTablaEsquema();
+    		
     		
     		$query = "SELECT column_name, data_type , is_nullable ";
     		$query .=" FROM information_schema.columns ";
@@ -548,8 +550,9 @@ class Persistencia {
     }
     
     public function getPrefijoColumna(){
-    	$this->recuperarTablaEsquema();
-    	return $this->tablaNombre;
+    	//$this->recuperarTablaEsquema();
+    	//return $this->tablaNombre;
+    	return $this->prefijoColumna;
     }
     
     public function setPrefijoColumna($prefijo = ''){
@@ -561,8 +564,9 @@ class Persistencia {
     }
     
     public function getPrefijoColumnaH(){
-    	$this->recuperarTablaEsquema();
-    	return $this->tablaNombre."_h";
+    	//$this->recuperarTablaEsquema();
+    	//return $this->tablaNombre."_h";
+    	return $this->prefijoColumnaH;
     }
     
             

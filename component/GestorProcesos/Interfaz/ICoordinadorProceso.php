@@ -1,7 +1,7 @@
 <?php
-namespace component\gestorprocesos\interfaz;
+namespace component\GestorProcesos\interfaz;
 
-interface ICoordinarProceso{
+interface ICoordinadorProceso{
     /**
      *  Realiza el registo de un nuevo calendarioR
      *  nombre_calendario,
@@ -11,7 +11,7 @@ interface ICoordinarProceso{
      *  estado
      * @param \JsonSerializable $datos contine: nombre_calendario,descripcion_calendario, propietario, zona_horaria, estado
      */
-    function consultarProcesos($datos);
+    
 	
 }
 

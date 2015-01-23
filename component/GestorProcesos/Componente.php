@@ -3,17 +3,25 @@
 namespace component\GestorProcesos;
 
 use component\Component;
-use component\gestorprocesos\interfaz\ICoordinarFlujo;
-use component\gestorprocesos\interfaz\ICoordinarProceso;
-use component\gestorprocesos\interfaz\IRegistrar;
-use component\gestorprocesos\interfaz\IModelarProceso;
-use component\GestorProcesos\Clase\CoordinadorFlujo;
-use component\GestorProcesos\Clase\CoordinadorProceso;
-use component\GestorProcesos\Clase\Registrador;
-use component\GestorProcesos\Clase\ModeladorProceso;
+include 'component/GestorProcesos/Interfaz/ICoordinadorFlujo.php';
+use component\GestorProcesos\interfaz\ICoordinadorFlujo as ICoordinadorFlujo;
+include 'component/GestorProcesos/Interfaz/ICoordinadorProceso.php';
+use component\GestorProcesos\interfaz\ICoordinadorProceso as ICoordinadorProceso;
+include 'component/GestorProcesos/Interfaz/IRegistrador.php';
+use component\GestorProcesos\interfaz\IRegistrar as IRegistrar;
+include 'component/GestorProcesos/Interfaz/IModeladorProcesos.php';
+use component\GestorProcesos\interfaz\IModelarProceso as IModelarProceso;
+include 'component/GestorProcesos/Clase/CoordinadorFlujo.class.php';
+use component\GestorProcesos\Clase\CoordinadorFlujo as CoordinadorFlujo;
+include 'component/GestorProcesos/Clase/CoordinadorProceso.class.php';
+use component\GestorProcesos\Clase\CoordinadorProceso as CoordinadorProceso;
+include 'component/GestorProcesos/Clase/Registrador.class.php';
+use component\GestorProcesos\Clase\Registrador as Registrador;
+include 'component/GestorProcesos/Clase/ModeladorProceso.class.php';
+use component\GestorProcesos\Clase\ModeladorProceso as ModeladorProceso;
 
 require_once ('component/Component.class.php');
-class Componente extends Component implements ICoordinarFlujo, ICoordinarProceso, IRegistrar, IModelarProceso {
+class Componente extends Component implements ICoordinadorFlujo, ICoordinadorProceso, IRegistrar, IModelarProceso {
 	private $miFlujo;
 	private $miProceso;
 	private $miRegistro;
@@ -55,8 +63,8 @@ class Componente extends Component implements ICoordinarFlujo, ICoordinarProceso
 	 * @return integer , $idTrabajo
 	 * 
 	 */
-	public function ejecutarProceso($idProceso) {
-		return $this->miFlujo->ejecutarProceso ( $idProceso );
+	public function ejecutarProceso($idProceso, $ejecucionAutomatica) {
+		return $this->miFlujo->ejecutarProceso ( $idProceso , $ejecucionAutomatica);
 	}
 	
 		

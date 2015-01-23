@@ -88,15 +88,11 @@ ALTER TABLE core.core_objetos
 ( 'proceso.tipo_ejecucion','Tipo Ejecucion','tipoEjecucion','Tabla tipo de ejecucion','tipo_ejecucion_',4,true, false,false,false,false,false,false,false,false),
 ( 'proceso.estado_paso','Estado paso','estadoPaso','Tabla de estado paso','estado_paso_',4,true, false,false,false,false,false,false,false,false),
 
+( 'proceso.actividad','Reglas','regla','Tabla de reglas de las reglas','reg_',3,false, true,true,true,true,true,true,false,true),
+( 'proceso.actividad','Reglas','regla','Tabla de reglas de las reglas','reg_',3,false, true,true,true,true,true,true,false,true),
+( 'proceso.actividad','Reglas','regla','Tabla de reglas de las reglas','reg_',3,false, true,true,true,true,true,true,false,true),
+( 'proceso.actividad','Reglas','regla','Tabla de reglas de las reglas','reg_',3,false, true,true,true,true,true,true,false,true),
 ( 'proceso.actividad','Reglas','regla','Tabla de reglas de las reglas','reg_',3,false, true,true,true,true,true,true,false,true)
-
-
-
-
-
-
-
-
 
 
 ;

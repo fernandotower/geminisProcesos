@@ -2,13 +2,12 @@
 
 namespace component\GestorProcesos\Clase;
 
-use component\GestorProcesos\interfaz\ICoordinarFlujo;
-use component\GestorUsuarios\Sql;
+use component\GestorProcesos\interfaz\ICoordinadorFlujo;
+
 
 include_once ('component/GestorProcesos/Interfaz/ICoordinadorFlujo.php');
-include_once ("core/manager/Configurador.class.php");
-include_once ("component/GestorProcesos/Sql.class.php");
-class CoordinadorFlujo implements ICoordinarFlujo {
+
+class CoordinadorFlujo implements ICoordinadorFlujo {
 	var $miSql;
 	
 
@@ -121,9 +120,6 @@ class CoordinadorFlujo implements ICoordinarFlujo {
 	
 	}
 	
-	private function procesarEnviarMensaje(){
-	
-	}
 	
 	private function procesarTemporizador(){
 	

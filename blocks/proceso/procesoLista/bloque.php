@@ -12,6 +12,9 @@ if (! isset ( $GLOBALS ["autorizado"] )) {
 include_once ("core/builder/Bloque.interface.php");
 
 include_once ("core/manager/Configurador.class.php");
+include_once ("core/connection/DAL.class.php");
+include_once ("core/connection/Persistencia.class.php");
+include_once ("component/GestorProcesos/Componente.php");
 
 // Elementos que constituyen un bloque típico CRUD.
 
@@ -25,7 +28,7 @@ include_once ("Funcion.class.php");
 include_once ("Sql.class.php");
 
 // Mensajes
-include_once ("Lenguaje.class.php");
+include_once ("Lenguaje.class.php");	
 
 // Esta clase actua como control del bloque en un patron FCE
 
@@ -64,6 +67,15 @@ if (!class_exists ( '\\proceso\\procesoLista\\Bloque' )) {
 			$this->miLenguaje = new Lenguaje ();
 		}
 		public function bloque() {
+			
+			var_dump($_REQUEST);
+			$dal = new \DAL();
+			$dal->setEstadoHistorico(true);
+			var_dump($dal->getEstadoHistorico());
+			$per = new \Persistencia('estructura','core.core_objetos');
+			var_dump($per->getListaColumnas());
+			exit;
+			
 			if (isset ( $_REQUEST ['botonCancelar'] ) && $_REQUEST ['botonCancelar'] == "true") {
 				$this->miFuncion->redireccionar ( "paginaPrincipal" );
 			} else {
