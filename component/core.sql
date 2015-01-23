@@ -2,6 +2,31 @@
 
 --Tabla de grupos Aplicaciones (esquema del core)
 
+  CREATE TABLE core.core_operacion
+(
+  operacion_id serial NOT NULL ,
+  operacion_nombre text NOT NULL,
+  operacion_alias text NOT NULL,
+  operacion_descripcion text NOT NULL,
+  CONSTRAINT operacion_pk PRIMARY KEY (operacion_id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE core.core_operacion
+  OWNER TO ecosiis;
+
+
+INSERT INTO core.core_operacion
+(  operacion_id,  operacion_nombre,  operacion_alias,  operacion_descripcion)
+VALUES
+(1,'crear','Crear','Crear CRUD'),
+(2,'consultar','Consultar','Consultar CRUD'),
+(3,'actualizar','Actualizar','Actualizar CRUD'),
+(4,'duplicar','Consultar','Consultar CRUD'),
+(5,'cambiarEstado','Cambiar Estado','Cambiar estado registro activo/inactivo'),
+(6,'eliminar','Eliminar','Eliminar CRUD');
+
   CREATE TABLE core.core_grupo_aplicacion
 (
   grupo_aplicacion_id serial NOT NULL ,
@@ -69,9 +94,10 @@ ALTER TABLE core.core_objetos
 ( 'core.core_columnas','Columnas', 'columnas','Tabla parametrica core','columnas_',1,true ,true,true,true,true,false,false,false,false),
 ( 'core.core_eventos_html','Eventos HTML', 'eventosHtml','Tabla parametrica core','eventos_html_',1,true ,false,false,false,false,false,false,false,false),
 ( 'core.core_eventos_columnas','Eventos HTML de las columnas', 'eventosColumnas','Tabla parametrica core','eventos_columnas_',1,true ,true,true,true,true,false,false,false,false),
+( 'core.core_operacion','Operaciones', 'operacion','Tabla parametrica core','operacion_',1,true ,true,true,true,true,false,false,false,false),
 
 ( 'usuarios.usuario','Usuario' ,'usuario','Tabla de usuario del gestor de usuarios','usuario_',2,false, true,true,true,true,true,true,false,false),
-( 'usuarios.relacion','Permisos', 'relacion','Tabla de relaciones entre usuarios, permisos, objetos y registros de los objetos','rel_',2,false,true,true,true,true,true,false,true,true),
+( 'usuarios.relaciones','Permisos', 'relacion','Tabla de relaciones entre usuarios, permisos, objetos y registros de los objetos','rel_',2,false,true,true,true,true,true,false,true,true),
 ( 'usuarios.acceso','Acceso', 'acceso','Tabla de log de acceso del gestor de usuarios','acceso_',2,false,false,true,false,false,false,false,false,false),
 ( 'usuarios.rol','Rol', 'rol','Tabla de roles del gestor de usuarios','rol_',2,false ,true,true,true,true,false,false,false,false),
 ( 'usuarios.usuario_rol','Rol', 'usuarioRol','Tabla de roles del gestor de usuarios','usuario_rol_',2,false ,true,true,true,true,false,false,false,false),

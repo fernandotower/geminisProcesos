@@ -40,6 +40,7 @@ class DAL{
 	public $conexion;
 	private $historico;
 	private $prefijoPorDefecto;
+	private $idObjetoGlobal;
 	
 	function __construct($tabla = null, $esquema = 'public',$conexion = '') {
 	
@@ -148,78 +149,6 @@ class DAL{
 	public function getExcluidos(){
 		return $this->excluidos;
 	}
-	
-	
-	/*
-	 * columnas
-	*/
-	
-	private function recuperarColumnasTabla(){
-		
-		//popula $this->columnas
-		$this->persistencia =  new Persistencia($this->conexion,'reglas.columnas');
-		$listaColumnas = $this->persistencia->getListaColumnas();
-		if(is_array($listaColumnas)){
-			$this->columnasTabla = $this->persistencia->read($listaColumnas);
-			return true;
-		}
-		$this->columnasTabla = false;
-		$this->mensaje->addMensaje("100","errorRecuperarColumnas",'error');
-		return false;
-	
-	
-	}
-	
-	public function getDatosColumnas(){
-		$this->recuperarColumnasTabla();
-	
-		$lista = array();
-		$prefijo = 'columnas_';
-		foreach ($this->columnasTabla as $columna){
-			$fila = array();
-			foreach ($columna as $a => $b){
-				if(strpos($a,$prefijo)!==false){
-					$indice = str_replace ($prefijo,"",$a);
-					$fila[$indice] =  $b;
-				}
-					
-			}
-			if(count($fila)>0)$lista[] = $fila;
-		}
-		return $lista;
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	/*
-	 * objetos
-	 */
-	/*
-	private function recuperarObjetos(){
-		//popula $this->objetos
-		$this->persistencia =  new Persistencia($this->conexion,'reglas.objetos');
-		$listaColumnas = $this->persistencia->getListaColumnas();
-		if(is_array($listaColumnas)){
-			$this->objetos = $this->persistencia->read($listaColumnas);
-			return true;
-		}
-		$this->objetos = false;
-		$this->mensaje->addMensaje("100","errorRecuperarObjetos",'error');
-		return false;
-	
-	
-	}*/
-	
-	
 	
 	
 	/**
@@ -344,6 +273,12 @@ class DAL{
     	if($valor=='t') return true;
     	return false;
     }
+    
+    private function getOperacionNombre(){
+    	
+    }
+    
+    
 	
 	
 	public function __call($method_name, $arguments){
@@ -376,7 +311,7 @@ class DAL{
 			
 		}
 		
-		//verifica si se solicito get
+		//verifica si se solicitó get
 		if (strpos($method_name,'get') !== false) {
 				
 			$objeto = str_replace('get','',$method_name);
@@ -397,6 +332,57 @@ class DAL{
 			return $this->get($prefijo,$listado,$arguments[0],$arguments[1],$arguments[2]);
 				
 		}
+		
+		//verifica si se solicitó consultar, crear, duplicar, cambiarEstado , eliminar, actualizar
+		
+		//obtener lista tabla de operaciones
+		$listaOperaciones =  $this->getListaOperacion();
+		$operacionSeleccion = '';
+		foreach ($listaOperaciones as $fila){
+			if (strpos($method_name,$fila['nombre']) !== false) {
+				$operacionSeleccion = $fila['nombre'];
+				break;
+			}
+		}
+		
+		if (strpos($method_name,$operacionSeleccion) !== false&&$operacionSeleccion!='') {
+		
+			$objeto = str_replace($operacionSeleccion,'',$method_name);
+			$idObjeto = $this->getObjeto($objeto,'ejecutar','id');
+			
+				
+			if(!$idObjeto) {
+				$this->mensaje->addMensaje("103","objetoNoEncontrado",'information');
+				return false;
+			}
+		
+		    $idOperacion = $this->getOperacion($operacionSeleccion,'nombre','id');
+		       
+			return $this->ejecutar($idObjeto,$arguments,$idOperacion);
+			
+		
+		}
+		
+		
+		//verifica si se solicitó crear
+		/*
+		if (strpos($method_name,'crear') !== false) {
+		
+			$objeto = str_replace('crear','',$method_name);
+			$idObjeto = $this->getObjeto($objeto,'ejecutar','id');
+			if(!$idObjeto) {
+				$this->mensaje->addMensaje("103","objetoNoEncontrado",'information');
+				return false;
+			}
+		
+			$idOperacion = $this->getPermiso('crear','nombre','id');
+		
+			return $this->ejecutar($idObjeto,$arguments,$idOperacion);
+		
+		}
+		*/
+		
+		
 		
 		
 		
@@ -487,6 +473,7 @@ class DAL{
 	
 	
 	private function validarId($valor){
+		$valor = (float) $valor;
 		if(!is_numeric($valor)){
 			$this->mensaje->addMensaje("101","errorEntradaParametrosId",'error');
 			return false;
@@ -585,11 +572,15 @@ class DAL{
 		$this->indexado = array();
 		$valor = '';
 		
+		
 		//_______________________________________________________________
 		//esto se reemplaza por una consulta a la tabla de columnas
 		//_______________________________________________________________
-		 
-		foreach($parametros as $a=>$b){
+
+		
+		foreach ($parametros as $param){
+			
+		foreach($param as $a=>$b){
 			
 			switch($a){
 				case 'id':
@@ -616,8 +607,8 @@ class DAL{
 					if(!$this->validarValor($b)) return false;
 					$valor = "'".$b."'";
 					break;
-				case 'estado':
-					if(!$this->validarEstado($b)) return false;
+				case 'estado_registro':
+					//if(!$this->validarEstado($b)) return false;
 					 $valor = $b;
 					break;
 				case 'fecha_registro':
@@ -630,13 +621,25 @@ class DAL{
 					$valor = "'".$b."'";
 					break;
 			}
-
+			
+			if($this->persistencia->columnaEnTabla($this->prefijoColumnas.$a))
+										$colIndex = $this->prefijoColumnas.$a;
+			elseif ($this->persistencia->columnaEnTabla($a))
+										$colIndex = $a;
+			else {
+				                        $colIndex = $a;
+				$this->mensaje->addMensaje("101",":Columna no existe en tabla ".$this->tablaAlias,'information');
+			}
+				
+			
 			$this->valores[] = $valor;
-			$this->parametros[] = $this->prefijoColumnas.$a;
-			$this->indexado[$this->prefijoColumnas.$a] = $valor;
+			$this->parametros[] = $colIndex;
+			$this->indexado[$colIndex] = $valor;
 			
 			
 		}
+		}
+		
 		
 		if(count($this->parametros)==count($this->valores))	return true;
 		
@@ -669,6 +672,7 @@ class DAL{
 	}
 	
 	private function procesarLeido($leido){
+		
 		if(isset($leido)&&is_array($leido)){
 			//quitar indices numericos
 			foreach ($leido as $a => $b){
@@ -706,28 +710,40 @@ class DAL{
 	}
 	
 	private function registrarPropietario($ultimoId = '',$objetoInsertar = ''){
-		//recupera ultimo Id
+		
+		
+		if($this->usuario=='__indefinido__'){
+			$this->mensaje->addMensaje("101",":Usuario Indefinido",'information');
+			return true;
+		}
 		
 		 if($ultimoId&&$ultimoId>=0){
 		 	
 		 	//set ambiente relaciones
-		 	$idObjeto = 6;
+
+		 	$idObjeto = $this->getObjeto('relacion','ejecutar','id');
 		 	$tabla = $this->getObjeto($idObjeto,'id','nombre');
+		 	$historico = $this->setBool($this->getObjeto($idObjeto,'id','historico'));
+		 	$prefijo = $this->getObjeto($idObjeto,'id','prefijo_columna');
 		 	if(!$tabla) return false;
 		 	$this->tablaAlias = $this->getObjeto($idObjeto,'id','alias');
-		 	$this->setAmbiente($tabla);
+		 			 	
+		 	$this->setAmbiente($tabla,$historico,$prefijo);
+		 	
+		 	$this->persistencia->setHistorico($historico);
 		 	
 		 	$parametros =  array();
-		 	$parametros['usuario'] = $this->usuario;
-		 	$parametros['objeto'] = $objetoInsertar;
+		 	$parametros['usuario_id'] = $this->usuario=='__indefinido__'?-1:$this->usuario;
+		 	$parametros['objetos_id'] = $objetoInsertar;
 		 	$parametros['registro'] = $ultimoId;
-		 	$parametros['permiso'] = 0;
-		 	$parametros['estado'] = 1;
+		 	$parametros['permiso_id'] = 0;
+		 	$parametros['estado_registro_id'] = 1;
 		 	
-		 	if(!$this->procesarParametros($parametros)||!$this->persistencia->create($this->parametros,$this->valores)){
-		 			
+		 	if(!$this->procesarParametros(array($parametros))||!$this->persistencia->create($this->parametros,$this->valores)){
+
 		 		$this->mensaje->addMensaje("101","errorCreacion".$this->tablaAlias,'error');
 		 		return false;
+		 		
 		 	}
 		 	
 		 	return true;
@@ -739,28 +755,23 @@ class DAL{
 	}
 	
 	
-	/**
-	 * 
-	 *
-	 * 
-	 * @param string $idObjeto
-	 * @param unknown $parametros
-	 * @param string $operacion
-	 * @return boolean|multitype:Ambigous <boolean, unknown>
-	 */
-	
 		
-	public function ejecutar($idObjeto = null, $parametros = array(), $operacion = null, $opciones= ''){
+	public function ejecutar($idObjeto = null, $parametros = array(), $operacion = null){
 		
 		
 		if(isset($parametros['justificacion'])){
 			$justificacion = $parametros['justificacion'];
 			unset($parametros['justificacion']);
-		}
+		}else $justificacion = 'sin justificacion';
 		$tabla = $this->getObjeto($idObjeto,'id','nombre');
+		$historico = $this->getObjeto($idObjeto,'id','historico');
 		if(!$tabla) return false;
+		$this->idObjetoGlobal = $idObjeto;
 		$this->tablaAlias = $this->getObjeto($idObjeto,'id','alias');
-		$this->setAmbiente($tabla);
+		$historico = $this->setBool($this->getObjeto($idObjeto,'id','historico'));
+		$prefijo = $this->getObjeto($idObjeto,'id','prefijo_columna');
+ 
+		$this->setAmbiente($tabla,$historico,$prefijo,$this->excluidos);
 		
 		if(!$this->validarEntrada($idObjeto, $parametros, $operacion)) return false;
 		
@@ -770,7 +781,7 @@ class DAL{
 		
 		
 		//Estado historico
-		$this->persistencia->setHistorico($this->historico);
+		$this->persistencia->setHistorico($historico);
 		
 		switch($operacion){
 			
@@ -785,10 +796,9 @@ class DAL{
 					return false;
 				}
 				$ultimoId =  $this->recuperarUltimoId();
-				
 				 
 				//registrar propietario
-				
+						
 				if(!$this->registrarPropietario($ultimoId,$idObjeto)) return false;
 				return $ultimoId;
 				
@@ -796,17 +806,22 @@ class DAL{
 			case 2:
 				//consultar
 				
+				
+				
+				
 				if(!$this->procesarParametros($parametros)){
-					
+						
 					return false;
 				}
 				else{
+					
 					$this->setWhere();
 					
 					if(strlen($this->fechaBetween)>0&&strlen($this->where)>0) $this->where .= " AND ".$this->fechaBetween;
 					elseif(strlen($this->fechaBetween)>0&&!$this->where) $this->where .= $this->fechaBetween;
-					
+			
 					$leido = $this->persistencia->read($this->columnas,$this->where);
+		
 					
 					if(!$leido){
 						$this->mensaje->addMensaje("101","errorLectura".$this->tablaAlias,'information');
@@ -828,7 +843,7 @@ class DAL{
 				if(!$this->procesarParametros($parametros)||
 				   !$this->setWhere('id')||
 				   !$this->persistencia->update($this->parametros,$this->valores,$this->where)){
-					//var_dump($this->persistencia->getQuery());
+					return $this->persistencia->getQuery();
 					$this->mensaje->addMensaje("101","errorActualizar".$this->tablaAlias,'error');
 					
 				
@@ -854,7 +869,6 @@ class DAL{
 					
 					//2. Crear
 						$parametros = $this->procesarLeido($leido[0]);
-						//$parametros['estado'] = 3;
 						$nombre = $parametros['nombre'];
 						$creacion =  false;
 						$i = 0;
@@ -863,13 +877,14 @@ class DAL{
 							
 							if($i==0) $parametros['nombre'] = $nombre." copia";
 							else $parametros['nombre'] = $nombre." copia".$i;
-							$this->procesarParametros($parametros);
+							$this->procesarParametros(array($parametros));
 							$creacion =  $this->persistencia->create($this->parametros,$this->valores);
 							
 							$i++;
 						}while (!$creacion&&$i<self::numeroCopiasMaxima);
 							
 					  if(!$creacion){
+					  	return $this->persistencia->getQuery();
 					  	$this->mensaje->addMensaje("101","errorDuplicar".$this->tablaAlias,'error');
 					  	return false;
 					  

@@ -38,7 +38,7 @@ class Persistencia {
     	$this->miConfigurador = \Configurador::singleton ();
     
     	$this->miRecursoDB = $this->miConfigurador->fabricaConexiones->getRecursoDB ( $conexion );
-    
+        $this->conexion =  $conexion;   
     	$this->tabla =  $tabla;
     	$this->historico =  $historico;
     	if($usuario==''||is_null($usuario)) $this->usuario = '_indefinido_';
@@ -101,6 +101,7 @@ class Persistencia {
     private function probarTabla(){
     	if($this->validarConexion()){
     		$query = "SELECT '".$this->tabla."'::regclass";
+    		$this->setQuery($query);
     		$consulta = $this->miRecursoDB->ejecutarAcceso($query,"busqueda");
     
     		if($consulta ==  false){
@@ -244,13 +245,16 @@ class Persistencia {
     		$this->setQuery($sqlInsert);
     		
     		$insert = $this->ejecutar() ;
+    		 
     		if($insert ==  false){
     			$this->mensaje->addMensaje("10","errorInsertar",'error');
     			return false;
     		}
     		
+    		if($this->historico){
+    			if(!$this->historico($arrayFields,$arrayValues)) return false;
+    		} 
     		
-    		if(!$this->historico($arrayFields,$arrayValues)) return false;
     		
     		
     		
@@ -341,6 +345,57 @@ class Persistencia {
     	
     }
     
+    public function getArrayColumnas($excluidos=null){
+    	$this->getListaColumnas($excluidos);
+    	return $this->arrayColumnas;
+    }
+    
+    public function  getTablaNombre(){
+    	return $this->tablaNombre;
+    }
+    
+    public function  getEsquema(){
+    	return $this->esquema;
+    }
+    
+    public function columnaEnTabla($columna='',$tabla= '',$esquema = ''){
+    	
+    	if($columna==''||is_null($columna)) return false;
+    	
+    	if($tabla == ''&&$esquema ==''){
+    		$tabla = $this->tablaNombre;
+    		$esquema = $this->esquema;
+    	}
+    	
+    	
+    	
+    	if($esquema == '') $tablaReal = $tabla;
+    	else $tablaReal = $esquema.".".$tabla;
+    	
+    	if($this->probarTabla()){
+    	
+    	
+    	
+    		$query = "SELECT column_name, data_type , is_nullable ";
+    		$query .=" FROM information_schema.columns ";
+    		$query .=" WHERE table_schema = '".$this->esquema."' ";
+    		$query .=" AND table_name   = '".$this->tablaNombre."' ";
+    		$query .=" AND column_name   = '".$columna."' ";
+    	
+    		
+    		$this->setQuery($query);
+    		$columnas = $this->ejecutar("busqueda");
+    	
+    		if($columnas ==  false){
+    			$this->mensaje->addMensaje("12","errorColumnas",'error');
+    			return false;
+    		}
+    		//return $columnas; 
+    		return true;
+    	}
+    	
+    	return false;
+    }
      
     public function getListaColumnas($excluidos=null){
     	
@@ -477,7 +532,7 @@ class Persistencia {
     		 
     		 
     	}
-    	return false;
+    	return true;
     }
     
     private function getPks(){
