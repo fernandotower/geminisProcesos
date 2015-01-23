@@ -23,7 +23,7 @@ interface ICoordinadorFlujo {
 	 * @return integer , $idTrabajo
 	 *
 	 */
-	public function ejecutarProceso($idProceso,$ejecucionAutomatica);
+	public function ejecutarProceso($idProceso, $id_usuario, $ejecucionAutomatica);
 }
 
 

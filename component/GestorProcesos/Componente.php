@@ -63,7 +63,7 @@ class Componente extends Component implements ICoordinadorFlujo, ICoordinadorPro
 	 * @return integer , $idTrabajo
 	 * 
 	 */
-	public function ejecutarProceso($idProceso, $ejecucionAutomatica) {
+	public function ejecutarProceso($idProceso, $id_usuario, $ejecucionAutomatica) {
 		return $this->miFlujo->ejecutarProceso ( $idProceso , $ejecucionAutomatica);
 	}
 	
