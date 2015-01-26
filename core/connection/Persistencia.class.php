@@ -30,7 +30,7 @@ class Persistencia {
     private $columnasHistorico;
     public $mensaje;
     private $justificacion;
-    private $prefijoH;
+    private $prefijoColumnaH;
     
     
     function __construct($conexion = 'estructura' , $tabla = '' , $historico = false , $usuario = '') {
@@ -252,6 +252,7 @@ class Persistencia {
     		}
     		
     		if($this->historico){
+    			$this->justificacion = 'create';
     			if(!$this->historico($arrayFields,$arrayValues)) return false;
     		} 
     		
@@ -274,7 +275,7 @@ class Persistencia {
     	if($this->probarTabla()&&
     	  $this->validarCampos($arrayFields)&&
     	  $this->validarValores($arrayValues)&&
-    	  $this->validarWhere($where)&&
+    	  //$this->validarWhere($where)&&
     	  $this->compararValoresCampos($arrayFields, $arrayValues)){
     		
     		if(!$this->contarRegistros($where)) return false;
@@ -354,22 +355,26 @@ class Persistencia {
     	return $this->tablaNombre;
     }
     
+    public function  getTabla(){
+    	return $this->tabla;
+    }
+    
     public function  getEsquema(){
     	return $this->esquema;
     }
     
-    public function columnaEnTabla($columna='',$tabla= '',$esquema = ''){
+    public function columnaEnTabla($columna='',$tabla= null,$esquema = null){
     	
     	if($columna==''||is_null($columna)) return false;
     	
-    	if($tabla == ''&&$esquema ==''){
+    	if(is_null($tabla)&&is_null($esquema)){
     		$tabla = $this->tablaNombre;
     		$esquema = $this->esquema;
     	}
     	
     	
     	
-    	if($esquema == '') $tablaReal = $tabla;
+    	if(is_null($esquema)) $tablaReal = $tabla;
     	else $tablaReal = $esquema.".".$tabla;
     	
     	if($this->probarTabla()){
@@ -379,7 +384,7 @@ class Persistencia {
     		$query = "SELECT column_name, data_type , is_nullable ";
     		$query .=" FROM information_schema.columns ";
     		$query .=" WHERE table_schema = '".$this->esquema."' ";
-    		$query .=" AND table_name   = '".$this->tablaNombre."' ";
+    		$query .=" AND table_name   = '".$tabla."' ";
     		$query .=" AND column_name   = '".$columna."' ";
     	
     		
@@ -423,21 +428,25 @@ class Persistencia {
     		
     		$cols = array();
     		$colsh = array();
+    		
     		foreach($columnas as $c){
     			$cols[] = $c[0];
-    			if($this->historico)$colsh[] = $c[0]."_h";
+    			if($this->historico){
+    				if($this->columnaEnTabla($c[0]."_h",$this->getTablaNombre()."_h",$this->esquema)) $colsh[] = $c[0]."_h";
+    				else $colsh[] = $c[0];
+    			}
     		}
     		
     		$this->arrayColumnas =  $columnas;
     		
     		if($this->historico) {
-    			$colsh [] = $this->prefijoH."_usuario";
+    			$colsh [] = $this->prefijoColumnaH."_usuario";
     			$this->columnasHistorico =  $colsh;
     		}
     		
     		if($this->justificacion!=''){
     			
-    			$this->columnasHistorico[] = $this->prefijoH."_justificacion";;
+    			$this->columnasHistorico[] = $this->prefijoColumnaH."_justificacion";;
     		}
     		
     		return $cols;
@@ -489,9 +498,8 @@ class Persistencia {
     	}
     	
     	$this->tablaNombre = $tabla;
-    	$this->prefijoH = $this->tablaNombre."_h"; 
-    	$this->prefijoColumna = $this->tablaNombre;
-    	$this->prefijoColumnaH = $this->tablaNombre.'_h';
+    	
+    	
     	$this->esquema = $esquema;
     }
     
@@ -594,13 +602,12 @@ class Persistencia {
     
     public function contarRegistros($where=null){
     	$query = "SELECT COUNT(*) FROM ".$this->tabla;
-    	if($this->validarWhere($where)) $query .=" WHERE ".$where;
+    	if(!is_null($where)&&$where!='') $query .=" WHERE ".$where;
     	$this->setQuery($query);
     	$conteo = $this->ejecutar("busqueda");
     	if(is_array($conteo)) return $conteo[0][0];
     	$this->mensaje->addMensaje("15","errorConteo",'warning');
     	return false; 
-    	
     	
     }
     
@@ -611,17 +618,25 @@ class Persistencia {
     }
     
     public function setPrefijoColumna($prefijo = ''){
-    	$this->prefijoColumna = prefijo;
+    	$this->prefijoColumna = $prefijo;
     }
     
     public function setPrefijoColumnaH($prefijo = ''){
-    	$this->prefijoColumnaH = prefijo;
+    	$this->prefijoColumnaH = $prefijo;
     }
     
     public function getPrefijoColumnaH(){
     	//$this->recuperarTablaEsquema();
     	//return $this->tablaNombre."_h";
     	return $this->prefijoColumnaH;
+    }
+    
+    public function getPkSequenceName(){
+    	
+    }
+    
+    public function getPkSequenceCurrval(){
+    	 
     }
     
             

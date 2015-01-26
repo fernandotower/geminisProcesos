@@ -81,7 +81,7 @@ class Componente extends Component implements ICoordinadorFlujo, ICoordinadorPro
 	 * @return bool
 	 *
 	 */
-	public function actualizarEstadoPaso($idTrabajo, $idActividad ,$idEstadoPaso) {
+	public function actualizarEstadoPaso($idTrabajo = '', $idActividad = '' ,$idEstadoPaso = '') {
 		return $this->miRegistro->actualizarEstadoPaso($idTrabajo, $idActividad ,$idEstadoPaso);
 	}
 	
@@ -92,7 +92,7 @@ class Componente extends Component implements ICoordinadorFlujo, ICoordinadorPro
 	 * @return integer , $idTrabajo
 	 *
 	 */
-	public function crearTrabajo($idProceso) {
+	public function crearTrabajo($idProceso = '') {
 		return $this->miRegistro->crearTrabajo($idProceso);
 	}
 	
@@ -107,7 +107,7 @@ class Componente extends Component implements ICoordinadorFlujo, ICoordinadorPro
 	 * @return array , array de la consulta 
 	 *
 	 */
-	public function consultarPasos($idTrabajo, $idActividad, $idEstadoPaso, $idEstadoRegistro, $fechaRegistro) {
+	public function consultarPasos($idTrabajo = '', $idActividad = '', $idEstadoPaso = '', $idEstadoRegistro = '', $fechaRegistro = '') {
 		$idEstadoRegistro = 1;
 		return $this->miRegistro->consultarPasos($idTrabajo, $idActividad, $idEstadoPaso, $idEstadoRegistro, $fechaRegistro);
 		
@@ -124,8 +124,9 @@ class Componente extends Component implements ICoordinadorFlujo, ICoordinadorPro
 	 * @return array , array de la consulta 
 	 *
 	 */
-	public function consultarFlujo($idProceso) {
-		$this->miModeloProceso->consultarFlujo($idProceso);
+	public function consultarFlujo($idProceso= '') {
+		 
+		return $this->miModeloProceso->consultarFlujo($idProceso);
 	}
 	
 	/**
@@ -141,8 +142,8 @@ class Componente extends Component implements ICoordinadorFlujo, ICoordinadorPro
 	 * @return array , consulta
 	 *
 	 */
-	public function consultarActividad($idActividad,$nombreActividad, $aliasActividad, $idElementoBpmn, $idTipoEjecucion, $estadoRegistroId, $fechaRegistro) {
-		$this->miModeloProceso->consultarActividad($idActividad,$nombreActividad, $aliasActividad, $idElementoBpmn, $idTipoEjecucion, $estadoRegistroId, $fechaRegistro);
+	public function consultarActividad($idActividad = '',$nombreActividad = '', $aliasActividad = '', $idElementoBpmn = '', $idTipoEjecucion = '', $estadoRegistroId = '', $fechaRegistro = '') {
+		return $this->miModeloProceso->consultarActividad($idActividad,$nombreActividad, $aliasActividad, $idElementoBpmn, $idTipoEjecucion, $estadoRegistroId, $fechaRegistro);
 	}
 }
 
