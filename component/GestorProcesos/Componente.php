@@ -20,6 +20,15 @@ use component\GestorProcesos\Clase\Registrador as Registrador;
 include 'component/GestorProcesos/Clase/ModeladorProceso.class.php';
 use component\GestorProcesos\Clase\ModeladorProceso as ModeladorProceso;
 
+include 'component/GestorProcesos/Interfaz/ICoordinadorFlujo.php';
+include 'component/GestorProcesos/Interfaz/ICoordinadorProceso.php';
+include 'component/GestorProcesos/Interfaz/IRegistrador.php';
+include 'component/GestorProcesos/Interfaz/IModeladorProceso.php';
+include 'component/GestorProcesos/Clase/CoordinadorFlujo.class.php';
+include 'component/GestorProcesos/Clase/CoordinadorProceso.class.php';
+include 'component/GestorProcesos/Clase/Registrador.class.php';
+include 'component/GestorProcesos/Clase/ModeladorProceso.class.php';
+
 require_once ('component/Component.class.php');
 class Componente extends Component implements ICoordinadorFlujo, ICoordinadorProceso, IRegistrar, IModelarProceso {
 	private $miFlujo;
@@ -49,22 +58,27 @@ class Componente extends Component implements ICoordinadorFlujo, ICoordinadorPro
 	 * @return bool
 	 * 
 	 */
-	public function ejecutarActividad($idActividad) {
+	public function ejecutarActividad($idActividad,$ejecucionAutomatica) {
 		return $this->miFlujo->ejecutarActividad ( $idActividad );
 	}
 	
 	/**
 	 * 
 	 * Crea un trabajo , 
-	 * envia señal de ejecucion del paso de inicio y  
+	 * envia seï¿½al de ejecucion del paso de inicio y  
 	 * y retorna el id del trabajo
 	 * @param $idProceso , integer id del proceso del cual se quiere ejecutar el flujo
 	 * @param $ejecucionAutomatica , bool true:comienza a ejecutar actividades hasta que se encuentre con un paso manual , false:solo ejecuta la actividad de inicio.   
 	 * @return integer , $idTrabajo
 	 * 
 	 */
+<<<<<<< HEAD
+	public function ejecutarProceso() {
+		return $this->miFlujo->ejecutarProceso ( );
+=======
 	public function ejecutarProceso($idProceso, $id_usuario, $ejecucionAutomatica) {
 		return $this->miFlujo->ejecutarProceso ( $idProceso , $ejecucionAutomatica);
+>>>>>>> branch 'master' of https://github.com/fernandotower/geminisProcesos.git
 	}
 	
 		

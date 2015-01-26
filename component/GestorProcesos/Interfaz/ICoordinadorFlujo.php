@@ -23,7 +23,11 @@ interface ICoordinadorFlujo {
 	 * @return integer , $idTrabajo
 	 *
 	 */
+<<<<<<< HEAD
+	public function ejecutarProceso();
+=======
 	public function ejecutarProceso($idProceso, $id_usuario, $ejecucionAutomatica);
+>>>>>>> branch 'master' of https://github.com/fernandotower/geminisProcesos.git
 }
 
 
