@@ -168,14 +168,45 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 		// 2. crear trabajo
 		
 		// 3. consultar paso(s) actuales
-		// para cada paso:
-		// 4. consultar actividad del paso
-		// 5. ejecutar actividad (actividad[])
-		$this->ejecutarActividad ( 'compuertaAnd' );
+		
+		$pasos [] = [ 
+				3,
+				4 
+		];
+		
+		// si alguna de las pasos se ejecuta (TRUE) se vueven a consultar los pasos y
+		// se solicita la ejecución de las actividades.
+		$resultadoEjecucion == TRUE;
+		while ( $resultadoEjecucion == TRUE ) {
+			$pasos = $this->consultarPasos ( $id_trabajo );
+			$resultadoEjecucion = $this->ejecutarActividad ( $pasos );
+		}
+		
+		return FALSE;
+		
 		// 6. registrar ejecución
 		// 7. actualizar pasos
-		
-		
+	}
+	private function consultarPasos($id_trabajo) {
+		;
+	}
+	
+	/**
+	 * Ejecuta los pasos que se pasan,
+	 * retorna TRUE si alguno de los pasos se ejecutó
+	 * si ninguno se ejecuta retorna FALSE.
+	 *
+	 * @param array $pasos        	
+	 * @return unknown
+	 */
+	private function ejecutarActividades($pasos) {
+		foreach ( $pasos as $paso ) {
+			$resultadoEjecucionActividad = $this->ejecutarActividad ( 'compuertaAnd' );
+			if ($resultadoEjecucionActividad == TRUE) {
+				return TRUE;
+			}
+		}
+		return FALSE;
 	}
 	
 	//
@@ -229,12 +260,11 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 	private function ejecutarCompuertaXor($valor) {
 	}
 	private function ejecutarCompuertaAnd() {
-		
-		$paso=3;
+		$paso = 3;
 		// Consulta todas las actividades padre
 		$padres = $this->consultarAtividadesPadre ( $paso );
-		//consulta si estan terminadas
-			//$actividades='aqui va la consulta';
+		// consulta si estan terminadas
+		// $actividades='aqui va la consulta';
 		// Si alguna esta sin terminar retorna FALSE
 		/**
 		 * foreach ( $actividades as $actividad ) {
@@ -248,9 +278,8 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 		// si todas estan terminadas
 		// Activa todas las salidas ¿como?
 		// 1. consulta todos los hijos
-		//$hijos=$this->consultarAtividadesHijo($paso);
+		// $hijos=$this->consultarAtividadesHijo($paso);
 		// 2. activa todos los hijos
-		
 		
 		var_dump ( $this->flujoTrabajo );
 		exit ();
@@ -287,7 +316,8 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 	/**
 	 * Consulta en el flujo actual los pasos hijo del paso padre ($id_actividadPadre).
 	 * si el resultado es vacio retorna FALSE
-	 * @param unknown $id_actividadPadre
+	 *
+	 * @param unknown $id_actividadPadre        	
 	 * @return string
 	 */
 	private function consultarAtividadesHijo($id_actividadPadre) {
@@ -296,11 +326,17 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 				$hijos [] = $relacion ['actividad_hijo_id'];
 			}
 		}
-		return $hijos;
+		if (is_array ( $padres )) {
+			return $hijos;
+			;
+		} else {
+			return FALSE;
+		}
 	}
 	/**
 	 * Consulta en el flujo actual los pasos padre del paso hijo ($id_actividadHijo).
-	 * @param unknown $id_actividadHijo
+	 *
+	 * @param unknown $id_actividadHijo        	
 	 * @return string|boolean
 	 */
 	private function consultarAtividadesPadre($id_actividadHijo) {
