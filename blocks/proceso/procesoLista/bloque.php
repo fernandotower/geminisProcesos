@@ -12,7 +12,7 @@ if (! isset ( $GLOBALS ["autorizado"] )) {
 include_once ("core/builder/Bloque.interface.php");
 
 include_once ("core/manager/Configurador.class.php");
-include_once ("core/connection/DAL.class.php");
+//include_once ("core/connection/DAL.class.php");
 include_once ("core/connection/Persistencia.class.php");
 include_once ("core/general/Rango.class.php");
 include_once ("core/general/Tipos.class.php");
@@ -89,12 +89,12 @@ if (!class_exists ( '\\proceso\\procesoLista\\Bloque' )) {
 			//$parametros['descripcion'] = 'carlos';
 			//var_dump($dal->consultarUsuario($parametros));
 			//var_dump($dal->crearUsuario($parametros));
-			var_dump($dal->eliminarUsuario($parametros));
+			//var_dump($dal->eliminarUsuario($parametros));
 			//var_dump($dal->actualizarUsuario($parametros));
 			//var_dump($dal->duplicarUsuario($parametros));
 			//$per = new \Persistencia('estructura','core.core_objetos');
 			//var_dump($per->getListaColumnas());
-			exit;
+			//exit;
 			
 			if (isset ( $_REQUEST ['botonCancelar'] ) && $_REQUEST ['botonCancelar'] == "true") {
 				$this->miFuncion->redireccionar ( "paginaPrincipal" );

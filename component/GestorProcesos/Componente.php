@@ -59,8 +59,8 @@ class Componente extends Component implements ICoordinadorFlujo, ICoordinadorPro
 	 * @return bool
 	 *
 	 */
-	function ejecutarActividad() {
-		return $this->miFlujo->ejecutarActividad ( $idActividad );
+	function ejecutarActividad($actividad) {
+		return $this->miFlujo->ejecutarActividad ( $actividad );
 	}
 	
 	/**

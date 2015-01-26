@@ -11,7 +11,7 @@ interface ICoordinadorFlujo {
 	 * @return bool
 	 *
 	 */
-	function ejecutarActividad();
+	function ejecutarActividad($actividad);
 	
 	/**
 	 *
