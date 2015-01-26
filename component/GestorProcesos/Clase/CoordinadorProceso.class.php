@@ -2,21 +2,16 @@
 
 namespace component\GestorProcesos\Clase;
 
-<<<<<<< HEAD
+
 use component\gestorprocesos\interfaz\ICoordinarProceso;
-=======
->>>>>>> branch 'master' of https://github.com/fernandotower/geminisProcesos.git
+use component\GestorProcesos\interfaz\ICoordinadorProceso;
 
 include_once ('component/GestorProcesos/Interfaz/ICoordinadorProceso.php');
-<<<<<<< HEAD
+
 include_once ("core/manager/Configurador.class.php");
 include_once ("component/GestorUsuarios/Sql.class.php");
-class CoordinadorProceso implements ICoordinarProceso {
-=======
-use component\GestorProcesos\Interfaz\ICoordinadorProceso as ICoordinadorProceso; 
-
 class CoordinadorProceso implements ICoordinadorProceso {
->>>>>>> branch 'master' of https://github.com/fernandotower/geminisProcesos.git
+
 	var $miSql;
 	
 	/**

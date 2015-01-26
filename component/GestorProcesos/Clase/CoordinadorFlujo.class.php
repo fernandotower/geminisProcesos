@@ -16,7 +16,7 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 	 *
 	 * @see \component\GestorProcesos\interfaz\ICoordinarFlujo::ejecutarActividad()
 	 */
-	public function ejecutarActividad($idActividad,$ejecucionAutomatica) {
+	public function ejecutarActividad() {
 		$tipoElementoBpmn = $actividad ['elemento_bpmn_nombre'];
 		// 1. determina el tipo de objeto bpmn con el id
 		
@@ -207,10 +207,6 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 	}
 	private function procesarRecibirMensaje() {
 	}
-<<<<<<< HEAD
-=======
-	
->>>>>>> branch 'master' of https://github.com/fernandotower/geminisProcesos.git
 	private function procesarTemporizador() {
 	}
 	private function procesarGET() {

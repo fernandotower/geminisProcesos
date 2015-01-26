@@ -2,16 +2,13 @@
 
 namespace component\GestorProcesos\Clase;
 
-<<<<<<< HEAD
 use component\GestorUsuarios\interfaz\IGestionarUsuarios;
 use component\GestorUsuarios\Sql;
 use component\GestorProcesos\interfaz\IModelarProceso;
-=======
->>>>>>> branch 'master' of https://github.com/fernandotower/geminisProcesos.git
 
 
 include_once ('component/GestorProcesos/Interfaz/IModeladorProcesos.php');
-use component\GestorProcesos\Interfaz\IModelarProceso  as IModelarProceso;
+
 
 class ModeladorProceso implements IModelarProceso {
 	var $miSql;
