@@ -1,6 +1,6 @@
 <?php
-use component\Calendar\Componente;
-include_once ('component/Calendar/Componente.php');
+use component\GestorProcesos\Componente;
+include_once ('component/GestorProcesos/Componente.php');
 class MostradorCalendario {
 	var $miConfigurador;
 	var $lenguaje;
@@ -20,6 +20,11 @@ class MostradorCalendario {
 		$this->miComponente = new Componente ();
 	}
 	function mostrarLista() {
+		
+		$this->miComponente->ejecutarProceso();
+		exit;
+		
+		
 		$usuario = $_REQUEST ['id_usuario'];
 		$resultadoMiCalendario = $this->miComponente->consultarCalendariosUsuario ( $usuario );
 		$registro = $resultadoMiCalendario;

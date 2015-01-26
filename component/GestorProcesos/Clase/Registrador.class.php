@@ -2,9 +2,11 @@
 
 namespace component\GestorProcesos\Clase;
 
+use component\GestorUsuarios\interfaz\IGestionarUsuarios;
+use component\GestorUsuarios\Sql;
+use component\GestorProcesos\interfaz\IRegistrar;
 
 include_once ('component/GestorProcesos/Interfaz/IRegistrador.php');
-use  component\GestorProcesos\Interfaz\IRegistrar as IRegistrar;
 
 
 include_once ('component/GestorProcesos/Clase/PasosTrabajo.class.php');

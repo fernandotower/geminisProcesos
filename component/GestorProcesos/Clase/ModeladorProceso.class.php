@@ -2,10 +2,13 @@
 
 namespace component\GestorProcesos\Clase;
 
+use component\GestorUsuarios\interfaz\IGestionarUsuarios;
+use component\GestorUsuarios\Sql;
+use component\GestorProcesos\interfaz\IModelarProceso;
 
 
 include_once ('component/GestorProcesos/Interfaz/IModeladorProcesos.php');
-use component\GestorProcesos\Interfaz\IModelarProceso  as IModelarProceso;
+
 
 include_once ('component/GestorProcesos/Clase/Flujo.class.php');
 include_once ('component/GestorProcesos/Clase/Actividad.class.php');

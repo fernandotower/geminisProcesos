@@ -11,7 +11,7 @@ interface ICoordinadorFlujo {
 	 * @return bool
 	 *
 	 */
-	public function ejecutarActividad($idActividad);
+	function ejecutarActividad($actividad);
 	
 	/**
 	 *
@@ -23,7 +23,9 @@ interface ICoordinadorFlujo {
 	 * @return integer , $idTrabajo
 	 *
 	 */
-	public function ejecutarProceso($idProceso, $id_usuario, $ejecucionAutomatica);
+
+	function ejecutarProceso();
+
 }
 
 

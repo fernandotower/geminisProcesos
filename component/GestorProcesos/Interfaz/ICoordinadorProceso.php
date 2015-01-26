@@ -11,6 +11,8 @@ interface ICoordinadorProceso{
      *  estado
      * @param \JsonSerializable $datos contine: nombre_calendario,descripcion_calendario, propietario, zona_horaria, estado
      */
+
+    //function consultarProcesos($datos);
     
 	
 }

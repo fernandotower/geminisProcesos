@@ -3,10 +3,15 @@
 namespace component\GestorProcesos\Clase;
 
 
-include_once ('component/GestorProcesos/Interfaz/ICoordinadorProceso.php');
-use component\GestorProcesos\Interfaz\ICoordinadorProceso as ICoordinadorProceso; 
+use component\gestorprocesos\interfaz\ICoordinarProceso;
+use component\GestorProcesos\interfaz\ICoordinadorProceso;
 
+include_once ('component/GestorProcesos/Interfaz/ICoordinadorProceso.php');
+
+include_once ("core/manager/Configurador.class.php");
+include_once ("component/GestorUsuarios/Sql.class.php");
 class CoordinadorProceso implements ICoordinadorProceso {
+
 	var $miSql;
 	
 	/**
