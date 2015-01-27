@@ -10,8 +10,8 @@ include_once ("core/builder/Mensaje.class.php");
 
 
 //esta clas eesta hecha para trabajar con postgres
-// Esta clase contiene la logica de negocio del bloque y extiende a la clase funcion general la cual encapsula los
-// metodos mas utilizados en la aplicacion
+// Esta clase contiene la logica de negocio del bloque 
+// 
 
 
 class Persistencia {
@@ -38,7 +38,13 @@ class Persistencia {
     	$this->miConfigurador = \Configurador::singleton ();
     
     	$this->miRecursoDB = $this->miConfigurador->fabricaConexiones->getRecursoDB ( $conexion );
-        $this->conexion =  $conexion;   
+
+    	if (! $this->miRecursoDB) {
+    	
+    		$this->mensaje->addMensaje("1","errorConexion",'error');
+    		return false;
+    	}
+    	$this->conexion =  $conexion;   
     	$this->tabla =  $tabla;
     	$this->historico =  $historico;
     	if($usuario==''||is_null($usuario)) $this->usuario = '_indefinido_';
@@ -46,16 +52,13 @@ class Persistencia {
     	$this->mensaje =  Mensaje::singleton();
     	$this->saltarHistorico = false;
     	$this->justificacion = '';
-    	if (! $this->miRecursoDB) {
     
-    		$this->mensaje->addMensaje("1","errorConexion",'error');
-    		return false;
-    	}
     	
     	$this->recuperarTablaEsquema();
     
     	
     }
+    
     
     public function setJustificacion($justificacion = 'no Justifica'){
     	$this->justificacion = $justificacion;
@@ -222,10 +225,6 @@ class Persistencia {
     //si el campo es tipo char, string, etc
     //es necesario ponerle comillas a los valores, ejemplo, un array de cadenas a insertar seria
     //array("'valor1'","'valor2'","'valor3'")
-    //Algo similar hay que hacer con los nombres de las tablas
-    //algunas pueden necesitar comillas dobles para ser interpretadas
-    //por lo cual el nombre de la tabla se asignaría de la siguiente manera
-    //'"nombreTabla"'
     //------------------------------------------------------------------------------------
     
     

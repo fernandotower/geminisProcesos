@@ -1,5 +1,7 @@
 <?php
 
+///ESTA ES UNA PRUEBA DE MODIFICACION EN BRANCH
+
 //corregir problema de id que retiorna al insertar y duplicar
 
 if (! isset ( $GLOBALS ["autorizado"] )) {
@@ -64,7 +66,11 @@ class DAL{
 	    if(!is_null($tabla)&&$tabla!="") $this->setAmbiente($tabla);
 	    
 	
-	}	
+	}
+
+	public function validarConexion(){
+		return $this->persistencia->validarConexion();
+	}
 	
 	public function getQuery(){
 		return $this->persistencia->getQuery();
@@ -78,6 +84,8 @@ class DAL{
 		$listaColumnas = $this->persistencia->getListaColumnas();
 		$prefijo = $this->getPrefijoColumna();
 		 
+		
+		
 		$resultado =  array();
 		foreach ($listaColumnas as $columna){
 			$resultado[] =  str_replace ($prefijo,'',$columna);;
@@ -149,7 +157,7 @@ class DAL{
 
 		if(is_array($excluidos)){
 			foreach ($excluidos as $fila){
-				$this->excluidos[] =  "'".$this->prefijoColumnas."'";
+				$this->excluidos[] =  "'".$this->prefijoColumnas."_".$fila."'";
 			}
 		}else $this->excluidos = ''; 
 	}
@@ -160,18 +168,6 @@ class DAL{
 	
 	
 	/**
-	 * 
-	 *
-	 * 
-	 * REALIZAR UN OVERWRITE DEL METODO CALL Y AGREGAR UN GENERAL PARA LOS SIGUEINTES PREFIJOS DE METODOS
-	 *++getLista ej: getListaObjetos() , retornara un select * de la tabla Objetos, "Objetos" es el alias del objeto
-	 *    getLista($idObjeto) return array
-	 *++get ej: getTipoDato($idTipoDato,'id','nombre') , retorna el nombre segun el id dado, (TipoDato es una tabla registrada como Objeto) 
-	 *  ej2: getTipoDato($idTipoDato,'id','id'), 
-	 *  retorna true si el id existe
-	 *  get($idObjeto,$idTipoDato, $idIngreso, $idComparacion) return texto o bool  
-	 *++crear, actualizar, consultar, duplicar, cambiarEstado , eliminar   
-	 *ej crearTipoDato($parametros), hace un llamado a ejecutar(<id_objeto_tipo_dato>,$parametros,$idCrear)
 	 *
 	 * 
 	 * @param string $prefijo
