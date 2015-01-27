@@ -407,8 +407,8 @@ CREATE TABLE proceso.pasos_trabajo_h
   estado_paso_id_h integer NOT NULL,
   estado_registro_id_h integer NOT NULL,
   pasos_trabajo_fecha_registro_h DATE NOT NULL ,
-  pasos_trabajo_h_justificacion serial NOT NULL,
-  pasos_trabajo_h_usuario serial NOT NULL,
+  pasos_trabajo_h_justificacion text NOT NULL,
+  pasos_trabajo_h_usuario text NOT NULL,
   pasos_trabajo_h_fecha_registro DATE NOT NULL DEFAULT ('now'::text)::date,
   CONSTRAINT pasos_trabajo_h_pk PRIMARY KEY (pasos_trabajo_h_id)
 )

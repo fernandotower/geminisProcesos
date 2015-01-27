@@ -24,7 +24,7 @@ VALUES
 (2,'consultar','Consultar','Consultar CRUD'),
 (3,'actualizar','Actualizar','Actualizar CRUD'),
 (4,'duplicar','Consultar','Consultar CRUD'),
-(5,'cambiarEstado','Cambiar Estado','Cambiar estado registro activo/inactivo'),
+(5,'activarInactivar','Cambiar Estado','Cambiar estado registro activo/inactivo'),
 (6,'eliminar','Eliminar','Eliminar CRUD');
 
   CREATE TABLE core.core_grupo_aplicacion
@@ -81,6 +81,14 @@ ALTER TABLE core.core_objetos
   
   
   ---Lnea Tabla de Objetos
+  
+    INSERT INTO core.core_objetos(objetos_id,
+            objetos_nombre,objetos_alias,objetos_ejecutar, objetos_descripcion , objetos_prefijo_columna, 
+            grupo_aplicacion_id ,objetos_listar,objetos_visible,objetos_crear, objetos_consultar, objetos_actualizar , 
+            objetos_cambiarEstado , objetos_duplicar , objetos_eliminar,objetos_historico)
+   VALUES 
+  ( 0 , 'todo','Todos los obejtos', 'TODOSOBJETOS','Comodin todos los objetos','estado_registro_',1,false,false,false,false,false,false,false,false,false)
+    ;
   INSERT INTO core.core_objetos(
             objetos_nombre,objetos_alias,objetos_ejecutar, objetos_descripcion , objetos_prefijo_columna, 
             grupo_aplicacion_id ,objetos_listar,objetos_visible,objetos_crear, objetos_consultar, objetos_actualizar , 
@@ -98,7 +106,7 @@ ALTER TABLE core.core_objetos
 
 ( 'usuarios.usuario','Usuario' ,'usuario','Tabla de usuario del gestor de usuarios','usuario_',2,false, true,true,true,true,true,true,false,false),
 ( 'usuarios.relaciones','Permisos', 'relacion','Tabla de relaciones entre usuarios, permisos, objetos y registros de los objetos','rel_',2,false,true,true,true,true,true,false,true,true),
-( 'usuarios.acceso','Acceso', 'acceso','Tabla de log de acceso del gestor de usuarios','acceso_',2,false,false,true,false,false,false,false,false,false),
+( 'usuarios.acceso','Acceso', 'acceso','Tabla de log de acceso del gestor de usuarios','acc_',2,false,false,true,false,false,false,false,false,false),
 ( 'usuarios.rol','Rol', 'rol','Tabla de roles del gestor de usuarios','rol_',2,false ,true,true,true,true,false,false,false,false),
 ( 'usuarios.usuario_rol','Rol', 'usuarioRol','Tabla de roles del gestor de usuarios','usuario_rol_',2,false ,true,true,true,true,false,false,false,false),
 ( 'usuarios.permiso','Permisos', 'permiso','Tabla lista permisos del gestor de usuarios','permiso_',2,true ,false,false,false,false,false,false,false,false),
@@ -119,7 +127,7 @@ ALTER TABLE core.core_objetos
 ( 'proceso.actividad_rol','Permisos roles actividad','actividadRol','Tabla de permisos roles sobre la actividad','actividad_rol_',4,false, true,true,true,true,true,true,false,true),
 ( 'proceso.proceso','Proceso','proceso','tabla de procesos','´proceso_',4,false, true,true,true,true,true,true,false,true),
 ( 'proceso.flujo_proceso','Flujo','flujoProceso','tabla del flujo del proceso','flujo_proceso_',4,false, true,true,true,true,true,true,false,true),
-( 'proceso.trabajo','Traabjo','trabajo','tabla de trabajos, instancia del proceso','trabajo_',4,false, true,true,true,true,true,true,false,true),
+( 'proceso.trabajo','Trabajo','trabajo','tabla de trabajos, instancia del proceso','trabajo_',4,false, true,true,true,true,true,true,false,true),
 ( 'proceso.pasos_trabajo','Pasos Trabajo','pasosTrabajo','registro de pasos que se ejecutan en el trabajo','pasos_trabajo_',4,false, true,true,true,true,true,true,false,true),
 ( 'proceso.trabajo_usuario','Permisos trabajos usuario','trabajoUsuario','tabla de permisis trabajos usuarios','trabajo_usuario_',4,false, true,true,true,true,true,true,false,true),
 ( 'proceso.proceso_rol','Permisos proceso Rol','procesoRol','tabla de permisos roles sobre procesos','proceso_rol_',4,false, true,true,true,true,true,true,false,true)
@@ -169,19 +177,37 @@ columnas_nombre , columnas_alias ,  columnas_input , grupo_aplicacion_id , colum
   columnas_requerido_crear ,  columnas_requerido_actualizar 
 )
 VALUES
-  
+  ----core
   ('id','Identificación','text',1,true,false,false,false,false,false,false,true,false,false,false,false,true),
   ('nombre','Nombre','text',1,true,true,true,false,false,false,false,true,false,false,true, true, false),
   ('alias','Alias','text',1,true,true,true,false,false,false,false,true,false,false,true, true, false),
   ('descripcion','Descripción','textarea',1,false,true,true,false,false,false,false,false,false,false,false, false, false),
   ('estado_registro_id','Estado Registro','select',1,true,true,true,true,false,false,false, true,true,true, true,true,true),
   ('fecha_registro','Fecha Registro','date',1,true,false,false,false,true,true,false,false,false,false,false, false, false),
+  
+  -----usuarios
   ('usuario_id','Usuario','text',1,true,true,true,false,false,false,false,true,false,false,true, true, false),
   ('objeto_id','Objeto','select',1,true,true,true,true,false,false,false, true,true,true, true,true,true),
   ('registro','Registro','text',1,true,true,true,false,false,false,false,true,false,false,true, true, false),
   ('permiso_id','Permiso','select',1,true,true,true,true,false,false,false, true,true,true, true,true,true),
-  ('rol_id','Permiso','select',1,true,true,true,true,false,false,false, true,true,true, true,true,true)
-
+  ('rol_id','Permiso','select',1,true,true,true,true,false,false,false, true,true,true, true,true,true),
+  ('codigo','Codigo','text',1,true,true,true,false,false,false,false,true,false,false,true, true, false),
+  ('usuario','Usuario','text',1,true,true,true,false,false,false,false,true,false,false,true, true, false),
+  ('detalle','Detalle','text',1,true,true,true,false,false,false,false,true,false,false,true, true, false),
+  
+  -----procesos
+  ('estado_paso_id','Id del estado del paso','select',3,true,true,true,true,false,false,false, true,true,true, true,true,true),
+  ('elemento_bpmn_id','Id de Objeto BPMN','select',3,true,true,true,true,false,false,false, true,true,true, true,true,true),
+  ('grupo_elemento_bpmn_id','Grupo del elemento BPMN','select',3,true,true,true,true,false,false,false, true,true,true, true,true,true),
+  ('tipo_ejecucion_id','Tipo de Ejecucion de actividad','select',3,true,true,true,true,false,false,false, true,true,true, true,true,true),
+  ('actividad_id','Id del objeto Actividad','select',3,true,true,true,true,false,false,false, true,true,true, true,true,true),
+  ('proceso_id','Id del objeto Proceso','select',3,true,true,true,true,false,false,false, true,true,true, true,true,true),
+  ('padre_id','Id del objeto Actividad padre','select',3,true,true,true,true,false,false,false, true,true,true, true,true,true),
+  ('hijo_id','Id del objeto Actividad hijo','select',3,true,true,true,true,false,false,false, true,true,true, true,true,true),
+  ('trabajo_id','Id del objeto Trabajo','select',3,true,true,true,true,false,false,false, true,true,true, true,true,true)
+  
+  ;
+  
 
 --Tabla de tipo_dato (esquema del core)
 CREATE TABLE core.core_tipo_dato

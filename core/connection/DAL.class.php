@@ -1,5 +1,9 @@
 <?php
 
+///ESTA ES UNA PRUEBA DE MODIFICACION EN BRANCH
+
+//corregir problema de id que retiorna al insertar y duplicar
+
 if (! isset ( $GLOBALS ["autorizado"] )) {
 	include ("../index.php");
 	exit ();
@@ -62,7 +66,15 @@ class DAL{
 	    if(!is_null($tabla)&&$tabla!="") $this->setAmbiente($tabla);
 	    
 	
-	}	
+	}
+
+	public function validarConexion(){
+		return $this->persistencia->validarConexion();
+	}
+	
+	public function getQuery(){
+		return $this->persistencia->getQuery();
+	}
 	
 	public function getAtributosObjeto($idObjeto = ''){
 		
@@ -72,6 +84,8 @@ class DAL{
 		$listaColumnas = $this->persistencia->getListaColumnas();
 		$prefijo = $this->getPrefijoColumna();
 		 
+		
+		
 		$resultado =  array();
 		foreach ($listaColumnas as $columna){
 			$resultado[] =  str_replace ($prefijo,'',$columna);;
@@ -99,7 +113,9 @@ class DAL{
 			
 			$this->setExcluidos($excluidos);
 			$this->recuperarColumnas();
-		}return false;
+			
+		}
+		return false;
 	}
 	
 	private function setTabla($tabla){
@@ -117,7 +133,7 @@ class DAL{
 	}
 	
 	private function crearPersistencia(){
-		if(is_null($this->usuario)||$this->usuario=='') $this->usuario = '__indefinido__';
+		if(is_null($this->usuario)||$this->usuario=='') $this->usuario = -1;
 		$this->persistencia =  new Persistencia($this->conexion,$this->tabla, $this->historico,"'".$this->usuario."'");
 	}
 	
@@ -141,7 +157,7 @@ class DAL{
 
 		if(is_array($excluidos)){
 			foreach ($excluidos as $fila){
-				$this->excluidos[] =  "'".$this->prefijoColumnas."'";
+				$this->excluidos[] =  "'".$this->prefijoColumnas."_".$fila."'";
 			}
 		}else $this->excluidos = ''; 
 	}
@@ -152,18 +168,6 @@ class DAL{
 	
 	
 	/**
-	 * 
-	 *
-	 * 
-	 * REALIZAR UN OVERWRITE DEL METODO CALL Y AGREGAR UN GENERAL PARA LOS SIGUEINTES PREFIJOS DE METODOS
-	 *++getLista ej: getListaObjetos() , retornara un select * de la tabla Objetos, "Objetos" es el alias del objeto
-	 *    getLista($idObjeto) return array
-	 *++get ej: getTipoDato($idTipoDato,'id','nombre') , retorna el nombre segun el id dado, (TipoDato es una tabla registrada como Objeto) 
-	 *  ej2: getTipoDato($idTipoDato,'id','id'), 
-	 *  retorna true si el id existe
-	 *  get($idObjeto,$idTipoDato, $idIngreso, $idComparacion) return texto o bool  
-	 *++crear, actualizar, consultar, duplicar, cambiarEstado , eliminar   
-	 *ej crearTipoDato($parametros), hace un llamado a ejecutar(<id_objeto_tipo_dato>,$parametros,$idCrear)
 	 *
 	 * 
 	 * @param string $prefijo
@@ -364,29 +368,6 @@ class DAL{
 		}
 		
 		
-		//verifica si se solicitó crear
-		/*
-		if (strpos($method_name,'crear') !== false) {
-		
-			$objeto = str_replace('crear','',$method_name);
-			$idObjeto = $this->getObjeto($objeto,'ejecutar','id');
-			if(!$idObjeto) {
-				$this->mensaje->addMensaje("103","objetoNoEncontrado",'information');
-				return false;
-			}
-		
-			$idOperacion = $this->getPermiso('crear','nombre','id');
-		
-			return $this->ejecutar($idObjeto,$arguments,$idOperacion);
-		
-		}
-		*/
-		
-		
-		
-		
-		
-		
 		return call_user_func_array(array($this , $method_name), $arguments);
 		 
 	}
@@ -579,7 +560,7 @@ class DAL{
 
 		
 		foreach ($parametros as $param){
-			
+		
 		foreach($param as $a=>$b){
 			
 			switch($a){
@@ -662,8 +643,8 @@ class DAL{
 			if(isset($this->indexado[$this->prefijoColumnas.'id'])){
 				$where =$this->prefijoColumnas.'id='.$this->indexado[$this->prefijoColumnas.'id'];
 			}else{
-				$this->mensaje->addMensaje("101","errorIdNoDefinido".$this->tablaAlias,'error');
-				return false;
+				$this->mensaje->addMensaje("101","errorIdNoDefinido".$this->tablaAlias,'information');
+				$where = '';
 			}
 			
 		}
@@ -675,16 +656,19 @@ class DAL{
 		
 		if(isset($leido)&&is_array($leido)){
 			//quitar indices numericos
+			$resultado = array();
 			foreach ($leido as $a => $b){
 				if(!is_numeric($a)){
-					$valorNoPrefijo = str_replace($this->prefijoColumnas,'',$a);
-					$leido[$valorNoPrefijo] = $b ;
-					unset($leido[$a]);
+					
+					if(strpos($a,$this->prefijoColumnas)!==false) $valorNoPrefijo = str_replace($this->prefijoColumnas,'',$a);
+					else $valorNoPrefijo = $a;
+					$resultado[$valorNoPrefijo] = $b ;
+					
 				}
-				unset($leido[$a]);
+				
 			}
 			
-			return $leido;
+			return $resultado;
 		}
 		
 			$this->mensaje->addMensaje("101","errorIdNoExiste".$this->tablaAlias,'error');
@@ -712,12 +696,12 @@ class DAL{
 	private function registrarPropietario($ultimoId = '',$objetoInsertar = ''){
 		
 		
-		if($this->usuario=='__indefinido__'){
+		if($this->usuario=='-1'){
 			$this->mensaje->addMensaje("101",":Usuario Indefinido",'information');
 			return true;
 		}
 		
-		 if($ultimoId&&$ultimoId>=0){
+	    if($ultimoId&&$ultimoId>=0){
 		 	
 		 	//set ambiente relaciones
 
@@ -731,6 +715,8 @@ class DAL{
 		 	$this->setAmbiente($tabla,$historico,$prefijo);
 		 	
 		 	$this->persistencia->setHistorico($historico);
+		 	$this->persistencia->setPrefijoColumna($prefijo);
+		 	$this->persistencia->setPrefijoColumnaH($prefijo."h");
 		 	
 		 	$parametros =  array();
 		 	$parametros['usuario_id'] = $this->usuario=='__indefinido__'?-1:$this->usuario;
@@ -749,6 +735,7 @@ class DAL{
 		 	return true;
 		 	 
 		 }
+		 
 		 $this->mensaje->addMensaje("101","errorRegistroPropietario".$this->tablaAlias,'error');
 		 return false;
 		
@@ -766,18 +753,20 @@ class DAL{
 		$tabla = $this->getObjeto($idObjeto,'id','nombre');
 		$historico = $this->getObjeto($idObjeto,'id','historico');
 		if(!$tabla) return false;
+		
 		$this->idObjetoGlobal = $idObjeto;
 		$this->tablaAlias = $this->getObjeto($idObjeto,'id','alias');
 		$historico = $this->setBool($this->getObjeto($idObjeto,'id','historico'));
 		$prefijo = $this->getObjeto($idObjeto,'id','prefijo_columna');
  
+		
 		$this->setAmbiente($tabla,$historico,$prefijo,$this->excluidos);
 		
+		$this->persistencia->setPrefijoColumna($prefijo);
+		$this->persistencia->setPrefijoColumnaH($prefijo."h");
+		
+		
 		if(!$this->validarEntrada($idObjeto, $parametros, $operacion)) return false;
-		
-		
-		
-		
 		
 		
 		//Estado historico
@@ -787,6 +776,7 @@ class DAL{
 			
 			case 1:
 				//crear
+				
 				unset($parametros['id']);
 				unset($parametros['fecha_creacion']);
 				
@@ -799,7 +789,8 @@ class DAL{
 				 
 				//registrar propietario
 						
-				if(!$this->registrarPropietario($ultimoId,$idObjeto)) return false;
+				if($this->usuario!=-1&&$this->usuario!='__indefinido__'&&!$this->registrarPropietario($ultimoId,$idObjeto)) return false;
+				
 				return $ultimoId;
 				
 				break;
@@ -822,12 +813,13 @@ class DAL{
 			
 					$leido = $this->persistencia->read($this->columnas,$this->where);
 		
-					
 					if(!$leido){
+						
 						$this->mensaje->addMensaje("101","errorLectura".$this->tablaAlias,'information');
 						return false;
 					}
 					
+					    //return $leido;
 						$lista =  array();
 						foreach($leido as $lei) $lista[] =  $this->procesarLeido($lei);
 						return $lista; 
@@ -843,12 +835,13 @@ class DAL{
 				if(!$this->procesarParametros($parametros)||
 				   !$this->setWhere('id')||
 				   !$this->persistencia->update($this->parametros,$this->valores,$this->where)){
-					return $this->persistencia->getQuery();
+					
 					$this->mensaje->addMensaje("101","errorActualizar".$this->tablaAlias,'error');
 					
 				
 					return false;
 				}
+				
 				
 				
 				break;
@@ -884,7 +877,7 @@ class DAL{
 						}while (!$creacion&&$i<self::numeroCopiasMaxima);
 							
 					  if(!$creacion){
-					  	return $this->persistencia->getQuery();
+					  	
 					  	$this->mensaje->addMensaje("101","errorDuplicar".$this->tablaAlias,'error');
 					  	return false;
 					  
@@ -894,39 +887,33 @@ class DAL{
 					  
 					  	
 					  //registrar propietario
-					  if(!$this->registrarPropietario($ultimoId,$idObjeto)) return false;
+					  if($this->usuario!=-1&&$this->usuario!='__indefinido__'&&!$this->registrarPropietario($ultimoId,$idObjeto)) return false;
 					  return $ultimoId;
-					  
-					  
-					
-					
-					
 					
 				}
 				
-				
-				
-				
-				
 				break;
 			case 5:
+				
 				//cambio activo/inactivo
 				if(!$this->procesarParametros($parametros)||!$this->setWhere('id')){
 					return false;
 				}else{
 					$leido = $this->persistencia->read($this->columnas,$this->where);
+					 
 					if(!$leido) return false;
 					$parametros = $this->procesarLeido($leido[0]);
 					
 					foreach($parametros as $a => $b){
-						if($a!='estado') unset($parametros[$a]);
+						if($a!='estado_registro_id') unset($parametros[$a]);
 					}
 					
 					//toggle
-					if($parametros['estado']==2) $parametros['estado'] = 1;
-					else $parametros['estado'] = 2;
+					if(isset($parametros['estado_registro_id'])&&$parametros['estado_registro_id']==2) $parametros['estado_registro_id'] = 1;
+					else $parametros['estado_registro_id'] = 2;
 					
-					if(!$this->procesarParametros($parametros)||!$this->persistencia->update($this->parametros,$this->valores,$this->where)){
+					if(!$this->procesarParametros(array($parametros))||!$this->persistencia->update($this->parametros,$this->valores,$this->where)){
+
 						$this->mensaje->addMensaje("101","errorCambiarEstado".$this->tablaAlias,'error');
 						return false;
 					}

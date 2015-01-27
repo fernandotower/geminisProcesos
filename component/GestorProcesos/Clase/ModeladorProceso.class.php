@@ -10,8 +10,16 @@ use component\GestorProcesos\interfaz\IModelarProceso;
 include_once ('component/GestorProcesos/Interfaz/IModeladorProcesos.php');
 
 
+include_once ('component/GestorProcesos/Clase/Flujo.class.php');
+include_once ('component/GestorProcesos/Clase/Actividad.class.php');
+
 class ModeladorProceso implements IModelarProceso {
-	var $miSql;
+	
+	var $DAL ;
+	
+	public function __construct(){
+		
+	}
 	
 	/**
 	 * (non-PHPdoc)
@@ -19,6 +27,12 @@ class ModeladorProceso implements IModelarProceso {
 	 * @see omponent\GestorProcesos\interfaz\IGestionarCalendario::crearCalendario()
 	 */
 
+	/*public function __call($metodo, $argumentos){
+		var_dump($_REQUEST);
+		return $metodo;
+		return array($metodo, $argumentos);
+		
+	}*/
     
     /**
 	 *
@@ -28,12 +42,19 @@ class ModeladorProceso implements IModelarProceso {
 	 *
 	 */
 	public function consultarFlujo($idProceso) {
-		return array();
+		
+		if(is_null($idProceso)||$idProceso=='') return false;
+		
+		$objFlujo =  new Flujo();
+		
+		
+		return $objFlujo->consultarFlujo('',$idProceso);
+		
 	}
 	
 	/**
 	 *
-	 * Crea un trabajo
+	 * 
 	 * @param $idActividad , integer obligatorio
 	 * @param $nombreActividad , string opcional
 	 * @param $aliasActividad , string opcional
@@ -45,6 +66,7 @@ class ModeladorProceso implements IModelarProceso {
 	 *
 	 */
 	public function consultarActividad($idActividad,$nombreActividad, $aliasActividad, $idElementoBpmn, $idTipoEjecucion, $estadoRegistroId, $fechaRegistro) {
-	    	return array();
+		$obj =  new Actividad();
+		return $obj->consultarActividad($idActividad,$nombreActividad, $aliasActividad, $idElementoBpmn, $idTipoEjecucion, $estadoRegistroId, $fechaRegistro);
 	}
 }

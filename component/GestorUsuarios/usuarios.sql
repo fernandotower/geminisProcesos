@@ -146,7 +146,7 @@ CREATE TABLE usuarios.relaciones_h
   rel_h_id serial NOT NULL,
   rel_id_h integer NOT NULL,
   usuario_id_h integer NOT NULL,
-  objeto_id_h integer NOT NULL,
+  objetos_id_h integer NOT NULL,
   rel_registro_h integer NOT NULL,
   permiso_id_h integer NOT NULL,
   estado_registro_id_h	 integer NOT NULL ,

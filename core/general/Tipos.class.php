@@ -36,6 +36,7 @@ class Tipos{
     	$idTipo = $idTipo;
     	$nombreTipo = $registrador->getTipoDato($tipo,'id','nombre');
     	$aliasTipo = $registrador->getTipoDato($tipo,'id','alias');
+    	
     	unset($registrador);
     	return array("id" =>$idTipo,"nombre" =>$nombreTipo,"alias" =>$aliasTipo);
     	

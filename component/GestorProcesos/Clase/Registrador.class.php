@@ -9,14 +9,14 @@ use component\GestorProcesos\interfaz\IRegistrar;
 include_once ('component/GestorProcesos/Interfaz/IRegistrador.php');
 
 
+include_once ('component/GestorProcesos/Clase/PasosTrabajo.class.php');
+include_once ('component/GestorProcesos/Clase/Trabajo.class.php');
+
 class Registrador implements IRegistrar {
 	var $miSql;
 	
-	/**
-	 * (non-PHPdoc)
-	 *
-	 * @see \component\Calendar\interfaz\IGestionarCalendario::crearCalendario()
-	 */
+	
+	
 
 	
 	/**
@@ -28,8 +28,9 @@ class Registrador implements IRegistrar {
 	 * @return bool
 	 *
 	 */
-	public function actualizarEstadoPaso($idTrabajo, $idActividad ,$idEstadoPaso) {
-		return true;
+	public function actualizarEstadoPaso($idTrabajo = '', $idActividad = '' ,$idEstadoPaso = '') {
+		$pasos =  new PasosTrabajo();
+		return $pasos->actualizarEstadoPaso($idTrabajo, $idActividad ,$idEstadoPaso);
 	}
 	
 	/**
@@ -39,8 +40,9 @@ class Registrador implements IRegistrar {
 	 * @return integer , $idTrabajo
 	 *
 	 */
-	public function crearTrabajo($idProceso) {
-		return 1;
+	public function crearTrabajo($idProceso = '') {
+		$trabajo =  new Trabajo();
+		return $trabajo->crearTrabajo($idProceso);
 	}
 	
 	/**
@@ -54,9 +56,10 @@ class Registrador implements IRegistrar {
 	 * @return array , array de la consulta
 	 *
 	 */
-	public function consultarPasos($idTrabajo, $idActividad, $idEstadoPaso, $idEstadoRegistro, $fechaRegistro) {
-		$idEstadoRegistro = 1;
-		return array();
+	public function consultarPasos($idTrabajo = '', $idActividad = '', $idEstadoPaso = '', $idEstadoRegistro= '', $fechaRegistro= '') {
+		
+		$pasos =  new PasosTrabajo();
+		return $pasos->consultarPasosTrabajo($idTrabajo, $idActividad, $idEstadoPaso, $idEstadoRegistro, $fechaRegistro);
 	
 	}
 
