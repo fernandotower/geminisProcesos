@@ -19,9 +19,9 @@ ALTER TABLE proceso.grupo_elemento_bpmn
 
 insert into proceso.grupo_elemento_bpmn (grupo_elemento_bpmn_nombre,grupo_elemento_bpmn_alias,grupo_elemento_bpmn_descripcion)
 VALUES
-('evento','Evento','Acción que sucede durante el curso del proceso, afectan el flujo de proceso y normalmente tienen una causa (trigger) o resultado'),
+('evento','Evento','Acciï¿½n que sucede durante el curso del proceso, afectan el flujo de proceso y normalmente tienen una causa (trigger) o resultado'),
 ('tarea','Tarea','Es el llamado a una funcion o aplicacion'),
-('compuerta','Compuerta','Acción usada para la toma de decisiones del flujo del proceso');
+('compuerta','Compuerta','Acciï¿½n usada para la toma de decisiones del flujo del proceso');
 
 ----------Tabla elemento_bpmn
 
@@ -49,15 +49,15 @@ values
 ('eventoInicio','Evento de Inicio',1,'representa el punto de inicio de un proceso'),
 ('eventoIntermedio','Evento intermedio',1,'Ocurre entre un evento de inicio y de fin'),
 ('eventoFin','Evendo de fin',1,'Es el que indica cuando un proceso termina'),
-('tareaHumana','Tarea Humana',2,'intervención de un humano para su ejecución'),
-('tareaServicio','Tarea de Servicio',2,'llamado a un servicio realizada por el sistema sin intervención humana'),
+('tareaHumana','Tarea Humana',2,'intervenciï¿½n de un humano para su ejecuciï¿½n'),
+('tareaServicio','Tarea de Servicio',2,'llamado a un servicio realizada por el sistema sin intervenciï¿½n humana'),
 ('tareaLlamada','Tarea de LLamada',2,'Se debe poder referenciar a un proceso o tarea, definida de forma
 global, que se reutiliza en el proceso actual'),
 ('tareaRecibirMensaje','Tarea de recibir mensaje',2,'recibe un mensaje, y que una vez el mensaje haya sido recibido, la tarea es completada'),
-('tareaEnviarMensaje','Tarea de enviar mensaje',2,'designada para enviar un mensaje a un proceso o caso específico, y que, una vez el mensaje haya sido enviado, la tarea es completada'),
-('tareaScript','Tarea de script',2,'tarea automática en la que el servidor ejecuta un script. No tienen interacción humana y no se conecta con ningún servicio externo'),
+('tareaEnviarMensaje','Tarea de enviar mensaje',2,'designada para enviar un mensaje a un proceso o caso especï¿½fico, y que, una vez el mensaje haya sido enviado, la tarea es completada'),
+('tareaScript','Tarea de script',2,'tarea automï¿½tica en la que el servidor ejecuta un script. No tienen interacciï¿½n humana y no se conecta con ningï¿½n servicio externo'),
 ('tareaTemporizador','Tarea de temporizador',2,'ejecuta un espera antes de ser completada'),
-('compuertaOr','Compuerta inclusiva OR',3,'Inclusiva o multi-decisión. Uno o más caminos pueden ser activados. Uno o más caminos deben sincronizarse dependiendo de las actividades anteriores de la misma figura'),
+('compuertaOr','Compuerta inclusiva OR',3,'Inclusiva o multi-decisiï¿½n. Uno o mï¿½s caminos pueden ser activados. Uno o mï¿½s caminos deben sincronizarse dependiendo de las actividades anteriores de la misma figura'),
 ('compuertaXor','Compuerta exclusiva XOR',3,'Solo toma un camino e ignora los demas'),
 ('compuertaAnd','Compuerta paralela AND',3,'Activa todos los caminos que dependen de ella y valida que todos los que lleguen se cumplan');
 
@@ -242,7 +242,7 @@ CREATE TABLE proceso.flujo_proceso
 (
   flujo_proceso_id serial NOT NULL,
   proceso_id integer NOT NULL,
-  actividad_padre_id integer NOT NULL,
+  actividad_padre_id integer ,
   actividad_hijo_id integer NOT NULL,
   flujo_proceso_orden_evaluacion_condicion integer NOT NULL,
   flujo_proceso_condicion boolean NOT NULL DEFAULT false,
@@ -277,7 +277,7 @@ CREATE TABLE proceso.flujo_proceso_h
   flujo_proceso_h_id serial NOT NULL,
   flujo_proceso_id_h integer NOT NULL,
   proceso_id_h integer NOT NULL,
-  actividad_padre_id_h integer NOT NULL,
+  actividad_padre_id_h integer ,
   actividad_hijo_id_h integer NOT NULL,
   flujo_proceso_orden_evaluacion_condicion_h integer NOT NULL,
   flujo_proceso_condicion_h boolean NOT NULL DEFAULT false,
