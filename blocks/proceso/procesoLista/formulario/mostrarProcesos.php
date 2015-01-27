@@ -24,7 +24,6 @@ class MostradorCalendario {
 		$this->miComponente->ejecutarProceso();
 		exit;
 		
-		
 		$usuario = $_REQUEST ['id_usuario'];
 		$resultadoMiCalendario = $this->miComponente->consultarCalendariosUsuario ( $usuario );
 		$registro = $resultadoMiCalendario;

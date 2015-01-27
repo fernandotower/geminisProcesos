@@ -12,52 +12,6 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 	/**
 	 * (non-PHPdoc)
 	 *
-	 * @see \component\GestorProcesos\interfaz\ICoordinarFlujo::ejecutarActividad()
-	 */
-	public function ejecutarActividad($actividad) {
-		echo $actividad;
-		$actividad = $actividad;
-		// 1. determina el tipo de objeto bpmn con el id
-		
-		switch ($actividad) {
-			case 'eventoInicio' :
-				$this->ejecutarEventoInicio ();
-			case 'eventoIntermedio' :
-				$this->ejecutarEventoIntermedio ();
-			case 'eventoFin' :
-				$this->ejecutarEventoFin ();
-			case 'tareaHumana' :
-				$this->ejecutarTareaHumana ();
-			case 'tareaServicio' :
-				$this->ejecutarTareaServicio ();
-			case 'tareaLlamada' :
-				$this->ejecutarTareaLlamada ();
-			case 'tareaRecibirMensaje' :
-				$this->ejecutarTareaRecibirMensaje ();
-			case 'tareaEnviarMensaje' :
-				$this->ejecutarTareaEnviarMensaje ();
-			case 'tareaScript' :
-				$this->ejecutarTareaScript ();
-			case 'tareaTemporizador' :
-				$this->ejecutarTareaTemporizador ();
-			case 'compuertaOr' :
-				$this->ejecutarCompuertaOr ();
-			case 'compuertaXor' :
-				$this->ejecutarCompuertaXor ();
-			case 'compuertaAnd' :
-				$this->ejecutarCompuertaAnd ();
-			
-			default :
-				echo 'No existe el elemento bpmn';
-		}
-		// 2. ejecuta las acciones asociadas al objeto bpmn
-		
-		return true;
-	}
-	
-	/**
-	 * (non-PHPdoc)
-	 *
 	 * @see \component\GestorProcesos\interfaz\ICoordinarFlujo::ejecutarProceso()
 	 */
 	public function ejecutarProceso() {
@@ -167,19 +121,12 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 		
 		// 2. crear trabajo
 		
-		// 3. consultar paso(s) actuales
-		
-		$pasos [] = [ 
-				3,
-				4 
-		];
-		
 		// si alguna de las pasos se ejecuta (TRUE) se vueven a consultar los pasos y
 		// se solicita la ejecución de las actividades.
-		$resultadoEjecucion == TRUE;
+		$resultadoEjecucion = TRUE;
 		while ( $resultadoEjecucion == TRUE ) {
-			$pasos = $this->consultarPasos ( $id_trabajo );
-			$resultadoEjecucion = $this->ejecutarActividad ( $pasos );
+			$pasos = $this->consultarPasos ( 50 );
+			$resultadoEjecucion = $this->ejecutarActividades ( $pasos );
 		}
 		
 		return FALSE;
@@ -187,26 +134,95 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 		// 6. registrar ejecución
 		// 7. actualizar pasos
 	}
-	private function consultarPasos($id_trabajo) {
-		;
-	}
 	
 	/**
-	 * Ejecuta los pasos que se pasan,
+	 * Ejecuta las actividades correspondentes a los pasos del flujo recibidos
 	 * retorna TRUE si alguno de los pasos se ejecutó
 	 * si ninguno se ejecuta retorna FALSE.
 	 *
 	 * @param array $pasos        	
-	 * @return unknown
+	 * @return boolean
 	 */
 	private function ejecutarActividades($pasos) {
+		$avanzar = FALSE;
 		foreach ( $pasos as $paso ) {
-			$resultadoEjecucionActividad = $this->ejecutarActividad ( 'compuertaAnd' );
+			$actividad = $this->consultarActividad ( $paso );
+			// se deben pasar todos los datos de la actividad,
+			// es decir todo el registro obtenido de la consulta
+			
+			$resultadoEjecucionActividad = $this->ejecutarActividad ( $actividad, $paso );
 			if ($resultadoEjecucionActividad == TRUE) {
-				return TRUE;
+				$avanzar = TRUE;
 			}
 		}
-		return FALSE;
+		return $avanzar;
+	}
+	private function consultarPasos($id_trabajo) {
+		$pasos = [ 
+				3 
+		];
+		return $pasos;
+	}
+	private function consultarActividad($paso) {
+		$actividad ['id_actividad'] = '25';
+		$actividad ['tipo_elementoBpmn'] = 'compuertaAnd';
+		return $actividad;
+	}
+	
+	/**
+	 * (non-PHPdoc)
+	 *
+	 * @see \component\GestorProcesos\interfaz\ICoordinarFlujo::ejecutarActividad()
+	 */
+	public function ejecutarActividad($actividad, $paso) {
+		
+		// 1. determina el tipo de objeto bpmn con el id
+		switch ($actividad ['tipo_elementoBpmn']) {
+			case 'eventoInicio' :
+				return $this->ejecutarEventoInicio ();
+				break;
+			case 'eventoIntermedio' :
+				$this->ejecutarEventoIntermedio ();
+				break;
+			case 'eventoFin' :
+				$this->ejecutarEventoFin ();
+				break;
+			case 'tareaHumana' :
+				$this->ejecutarTareaHumana ();
+				break;
+			case 'tareaServicio' :
+				$this->ejecutarTareaServicio ();
+				break;
+			case 'tareaLlamada' :
+				$this->ejecutarTareaLlamada ();
+				break;
+			case 'tareaRecibirMensaje' :
+				$this->ejecutarTareaRecibirMensaje ();
+				break;
+			case 'tareaEnviarMensaje' :
+				$this->ejecutarTareaEnviarMensaje ();
+				break;
+			case 'tareaScript' :
+				$this->ejecutarTareaScript ();
+				break;
+			case 'tareaTemporizador' :
+				$this->ejecutarTareaTemporizador ();
+				break;
+			case 'compuertaOr' :
+				$this->ejecutarCompuertaOr ();
+				break;
+			case 'compuertaXor' :
+				$this->ejecutarCompuertaXor ($paso);
+				break;
+			case 'compuertaAnd' :
+				return $this->ejecutarCompuertaAnd ($paso);
+				break;
+			
+			default :
+				echo 'No existe el elemento bpmn';
+				break;
+		}
+		// 2. ejecuta las acciones asociadas al objeto bpmn
 	}
 	
 	//
@@ -244,24 +260,50 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 		true;
 	}
 	private function ejecutarTareaLlamada($valor) {
-		// No definido
+		return FALSE;
 	}
 	private function ejecutarTareaRecibirMensaje($valor) {
+		return FALSE;
 	}
 	private function ejecutarTareaEnviarMensaje($valor) {
+		return FALSE;
 	}
 	private function ejecutarTareaScript($valor) {
+		return FALSE;
 	}
 	private function ejecutarTareaTemporizador($valor) {
+		return FALSE;
 	}
-	private function ejecutarCompuertaOr($valor) {
+	private function ejecutarCompuertaOr() {
+		return FALSE;
 		// 1.
 	}
-	private function ejecutarCompuertaXor($valor) {
+	
+	/**
+	 * 
+	 * @param array $paso
+	 * @return boolean
+	 */
+	private function ejecutarCompuertaXor($paso) {
+		
+		
+		//1. consulta los hijos (registros complero del paso)
+		//2. los organiza por prioridad, al final la condición default
+		//	para cada hijo
+		//3. evalua condicion
+		// si TRUE: actualiza actividad y registra actividad hijo y return TRUE, 
+		// si FALSE: no hace nada;
+		//5. Si ninguna condición es verdadera activa la actividad asociada la condición Default y return=TRUE		
+		
+		return FALSE;
+		
+		
 	}
-	private function ejecutarCompuertaAnd() {
+	private function ejecutarCompuertaAnd($paso) {
+		echo 'estoy en la compuestaAnd';
+		return FALSE;
 		$paso = 3;
-		// Consulta todas las actividades padre
+		// Consulta todas las actividades padre del paso del flujo
 		$padres = $this->consultarAtividadesPadre ( $paso );
 		// consulta si estan terminadas
 		// $actividades='aqui va la consulta';
@@ -292,25 +334,25 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 	// Ejecucion accion , retorna el valor de la ejecucion
 	//
 	private function procesarRegla() {
-		return true;
+		return FALSE;
 	}
 	private function procesarFuncion() {
-		return true;
+		return FALSE;
 	}
 	private function procesarWSSoap() {
-		return true;
+		return FALSE;
 	}
 	private function procesarEnviarMensaje() {
-		return true;
+		return FALSE;
 	}
 	private function procesarRecibirMensaje() {
-		return true;
+		return FALSE;
 	}
 	private function procesarTemporizador() {
-		return true;
+		return FALSE;
 	}
 	private function procesarGET() {
-		return true;
+		return FALSE;
 	}
 	
 	/**
