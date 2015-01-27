@@ -18,6 +18,8 @@ include_once ("core/general/Rango.class.php");
 include_once ("core/general/Tipos.class.php");
 include_once ("component/GestorProcesos/Componente.php");
 
+use component\GestorProcesos\Componente as GestorProcesos;
+
 // Elementos que constituyen un bloque típico CRUD.
 
 // Interfaz gráfica
@@ -72,7 +74,15 @@ if (!class_exists ( '\\proceso\\procesoLista\\Bloque' )) {
 			
 			//var_dump($_REQUEST);
 			$dal = new \DAL();
-			$dal->setEstadoHistorico(true);
+			//$dal->setEstadoHistorico(true);
+			//$dal->setConexion('academica');
+			//$dal->setConexion('estructura');
+			//var_dump($dal->getListaOperacion());
+			//var_dump($dal->consultarFlujoProceso());
+			//var_dump($dal->getQuery());
+			//var_dump($dal->getConexion());
+			//var_dump($dal->getTablaAlias());
+			//exit;
 			//var_dump(\Tipos::validarTipo(3.3,3));
 			//var_dump(\Tipos::validarTipo('',6));
 			//var_dump(\Tipos::evaluarTipo('hhh',6));
@@ -94,7 +104,14 @@ if (!class_exists ( '\\proceso\\procesoLista\\Bloque' )) {
 			//var_dump($dal->duplicarUsuario($parametros));
 			//$per = new \Persistencia('estructura','core.core_objetos');
 			//var_dump($per->getListaColumnas());
-			//exit;
+			
+			$gp = new GestorProcesos;
+			$idProceso = 1;
+			var_dump($gp->ejecutarProceso($idProceso));
+			
+			
+			
+			exit;
 			
 			if (isset ( $_REQUEST ['botonCancelar'] ) && $_REQUEST ['botonCancelar'] == "true") {
 				$this->miFuncion->redireccionar ( "paginaPrincipal" );

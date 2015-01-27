@@ -76,8 +76,8 @@ class Componente extends Component implements ICoordinadorFlujo, ICoordinadorPro
 	 * @return integer , $idTrabajo
 	 *        
 	 */
-	function ejecutarProceso() {
-		return $this->miFlujo->ejecutarProceso ();
+	function ejecutarProceso($idProceso = '',$ejecucionAutomatica = true) {
+		return $this->miFlujo->ejecutarProceso ($idProceso ,$ejecucionAutomatica);
 	}
 
 	
@@ -173,7 +173,7 @@ class Componente extends Component implements ICoordinadorFlujo, ICoordinadorPro
 	 * @return array , consulta
 	 *        
 	 */
-	function consultarActividad($idActividad, $nombreActividad, $aliasActividad, $idElementoBpmn, $idTipoEjecucion, $estadoRegistroId, $fechaRegistro) {
+	function consultarActividad($idActividad = '',$nombreActividad = '', $aliasActividad = '', $idElementoBpmn = '', $idTipoEjecucion = '', $estadoRegistroId = '', $fechaRegistro= '') {
 		$this->miModeloProceso->consultarActividad ( $idActividad, $nombreActividad, $aliasActividad, $idElementoBpmn, $idTipoEjecucion, $estadoRegistroId, $fechaRegistro );
 	}
 }

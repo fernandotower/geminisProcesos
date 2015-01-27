@@ -32,6 +32,9 @@ class Flujo{
     	//if(!is_null($tipoEjecucionId)&&$tipoEjecucionId!= '') $parametros['tipo_ejecucion_id'] = $tipoEjecucionId;
     	
     	$dal =  new \DAL();
+    	$dal->setConexion('academica');
+    	
+    	//
     	
     	return $dal-> consultarFlujoProceso($parametros);
     	

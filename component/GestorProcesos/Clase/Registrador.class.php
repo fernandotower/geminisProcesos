@@ -11,6 +11,8 @@ include_once ('component/GestorProcesos/Interfaz/IRegistrador.php');
 
 include_once ('component/GestorProcesos/Clase/PasosTrabajo.class.php');
 include_once ('component/GestorProcesos/Clase/Trabajo.class.php');
+include_once ('core/connection/DAL.class.php');
+
 
 class Registrador implements IRegistrar {
 	var $miSql;
@@ -31,6 +33,11 @@ class Registrador implements IRegistrar {
 	public function actualizarEstadoPaso($idTrabajo = '', $idActividad = '' ,$idEstadoPaso = '') {
 		$pasos =  new PasosTrabajo();
 		return $pasos->actualizarEstadoPaso($idTrabajo, $idActividad ,$idEstadoPaso);
+	}
+	
+	public function crearPaso($idTrabajo = '', $idActividad = '' ,$idEstadoPaso = '') {
+		$pasos =  new PasosTrabajo();
+		return $pasos->crearPaso($idTrabajo, $idActividad ,$idEstadoPaso);
 	}
 	
 	/**
@@ -61,6 +68,13 @@ class Registrador implements IRegistrar {
 		$pasos =  new PasosTrabajo();
 		return $pasos->consultarPasosTrabajo($idTrabajo, $idActividad, $idEstadoPaso, $idEstadoRegistro, $fechaRegistro);
 	
+	}
+	
+	public function getElementoBpmn($idElementoBpmn,$dado,$buscar){
+		$dal =  new \DAL;
+		$dal->setConexion('academica');
+		return $dal->getElementoBpmn($idElementoBpmn,$dado,$buscar); 
+		;
 	}
 
 }

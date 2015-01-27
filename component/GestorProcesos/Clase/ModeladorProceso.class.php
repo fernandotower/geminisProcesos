@@ -47,7 +47,6 @@ class ModeladorProceso implements IModelarProceso {
 		
 		$objFlujo =  new Flujo();
 		
-		
 		return $objFlujo->consultarFlujo('',$idProceso);
 		
 	}
@@ -65,7 +64,7 @@ class ModeladorProceso implements IModelarProceso {
 	 * @return array , consulta array
 	 *
 	 */
-	public function consultarActividad($idActividad,$nombreActividad, $aliasActividad, $idElementoBpmn, $idTipoEjecucion, $estadoRegistroId, $fechaRegistro) {
+	public function consultarActividad($idActividad = '',$nombreActividad = '', $aliasActividad = '', $idElementoBpmn = '', $idTipoEjecucion = '', $estadoRegistroId = '', $fechaRegistro= '') {
 		$obj =  new Actividad();
 		return $obj->consultarActividad($idActividad,$nombreActividad, $aliasActividad, $idElementoBpmn, $idTipoEjecucion, $estadoRegistroId, $fechaRegistro);
 	}

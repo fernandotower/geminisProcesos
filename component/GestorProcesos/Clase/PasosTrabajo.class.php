@@ -12,7 +12,20 @@ class PasosTrabajo{
     	
     }
     
-    public function crearPasoTrabajo(){
+    public function crearPaso($idTrabajo = '', $idActividad = '' ,$idEstadoPaso = ''){
+    	
+    	if(is_null($idTrabajo)||is_null($idActividad)||is_null($idEstadoPaso)) return false;
+    	if($idTrabajo==''||$idActividad==''||$idEstadoPaso=='') return false;
+    	
+    	$parametros['trabajo_id'] = $idTrabajo;
+    	$parametros['actividad_id'] = $idActividad;
+    	$parametros['estado_paso_id'] = $idEstadoPaso;
+    	$parametros['estado_registro_id'] = 1;
+    	 
+    	 
+    	$dal = new \ DAL();
+    	$dal->setConexion('academica');
+    	return $dal->crearPasosTrabajo($parametros);
     	
     }
     
@@ -25,12 +38,14 @@ class PasosTrabajo{
     	$parametros['trabajo_id'] = $idTrabajo;
     	$parametros['actividad_id'] = $idActividad;
     	$parametros['estado_paso_id'] = $idEstadoPaso;
+    	
     	 
     	
     	
     	$dal = new \ DAL();
     	
     	
+    	$dal->setConexion('academica');
     	
     	return $dal->actualizarPasosTrabajo($parametros);
     }
@@ -52,7 +67,7 @@ class PasosTrabajo{
     	$dal = new \ DAL();
     	 
     	 
-    	 
+    	$dal->setConexion('academica');
     	return $dal->consultarPasosTrabajo($parametros);
     	
     }

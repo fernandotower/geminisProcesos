@@ -21,7 +21,7 @@ class Trabajo{
     	$parametros['estado_registro_id'] = 1;
     	
     	$obj =  new \DAL();
-    	
+    	$obj->setConexion('academica');
     	return $obj->crearTrabajo($parametros);
     	 
     	 

@@ -4,129 +4,59 @@ namespace component\GestorProcesos\Clase;
 
 use component\GestorProcesos\interfaz\ICoordinadorFlujo;
 
+use component\GestorProcesos\Clase\Registrador as Registrador;
+use component\GestorProcesos\Clase\ModeladorProceso as ModeladorProceso;
+
 include_once ('component/GestorProcesos/Interfaz/ICoordinadorFlujo.php');
+
+
 class CoordinadorFlujo implements ICoordinadorFlujo {
 	var $miSql;
 	var $flujoTrabajo;
-	
+	private $registrador;
+	private $modelador;
+
+	public function __construct(){
+		$this->registrador =  new Registrador;
+		$this->modelador =  new ModeladorProceso;
+	}
 	/**
 	 * (non-PHPdoc)
 	 *
 	 * @see \component\GestorProcesos\interfaz\ICoordinarFlujo::ejecutarProceso()
 	 */
-	public function ejecutarProceso() {
+	public function ejecutarProceso($idProceso = '',$ejecucionAutomatica = true) {
 		
 		// 1. Consultar flujo
-		$this->flujoTrabajo [] = [ 
-				'flujo_proceso_id' => '1',
-				'proceso_id' => '1',
-				'actividad_padre_id' => 'NULL',
-				'actividad_hijo_id' => '1',
-				'flujo_proceso_orden_evaluacion_condicion' => '-1',
-				'flujo_proceso_condicion' => '-1',
-				'tipo_ejecucion_id' => '',
-				'flujo_proceso_ruta_ejecucion_condicion' => '',
-				'estado_registro_id' => '1',
-				'flujo_proceso_fecha_registro' => '2015/01/01' 
-		];
-		$this->flujoTrabajo [] = [ 
-				'flujo_proceso_id' => '1',
-				'proceso_id' => '1',
-				'actividad_padre_id' => '1',
-				'actividad_hijo_id' => '2',
-				'flujo_proceso_orden_evaluacion_condicion' => '-1',
-				'flujo_proceso_condicion' => '-1',
-				'tipo_ejecucion_id' => '',
-				'flujo_proceso_ruta_ejecucion_condicion' => '',
-				'estado_registro_id' => '1',
-				'flujo_proceso_fecha_registro' => '2015/01/01' 
-		];
-		$this->flujoTrabajo [] = [ 
-				'flujo_proceso_id' => '1',
-				'proceso_id' => '1',
-				'actividad_padre_id' => '2',
-				'actividad_hijo_id' => '3',
-				'flujo_proceso_orden_evaluacion_condicion' => '-1',
-				'flujo_proceso_condicion' => '-1',
-				'tipo_ejecucion_id' => '',
-				'flujo_proceso_ruta_ejecucion_condicion' => '',
-				'estado_registro_id' => '1',
-				'flujo_proceso_fecha_registro' => '2015/01/01' 
-		];
-		$this->flujoTrabajo [] = [ 
-				'flujo_proceso_id' => '1',
-				'proceso_id' => '1',
-				'actividad_padre_id' => '3',
-				'actividad_hijo_id' => '4',
-				'flujo_proceso_orden_evaluacion_condicion' => '-1',
-				'flujo_proceso_condicion' => '-1',
-				'tipo_ejecucion_id' => '',
-				'flujo_proceso_ruta_ejecucion_condicion' => '',
-				'estado_registro_id' => '1',
-				'flujo_proceso_fecha_registro' => '2015/01/01' 
-		];
-		$this->flujoTrabajo [] = [ 
-				'flujo_proceso_id' => '1',
-				'proceso_id' => '1',
-				'actividad_padre_id' => '3',
-				'actividad_hijo_id' => '5',
-				'flujo_proceso_orden_evaluacion_condicion' => '-1',
-				'flujo_proceso_condicion' => '-1',
-				'tipo_ejecucion_id' => '',
-				'flujo_proceso_ruta_ejecucion_condicion' => '',
-				'estado_registro_id' => '1',
-				'flujo_proceso_fecha_registro' => '2015/01/01' 
-		];
 		
-		$this->flujoTrabajo [] = [ 
-				'flujo_proceso_id' => '1',
-				'proceso_id' => '1',
-				'actividad_padre_id' => '4',
-				'actividad_hijo_id' => '6',
-				'flujo_proceso_orden_evaluacion_condicion' => '-1',
-				'flujo_proceso_condicion' => '-1',
-				'tipo_ejecucion_id' => '',
-				'flujo_proceso_ruta_ejecucion_condicion' => '',
-				'estado_registro_id' => '1',
-				'flujo_proceso_fecha_registro' => '2015/01/01' 
-		];
+		$this->flujoTrabajo = $this->modelador->consultarFlujo($idProceso);
 		
-		$this->flujoTrabajo [] = [ 
-				'flujo_proceso_id' => '1',
-				'proceso_id' => '1',
-				'actividad_padre_id' => '5',
-				'actividad_hijo_id' => '6',
-				'flujo_proceso_orden_evaluacion_condicion' => '-1',
-				'flujo_proceso_condicion' => '-1',
-				'tipo_ejecucion_id' => '',
-				'flujo_proceso_ruta_ejecucion_condicion' => '',
-				'estado_registro_id' => '1',
-				'flujo_proceso_fecha_registro' => '2015/01/01' 
-		];
+		if(!is_array($this->flujoTrabajo)) return false;
 		
-		$this->flujoTrabajo [] = [ 
-				'flujo_proceso_id' => '1',
-				'proceso_id' => '1',
-				'actividad_padre_id' => '6',
-				'actividad_hijo_id' => '7',
-				'flujo_proceso_orden_evaluacion_condicion' => '-1',
-				'flujo_proceso_condicion' => '-1',
-				'tipo_ejecucion_id' => '',
-				'flujo_proceso_ruta_ejecucion_condicion' => '',
-				'estado_registro_id' => '1',
-				'flujo_proceso_fecha_registro' => '2015/01/01' 
-		];
+		//actividad null es la prima que se ejecuta
+		$idActividadInicio = $this->consultarAtividadesHijo(null)[0];
 		
-		// var_dump ( $this->flujoTrabajo );
+		if(!$idActividadInicio) return false;
 		
 		// 2. crear trabajo
+		$idTrabajo =  $this->registrador->crearTrabajo($idProceso);
+		if(!$idTrabajo) return false;
+		
+		//crear paso con la primera actividad
+		
+		$idPaso = $this->registrador->crearPaso($idTrabajo, $idActividadInicio ,1);
+		
+		
 		
 		// si alguna de las pasos se ejecuta (TRUE) se vueven a consultar los pasos y
 		// se solicita la ejecución de las actividades.
 		$resultadoEjecucion = TRUE;
 		while ( $resultadoEjecucion == TRUE ) {
-			$pasos = $this->consultarPasos ( 50 );
-			$resultadoEjecucion = $this->ejecutarActividades ( $pasos );
+			//$pasos = $this->consultarPasos ( 50 );
+			$pasos =  $this->registrador->consultarPasos($idTrabajo);
+			
+			$resultadoEjecucion = $this->ejecutarActividades( $pasos );
+			
 		}
 		
 		return FALSE;
@@ -134,6 +64,8 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 		// 6. registrar ejecución
 		// 7. actualizar pasos
 	}
+	
+	
 	
 	/**
 	 * Ejecuta las actividades correspondentes a los pasos del flujo recibidos
@@ -146,12 +78,19 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 	private function ejecutarActividades($pasos) {
 		$avanzar = FALSE;
 		foreach ( $pasos as $paso ) {
-			$actividad = $this->consultarActividad ( $paso );
+			$actividad = $this->modelador->consultarActividad ( $paso['actividad_id'] )[0];
+			 
 			// se deben pasar todos los datos de la actividad,
 			// es decir todo el registro obtenido de la consulta
 			
 			$resultadoEjecucionActividad = $this->ejecutarActividad ( $actividad, $paso );
+			
+			 
 			if ($resultadoEjecucionActividad == TRUE) {
+				//registrar la ejecucion en la tabla de pasos
+				
+				//crear nuevo paso en la tabla de pasos
+				
 				$avanzar = TRUE;
 			}
 		}
@@ -180,10 +119,15 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 	 *
 	 * @see \component\GestorProcesos\interfaz\ICoordinarFlujo::ejecutarActividad()
 	 */
-	public function ejecutarActividad($actividad, $paso) {
+	//public function ejecutarActividad($actividad, $paso) {
+	public function ejecutarActividad($actividad) {	
+		
+		//id elemento bpmn de la actividad
+		$idElementoBpmn = $actividad['elemento_bpmn_id'];
+		$nombreElementoBpmn = $this->registrador->getElementoBpmn($idElementoBpmn,'id','nombre');
 		
 		// 1. determina el tipo de objeto bpmn con el id
-		switch ($actividad ['tipo_elementoBpmn']) {
+		switch ($nombreElementoBpmn) {
 			case 'eventoInicio' :
 				return $this->ejecutarEventoInicio ();
 				break;
@@ -260,6 +204,7 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 		// 4. para solicitar su ejecución nuevamente, se debe realizar de forma manual desde el flujo
 		// 5. En este momento verifica que se haya realizado lo referente a la tarea (puede ser un bit bandera).
 		// 6. Retorna al paso 1
+		return true;
 	}
 	private function ejecutarTareaServicio($valor) {
 		// llama servicio si se ejecutó retorna true;
@@ -374,7 +319,7 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 				$hijos [] = $relacion ['actividad_hijo_id'];
 			}
 		}
-		if (is_array ( $padres )) {
+		if (is_array ( $hijos )) {
 			return $hijos;
 			;
 		} else {

@@ -33,6 +33,7 @@ class Actividad{
     	if(!is_null($estadoRegistroId)&&$fechaRegistro!='') $parametros['fecha_registro'] = $fechaRegistro;
     	 
     	$dal =  new \DAL();
+    	$dal->setConexion('academica');
     	 
     	return $dal-> consultarActividad($parametros);
     	

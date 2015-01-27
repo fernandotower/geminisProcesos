@@ -24,7 +24,7 @@ interface ICoordinadorFlujo {
 	 *
 	 */
 
-	function ejecutarProceso();
+	function ejecutarProceso($idProceso ,$ejecucionAutomatica );
 
 }
 

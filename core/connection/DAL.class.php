@@ -112,7 +112,10 @@ class DAL{
 			else $this->setPrefijoColumna($this->persistencia->getPrefijoColumna().'_');
 			
 			$this->setExcluidos($excluidos);
+			$conexion = $this->getConexion();
+			$this->setConexion('estructura'); 
 			$this->recuperarColumnas();
+			$this->setConexion($conexion);
 			
 		}
 		return false;
@@ -123,6 +126,16 @@ class DAL{
 		
 	}
 	
+	public function getTabla(){
+		return $this->tabla ;
+	
+	}
+	
+	public function getTablaAlias(){
+		return $this->tablaAlias ;
+	
+	}
+	
 	public function setEstadoHistorico($estado =  ''){
 		if($estado!='') $this->historico =  (bool) $estado; 
 		else $this->historico =  self::estadoHistorico;
@@ -130,6 +143,14 @@ class DAL{
 	
 	public function getEstadoHistorico(){
 		return $this->historico;
+	}
+	
+	public function setConexion($conexion = ''){
+		$this->conexion = $conexion;
+	}
+	
+	public function getConexion(){
+		return $this->conexion ;
 	}
 	
 	private function crearPersistencia(){
@@ -224,6 +245,7 @@ class DAL{
 	}
 	
 	private function getLista($nombre,$prefijo){
+		
 		$lista_obj = $this->recuperarListado($nombre,$prefijo);
 		 
 		$lista = array();
@@ -247,6 +269,7 @@ class DAL{
 		$lista=  array();
 		$this->persistencia =  new Persistencia($this->conexion,$nombre);
 		$listaColumnas = $this->persistencia->getListaColumnas();
+		
 		
 		if(is_array($listaColumnas)){
 			$lista = $this->persistencia->read($listaColumnas);
@@ -293,7 +316,7 @@ class DAL{
 			return call_user_func_array(array($this , $method_name), $arguments);
 		
 		
-		//Verifica si se solicitó getLista
+		//Verifica si se solicitï¿½ getLista
 
 		if (strpos($method_name,'getLista') !== false) {
 			
@@ -311,11 +334,13 @@ class DAL{
 			$alias = $this->getObjeto($idObjeto,'id','alias');
 			$prefijo = $this->getObjeto($idObjeto,'id','prefijo_columna');
 			$nombre = $this->getObjeto($idObjeto,'id','nombre');
+			
+			
 			return $this->getLista($nombre,$prefijo);
 			
 		}
 		
-		//verifica si se solicitó get
+		//verifica si se solicitï¿½ get
 		if (strpos($method_name,'get') !== false) {
 				
 			$objeto = str_replace('get','',$method_name);
@@ -337,10 +362,14 @@ class DAL{
 				
 		}
 		
-		//verifica si se solicitó consultar, crear, duplicar, cambiarEstado , eliminar, actualizar
+		//verifica si se solicitï¿½ consultar, crear, duplicar, cambiarEstado , eliminar, actualizar
 		
 		//obtener lista tabla de operaciones
+ 		$conexionActual =  $this->conexion;
+		$this->setConexion('estructura');
+		
 		$listaOperaciones =  $this->getListaOperacion();
+		$this->setConexion($conexionActual);
 		$operacionSeleccion = '';
 		foreach ($listaOperaciones as $fila){
 			if (strpos($method_name,$fila['nombre']) !== false) {
@@ -360,8 +389,13 @@ class DAL{
 				return false;
 			}
 		
+			$conexionActual =  $this->conexion;
+			$this->setConexion('estructura');
 		    $idOperacion = $this->getOperacion($operacionSeleccion,'nombre','id');
-		       
+		    $this->setConexion($conexionActual);
+		    
+		    
+		    
 			return $this->ejecutar($idObjeto,$arguments,$idOperacion);
 			
 		
