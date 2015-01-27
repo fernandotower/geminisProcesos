@@ -163,6 +163,12 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 		];
 		return $pasos;
 	}
+	
+	/**
+	 * Consulta la actividad asociada al paso
+	 * @param unknown $paso
+	 * @return string
+	 */
 	private function consultarActividad($paso) {
 		$actividad ['id_actividad'] = '25';
 		$actividad ['tipo_elementoBpmn'] = 'compuertaAnd';
