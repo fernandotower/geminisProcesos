@@ -3,69 +3,76 @@
 namespace component\GestorProcesos\Clase;
 
 use component\GestorProcesos\interfaz\ICoordinadorFlujo;
-
 use component\GestorProcesos\Clase\Registrador as Registrador;
 use component\GestorProcesos\Clase\ModeladorProceso as ModeladorProceso;
 
 include_once ('component/GestorProcesos/Interfaz/ICoordinadorFlujo.php');
-
-
 class CoordinadorFlujo implements ICoordinadorFlujo {
 	var $miSql;
 	var $flujoTrabajo;
+	var $idTrabajo;
 	private $registrador;
 	private $modelador;
-
-	public function __construct(){
-		$this->registrador =  new Registrador;
-		$this->modelador =  new ModeladorProceso;
+	public function __construct() {
+		$this->registrador = new Registrador ();
+		$this->modelador = new ModeladorProceso ();
 	}
 	/**
 	 * (non-PHPdoc)
 	 *
 	 * @see \component\GestorProcesos\interfaz\ICoordinarFlujo::ejecutarProceso()
 	 */
-	public function ejecutarProceso($idProceso = '',$ejecucionAutomatica = true) {
+	public function ejecutarProceso($idProceso = '', $ejecucionAutomatica = true) {
 		
 		// 1. Consultar flujo
+		$this->flujoTrabajo = $this->modelador->consultarFlujo ( $idProceso );
+		var_dump ( $this->flujoTrabajo );
+		if (! is_array ( $this->flujoTrabajo ))
+			return false;
+			
+			// actividad null es la prima que se ejecuta
+		$idActividadInicio = $this->consultarAtividadesHijo ( null )[0];
+		var_dump ( $idActividadInicio );
 		
-		$this->flujoTrabajo = $this->modelador->consultarFlujo($idProceso);
+		if (! $idActividadInicio)
+			return false;
+			
+			// 2. crear trabajo
+		$idTrabajo = $this->registrador->crearTrabajo ( $idProceso );
+		if (! $idTrabajo)
+			return false;
+		$this->idTrabajo = $idTrabajo;
+		var_dump ( $this->idTrabajo );
+		// crear paso con la primera actividad
 		
-		if(!is_array($this->flujoTrabajo)) return false;
-		
-		//actividad null es la prima que se ejecuta
-		$idActividadInicio = $this->consultarAtividadesHijo(null)[0];
-		
-		if(!$idActividadInicio) return false;
-		
-		// 2. crear trabajo
-		$idTrabajo =  $this->registrador->crearTrabajo($idProceso);
-		if(!$idTrabajo) return false;
-		
-		//crear paso con la primera actividad
-		
-		$idPaso = $this->registrador->crearPaso($idTrabajo, $idActividadInicio ,1);
-		
-		
+		$idPaso = $this->registrador->crearPaso ( $this->idTrabajo, $idActividadInicio, 1 );
+		var_dump ( $idPaso );
 		
 		// si alguna de las pasos se ejecuta (TRUE) se vueven a consultar los pasos y
 		// se solicita la ejecución de las actividades.
 		$resultadoEjecucion = TRUE;
 		while ( $resultadoEjecucion == TRUE ) {
-			//$pasos = $this->consultarPasos ( 50 );
-			$pasos =  $this->registrador->consultarPasos($idTrabajo);
 			
-			$resultadoEjecucion = $this->ejecutarActividades( $pasos );
+			$pasos = $this->registrador->consultarPasos ( $this->idTrabajo );
 			
+			// descartar los pasos ya ejecutados
+			foreach ( $pasos as $paso ) {
+				
+				if ($paso ['estado_paso_id'] == '1') {
+					$pasosNoEjecutados [] = $paso;
+				}else {var_dump($paso);exit;}
+			}
+			var_dump ( $pasosNoEjecutados );
+			$resultadoEjecucion = $this->ejecutarActividades ( $pasosNoEjecutados );
+			var_dump ( $resultadoEjecucion );
 		}
-		
+		var_dump ( $pasos );
+		var_dump ( $resultadoEjecucion );
 		return FALSE;
 		
 		// 6. registrar ejecución
 		// 7. actualizar pasos
 	}
-	
-	
 	
 	/**
 	 * Ejecuta las actividades correspondentes a los pasos del flujo recibidos
@@ -77,23 +84,28 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 	 */
 	private function ejecutarActividades($pasos) {
 		$avanzar = FALSE;
+		
 		foreach ( $pasos as $paso ) {
-			$actividad = $this->modelador->consultarActividad ( $paso['actividad_id'] )[0];
-			 
-			// se deben pasar todos los datos de la actividad,
-			// es decir todo el registro obtenido de la consulta
+			;
+			$actividad = $this->modelador->consultarActividad ( $paso ['actividad_id'] );
 			
-			$resultadoEjecucionActividad = $this->ejecutarActividad ( $actividad, $paso );
+			$resultadoEjecucionActividad = $this->ejecutarActividad ( $actividad [0], $paso );
 			
-			 
 			if ($resultadoEjecucionActividad == TRUE) {
-				//registrar la ejecucion en la tabla de pasos
 				
-				//crear nuevo paso en la tabla de pasos
+				// actualizar estado del paso
+				$this->registrador->actualizarEstadoPaso ( $this->idTrabajo, $paso ['actividad_id'], '4' );
+				// consultar las hijos
+				$hijos = $this->consultarAtividadesHijo ( $paso ['actividad_id'] );
+				// registrar hijos en la tabla de pasos_trabajo
+				foreach ( $hijos as $hijo ) {
+					$this->registrador->crearPaso ( $this->idTrabajo, $hijo, '1' );
+				}
 				
 				$avanzar = TRUE;
 			}
 		}
+		
 		return $avanzar;
 	}
 	private function consultarPasos($id_trabajo) {
@@ -105,7 +117,8 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 	
 	/**
 	 * Consulta la actividad asociada al paso
-	 * @param unknown $paso
+	 *
+	 * @param unknown $paso        	
 	 * @return string
 	 */
 	private function consultarActividad($paso) {
@@ -119,12 +132,13 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 	 *
 	 * @see \component\GestorProcesos\interfaz\ICoordinarFlujo::ejecutarActividad()
 	 */
-	//public function ejecutarActividad($actividad, $paso) {
-	public function ejecutarActividad($actividad) {	
+	// public function ejecutarActividad($actividad, $paso) {
+	public function ejecutarActividad($actividad) {
 		
-		//id elemento bpmn de la actividad
-		$idElementoBpmn = $actividad['elemento_bpmn_id'];
-		$nombreElementoBpmn = $this->registrador->getElementoBpmn($idElementoBpmn,'id','nombre');
+		// id elemento bpmn de la actividad
+		$idElementoBpmn = $actividad ['elemento_bpmn_id'];
+		
+		$nombreElementoBpmn = $this->registrador->getElementoBpmn ( $idElementoBpmn, 'id', 'nombre' );
 		
 		// 1. determina el tipo de objeto bpmn con el id
 		switch ($nombreElementoBpmn) {
@@ -162,10 +176,10 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 				$this->ejecutarCompuertaOr ();
 				break;
 			case 'compuertaXor' :
-				$this->ejecutarCompuertaXor ($paso);
+				$this->ejecutarCompuertaXor ( $paso );
 				break;
 			case 'compuertaAnd' :
-				return $this->ejecutarCompuertaAnd ($paso);
+				return $this->ejecutarCompuertaAnd ( $paso );
 				break;
 			
 			default :
@@ -178,7 +192,7 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 	//
 	// Ejecucion paso objetos bpmn
 	//
-	private function ejecutarEventoInicio($valor) {
+	private function ejecutarEventoInicio() {
 		return true;
 	}
 	private function ejecutarEventoIntermedio($valor) {
@@ -195,16 +209,16 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 		// 1. borrar todos los pasos del trabajo
 		// 2. se actualiza el estado del trabajo como terminado
 		// 3. Si realiza todo con éxito
-		return true;
+		return false;
 	}
-	private function ejecutarTareaHumana($valor) {
+	private function ejecutarTareaHumana() {
 		// 1. La tarea humana consulta si se ha realizado
 		// 2. si NO hace una parada
 		// 3. si SI retorna true
 		// 4. para solicitar su ejecución nuevamente, se debe realizar de forma manual desde el flujo
 		// 5. En este momento verifica que se haya realizado lo referente a la tarea (puede ser un bit bandera).
 		// 6. Retorna al paso 1
-		return true;
+		return false;
 	}
 	private function ejecutarTareaServicio($valor) {
 		// llama servicio si se ejecutó retorna true;
@@ -231,24 +245,20 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 	}
 	
 	/**
-	 * 
-	 * @param array $paso
+	 *
+	 * @param array $paso        	
 	 * @return boolean
 	 */
 	private function ejecutarCompuertaXor($paso) {
 		
-		
-		//1. consulta los hijos (registros complero del paso)
-		//2. los organiza por prioridad, al final la condición default
-		//	para cada hijo
-		//3. evalua condicion
-		// si TRUE: actualiza actividad y registra actividad hijo y return TRUE, 
+		// 1. consulta los hijos (registros complero del paso)
+		// 2. los organiza por prioridad, al final la condición default
+		// para cada hijo
+		// 3. evalua condicion
+		// si TRUE: actualiza actividad y registra actividad hijo y return TRUE,
 		// si FALSE: no hace nada;
-		//5. Si ninguna condición es verdadera activa la actividad asociada la condición Default y return=TRUE		
-		
+		// 5. Si ninguna condición es verdadera activa la actividad asociada la condición Default y return=TRUE
 		return FALSE;
-		
-		
 	}
 	private function ejecutarCompuertaAnd($paso) {
 		echo 'estoy en la compuestaAnd';
