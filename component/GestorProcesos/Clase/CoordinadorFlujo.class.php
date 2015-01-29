@@ -22,11 +22,11 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 	 *
 	 * @see \component\GestorProcesos\interfaz\ICoordinarFlujo::ejecutarProceso()
 	 */
-	public function ejecutarProceso($idProceso = '', $ejecucionAutomatica = true) {
+	public function ejecutarProceso($idProceso = '', $ejecucionAutomatica = FALSE) {
 		
 		// 1. Consultar flujo
 		$this->flujoTrabajo = $this->modelador->consultarFlujo ( $idProceso );
-		var_dump ( $this->flujoTrabajo );
+		//var_dump ( $this->flujoTrabajo );
 		if (! is_array ( $this->flujoTrabajo ))
 			return false;
 			
@@ -43,7 +43,7 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 			return false;
 		$this->idTrabajo = $idTrabajo;
 		// var_dump ( $this->idTrabajo );
-		// crear paso con la primera actividad
+		// crear paso con la primera actividad		
 		
 		$idPaso = $this->registrador->crearPaso ( $this->idTrabajo, $idActividadInicio, 1 );
 		// var_dump ( $idPaso );
@@ -52,15 +52,18 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 		// se solicita la ejecución de las actividades.
 		$resultadoEjecucion = TRUE;
 		while ( $resultadoEjecucion == TRUE ) {
-			
-			$pasosNoEjecutados = $this->registrador->consultarPasos ( $idTrabajo, '', '1' );
+						
+			$pasosNoEjecutados = $this->registrador->consultarPasos ( $this->idTrabajo, '', '1' );			
+			echo '<b>INICIO ITERACION</b><br>';
+			echo '1. pasos no ejecutados';
 			var_dump ( $pasosNoEjecutados );
 			$resultadoEjecucion = $this->ejecutarActividades ( $pasosNoEjecutados );
-			var_dump ( $resultadoEjecucion );
+			echo 'resultado iteracion';var_dump ( $resultadoEjecucion );
 			unset ( $pasosNoEjecutados );
 		}
 		// var_dump ( $pasos );
-		echo 'final';exit;
+		echo 'final';
+		exit ();
 		return FALSE;
 		
 		// 6. registrar ejecución
@@ -82,8 +85,13 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 			
 			$actividad = $this->modelador->consultarActividad ( $paso ['actividad_id'] );
 			
+			echo 'actividad: ';
+			var_dump($actividad);
+			
 			$resultadoEjecucionActividad = $this->ejecutarActividad ( $actividad [0] );
-			// var_dump ( $resultadoEjecucionActividad );
+			
+			echo 'resultado actividad';
+			var_dump($resultadoEjecucionActividad);
 			
 			if ($resultadoEjecucionActividad == TRUE) {
 				
@@ -91,6 +99,9 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 				$this->registrador->actualizarEstadoPaso ( $this->idTrabajo, $paso ['actividad_id'], '4' );
 				// consultar las hijos
 				$hijos = $this->consultarAtividadesHijo ( $paso ['actividad_id'] );
+				echo 'hijos';
+				var_dump($hijos);
+		
 				// registrar hijos en la tabla de pasos_trabajo
 				foreach ( $hijos as $hijo ) {
 					$this->registrador->crearPaso ( $this->idTrabajo, $hijo, '1' );
@@ -98,6 +109,9 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 				
 				$avanzar = TRUE;
 			}
+			//echo 'pasos registrados despues de ejecutar una actividad';
+			//$pasosRegistrados = $this->registrador->consultarPasos ( $this->idTrabajo );
+			//var_dump ( $pasosRegistrados );
 			unset ( $hijos );
 		}
 		
@@ -189,7 +203,7 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 	// Ejecucion paso objetos bpmn
 	//
 	private function ejecutarEventoInicio() {
-		return true;
+		return TRUE;
 	}
 	private function ejecutarEventoIntermedio($valor) {
 		return true;
@@ -206,7 +220,7 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 		// 2. se actualiza el estado del trabajo como terminado
 		// 3. Si realiza todo con éxito
 		echo 'ejecutarEventoFin';
-		exit;
+		exit ();
 		return FALSE;
 	}
 	private function ejecutarTareaHumana() {
