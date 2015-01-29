@@ -80,7 +80,7 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 	 */
 	private function ejecutarActividades($pasos) {
 		$avanzar = FALSE;
-		
+
 		foreach ( $pasos as $paso ) {
 			
 			$actividad = $this->modelador->consultarActividad ( $paso ['actividad_id'] );
@@ -147,9 +147,10 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 	 */
 	// public function ejecutarActividad($actividad, $paso) {
 	public function ejecutarActividad($actividad) {
-		
+				
 		// id elemento bpmn de la actividad
 		$idElementoBpmn = $actividad ['elemento_bpmn_id'];
+		$paso=$actividad['id'];
 		
 		$nombreElementoBpmn = $this->registrador->getElementoBpmn ( $idElementoBpmn, 'id', 'nombre' );
 		
@@ -219,7 +220,7 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 	 * @param unknown $valor        	
 	 */
 	private function ejecutarEventoFin($actividad) {
-		
+		return FALSE;
 		// 1. borrar todos los pasos del trabajo
 		// 2. se actualiza el estado del trabajo como terminado
 		// 3. Si realiza todo con éxito
@@ -283,12 +284,11 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 		return FALSE;
 	}
 	private function ejecutarCompuertaAnd($paso) {
-		echo 'estoy en la compuestaAnd';
-		return FALSE;
-		$paso = 3;
-		// Consulta todas las actividades padre del paso del flujo
-		$padres = $this->consultarAtividadesPadre ( $paso );
+				
+		$padres = $this->consultarAtividadesPadre ( $paso );		
 		// consulta si estan terminadas
+		echo 'se tiene que consultar si estan terminadas las actividades padre de la and';
+		exit;
 		// $actividades='aqui va la consulta';
 		// Si alguna esta sin terminar retorna FALSE
 		/**
