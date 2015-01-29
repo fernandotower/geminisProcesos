@@ -76,5 +76,10 @@ class Registrador implements IRegistrar {
 		return $dal->getElementoBpmn($idElementoBpmn,$dado,$buscar); 
 		;
 	}
+	
+	public function finalizarPasosTrabajo($idTrabajo = ''){
+		$pasos =  new PasosTrabajo();
+		return $pasos->finalizarPasosTrabajo($idTrabajo);
+	}
 
 }

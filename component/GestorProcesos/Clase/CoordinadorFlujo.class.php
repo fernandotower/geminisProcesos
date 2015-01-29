@@ -96,15 +96,19 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 			if ($resultadoEjecucionActividad == TRUE) {
 				
 				// actualizar estado del paso
-				$this->registrador->actualizarEstadoPaso ( $this->idTrabajo, $paso ['actividad_id'], '4' );
+				$actualiza = $this->registrador->actualizarEstadoPaso ( $this->idTrabajo, $paso ['actividad_id'], '4' );
+				if(!$actualiza) return false;
 				// consultar las hijos
 				$hijos = $this->consultarAtividadesHijo ( $paso ['actividad_id'] );
+				if(!$hijos) return  false;
 				echo 'hijos';
 				var_dump($hijos);
+				echo "<br><br>";
 		
 				// registrar hijos en la tabla de pasos_trabajo
 				foreach ( $hijos as $hijo ) {
-					$this->registrador->crearPaso ( $this->idTrabajo, $hijo, '1' );
+					$paso = $this->registrador->crearPaso ( $this->idTrabajo, $hijo, '1' );
+					if(!$paso) return false;
 				}
 				
 				$avanzar = TRUE;
@@ -158,7 +162,7 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 				return $this->ejecutarEventoIntermedio ();
 				break;
 			case 'eventoFin' :
-				return $this->ejecutarEventoFin ();
+				return $this->ejecutarEventoFin ($actividad);
 				break;
 			case 'tareaHumana' :
 				return $this->ejecutarTareaHumana ();
@@ -214,14 +218,18 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 	 *
 	 * @param unknown $valor        	
 	 */
-	private function ejecutarEventoFin() {
+	private function ejecutarEventoFin($actividad) {
 		
 		// 1. borrar todos los pasos del trabajo
 		// 2. se actualiza el estado del trabajo como terminado
 		// 3. Si realiza todo con éxito
 		echo 'ejecutarEventoFin';
-		exit ();
-		return FALSE;
+		$actualizacion = $this->registrador->actualizarEstadoPaso ( $this->idTrabajo, $actividad ['id'], '4' );
+		if(!$actualizacion) return false;
+		$cambioRegistro = $this->registrador->finalizarPasosTrabajo($this->idTrabajo);
+		if(!$cambioRegistro) return false;
+		return true; 
+		
 	}
 	private function ejecutarTareaHumana() {
 		// 1. La tarea humana consulta si se ha realizado
@@ -336,14 +344,15 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 	 * @return string
 	 */
 	private function consultarAtividadesHijo($id_actividadPadre) {
+		 
 		foreach ( $this->flujoTrabajo as $relacion ) {
 			if ($relacion ['actividad_padre_id'] == $id_actividadPadre) {
 				$hijos [] = $relacion ['actividad_hijo_id'];
 			}
 		}
-		if (is_array ( $hijos )) {
+		if (isset($hijos)&&is_array ( $hijos )) {
 			return $hijos;
-			;
+			
 		} else {
 			return FALSE;
 		}

@@ -39,6 +39,8 @@ class Persistencia {
     
     	$this->miRecursoDB = $this->miConfigurador->fabricaConexiones->getRecursoDB ( $conexion );
 
+    	$this->mensaje = \Mensaje::singleton();
+    	
     	if (! $this->miRecursoDB) {
     	
     		$this->mensaje->addMensaje("1","errorConexion",'error');
@@ -323,7 +325,16 @@ class Persistencia {
 	    		$sqlUpdate .=" WHERE ".$strWherePk;
 	    		
 	    		$this->setQuery($sqlUpdate);
-	    		 
+	    		/*
+	    		echo "<br>";
+	    		echo "--------------<br>";
+	    		var_dump($sqlUpdate);
+	    		echo "<br>";
+	    		echo "<br>";
+	    		var_dump($where);
+	    		echo "<br>";
+	    		echo "--------------<br>";
+	    		*/
 	    		$update = $this->ejecutar() ;
 	    		if($update ==  false){
 	    			$this->mensaje->addMensaje("11","errorActualizar",'error');

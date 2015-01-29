@@ -112,10 +112,10 @@ class DAL{
 			else $this->setPrefijoColumna($this->persistencia->getPrefijoColumna().'_');
 			
 			$this->setExcluidos($excluidos);
-			$conexion = $this->getConexion();
-			$this->setConexion('estructura'); 
+			//$conexion = $this->getConexion();
+			//$this->setConexion('estructura'); 
 			$this->recuperarColumnas();
-			$this->setConexion($conexion);
+			//$this->setConexion($conexion);
 			
 		}
 		return false;
@@ -165,6 +165,10 @@ class DAL{
 	
 	public function setPrefijoColumna($prefijo = ''){
 		$this->prefijoColumnas = $prefijo;
+	}
+	
+	public function getEsquema(){
+		return $this->persistencia->getEsquema();
 	}
 	
 	private	function recuperarColumnas(){
@@ -674,11 +678,13 @@ class DAL{
 			
 		}elseif ($where=='id'){
 
+			
 			if(isset($this->indexado[$this->prefijoColumnas.'id'])){
 				$where =$this->prefijoColumnas.'id='.$this->indexado[$this->prefijoColumnas.'id'];
 			}else{
 				$this->mensaje->addMensaje("101","errorIdNoDefinido".$this->tablaAlias,'information');
 				$where = '';
+				return false;
 			}
 			
 		}
@@ -869,6 +875,7 @@ class DAL{
 				if(!$this->procesarParametros($parametros)||
 				   !$this->setWhere('id')||
 				   !$this->persistencia->update($this->parametros,$this->valores,$this->where)){
+					
 					
 					$this->mensaje->addMensaje("101","errorActualizar".$this->tablaAlias,'error');
 					

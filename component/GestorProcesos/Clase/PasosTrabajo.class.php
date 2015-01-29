@@ -29,7 +29,7 @@ class PasosTrabajo{
     	
     }
     
-    public function actualizarEstadoPaso($idTrabajo = '', $idActividad = '' ,$idEstadoPaso = '') {
+    public function actualizarEstadoPaso($idTrabajo = '', $idActividad = '' ,$idEstadoPaso = '', $estadoRegistroId ='') {
     	$parametros = array();
     	
     	if(is_null($idTrabajo)||is_null($idActividad)||is_null($idEstadoPaso)) return false;
@@ -38,16 +38,84 @@ class PasosTrabajo{
     	$parametros['trabajo_id'] = $idTrabajo;
     	$parametros['actividad_id'] = $idActividad;
     	$parametros['estado_paso_id'] = $idEstadoPaso;
-    	
+    	if($estadoRegistroId!='' &&!is_null($estadoRegistroId))
+    		$parametros['estado_registro_id'] = $estadoRegistroId;
     	 
     	
     	
     	$dal = new \ DAL();
     	
     	
+    	
     	$dal->setConexion('academica');
     	
+    	
+    	$parametros_consulta =  array();
+    	$parametros_consulta['trabajo_id'] = $idTrabajo;
+    	$parametros_consulta['actividad_id'] = $idActividad;
+    	$parametros_consulta['estado_registro_id'] = 1;
+    	
+    	//consultar id
+    	$datosPasos =$dal->consultarPasosTrabajo($parametros_consulta);
+    	
+    	if(!$datosPasos) return false;
+    	
+    	$parametros['pasos_trabajo_id'] = $datosPasos[0]['id'];
+    	
     	return $dal->actualizarPasosTrabajo($parametros);
+    }
+    
+    public function finalizarPasosTrabajo($idTrabajo = ''){
+    	
+    	if(is_null($idTrabajo)||$idTrabajo=='') return false;
+    	
+    	$dal = new \ DAL();
+    	 
+    	$dal->setConexion('academica');
+    	 
+    	$parametros_consulta = array();
+    	$parametros_consulta['trabajo_id'] = $idTrabajo;
+    	
+    	//consulta lista de pasos trabajo
+    	$listado = $dal->consultarPasosTrabajo($parametros_consulta); 
+    	
+    	//cambia estado_registro_id de los pasos a 2
+
+    	if(!is_array($listado)) return false;
+    	
+    	$parametros = array();
+    	$parametros['estado_registro_id'] = 2;
+    	
+    	foreach ($listado as $fila){
+    		$parametros['pasos_trabajo_id'] = $fila['id'];
+    		$ejecucion =  $dal->actualizarPasosTrabajo($parametros);
+    		
+    		if(!$ejecucion) return false;
+    	}
+    	
+    	return true;
+    }
+    
+    public function borrarPasosTrabajo($lista){
+    	
+    	$dal = new \ DAL();
+    	 
+    	 
+    	 
+    	$dal->setConexion('academica');
+    	 
+    	if(!is_array($lista)) return false;
+    	 
+    	$parametros = array();
+    	
+    	 
+    	foreach ($lista as $fila){
+    		$parametros['pasos_trabajo_id'] = $fila;
+    		$ejecucion =  $dal->eliminarPasosTrabajo($parametros);
+    		if(!$ejecucion) return false;
+    	}
+    	 
+    	return true;
     }
     
     public function consultarPasosTrabajo($idTrabajo = '', $idActividad = '', $idEstadoPaso = '', $idEstadoRegistro= '', $fechaRegistro= ''){
