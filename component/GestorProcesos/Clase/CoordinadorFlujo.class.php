@@ -32,7 +32,7 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 			
 			// actividad null es la prima que se ejecuta
 		$idActividadInicio = $this->consultarAtividadesHijo ( null )[0];
-		var_dump ( $idActividadInicio );
+		// var_dump ( $idActividadInicio );
 		
 		if (! $idActividadInicio)
 			return false;
@@ -42,32 +42,25 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 		if (! $idTrabajo)
 			return false;
 		$this->idTrabajo = $idTrabajo;
-		var_dump ( $this->idTrabajo );
+		// var_dump ( $this->idTrabajo );
 		// crear paso con la primera actividad
 		
 		$idPaso = $this->registrador->crearPaso ( $this->idTrabajo, $idActividadInicio, 1 );
-		var_dump ( $idPaso );
+		// var_dump ( $idPaso );
 		
 		// si alguna de las pasos se ejecuta (TRUE) se vueven a consultar los pasos y
 		// se solicita la ejecución de las actividades.
 		$resultadoEjecucion = TRUE;
 		while ( $resultadoEjecucion == TRUE ) {
 			
-			$pasos = $this->registrador->consultarPasos ( $this->idTrabajo );
-			
-			// descartar los pasos ya ejecutados
-			foreach ( $pasos as $paso ) {
-				
-				if ($paso ['estado_paso_id'] == '1') {
-					$pasosNoEjecutados [] = $paso;
-				}else {var_dump($paso);exit;}
-			}
+			$pasosNoEjecutados = $this->registrador->consultarPasos ( $idTrabajo, '', '1' );
 			var_dump ( $pasosNoEjecutados );
 			$resultadoEjecucion = $this->ejecutarActividades ( $pasosNoEjecutados );
 			var_dump ( $resultadoEjecucion );
+			unset ( $pasosNoEjecutados );
 		}
-		var_dump ( $pasos );
-		var_dump ( $resultadoEjecucion );
+		// var_dump ( $pasos );
+		echo 'final';exit;
 		return FALSE;
 		
 		// 6. registrar ejecución
@@ -86,10 +79,11 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 		$avanzar = FALSE;
 		
 		foreach ( $pasos as $paso ) {
-			;
+			
 			$actividad = $this->modelador->consultarActividad ( $paso ['actividad_id'] );
 			
-			$resultadoEjecucionActividad = $this->ejecutarActividad ( $actividad [0], $paso );
+			$resultadoEjecucionActividad = $this->ejecutarActividad ( $actividad [0] );
+			// var_dump ( $resultadoEjecucionActividad );
 			
 			if ($resultadoEjecucionActividad == TRUE) {
 				
@@ -104,6 +98,7 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 				
 				$avanzar = TRUE;
 			}
+			unset ( $hijos );
 		}
 		
 		return $avanzar;
@@ -146,37 +141,38 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 				return $this->ejecutarEventoInicio ();
 				break;
 			case 'eventoIntermedio' :
-				$this->ejecutarEventoIntermedio ();
+				return $this->ejecutarEventoIntermedio ();
 				break;
 			case 'eventoFin' :
-				$this->ejecutarEventoFin ();
+				return $this->ejecutarEventoFin ();
 				break;
 			case 'tareaHumana' :
-				$this->ejecutarTareaHumana ();
+				return $this->ejecutarTareaHumana ();
+				
 				break;
 			case 'tareaServicio' :
-				$this->ejecutarTareaServicio ();
+				return $this->ejecutarTareaServicio ();
 				break;
 			case 'tareaLlamada' :
-				$this->ejecutarTareaLlamada ();
+				return $this->ejecutarTareaLlamada ();
 				break;
 			case 'tareaRecibirMensaje' :
-				$this->ejecutarTareaRecibirMensaje ();
+				return $this->ejecutarTareaRecibirMensaje ();
 				break;
 			case 'tareaEnviarMensaje' :
 				$this->ejecutarTareaEnviarMensaje ();
 				break;
 			case 'tareaScript' :
-				$this->ejecutarTareaScript ();
+				return $this->ejecutarTareaScript ();
 				break;
 			case 'tareaTemporizador' :
-				$this->ejecutarTareaTemporizador ();
+				return $this->ejecutarTareaTemporizador ();
 				break;
 			case 'compuertaOr' :
-				$this->ejecutarCompuertaOr ();
+				return $this->ejecutarCompuertaOr ();
 				break;
 			case 'compuertaXor' :
-				$this->ejecutarCompuertaXor ( $paso );
+				return $this->ejecutarCompuertaXor ( $paso );
 				break;
 			case 'compuertaAnd' :
 				return $this->ejecutarCompuertaAnd ( $paso );
@@ -204,12 +200,14 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 	 *
 	 * @param unknown $valor        	
 	 */
-	private function ejecutarEventoFin($valor) {
+	private function ejecutarEventoFin() {
 		
 		// 1. borrar todos los pasos del trabajo
 		// 2. se actualiza el estado del trabajo como terminado
 		// 3. Si realiza todo con éxito
-		return false;
+		echo 'ejecutarEventoFin';
+		exit;
+		return FALSE;
 	}
 	private function ejecutarTareaHumana() {
 		// 1. La tarea humana consulta si se ha realizado
@@ -218,7 +216,7 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 		// 4. para solicitar su ejecución nuevamente, se debe realizar de forma manual desde el flujo
 		// 5. En este momento verifica que se haya realizado lo referente a la tarea (puede ser un bit bandera).
 		// 6. Retorna al paso 1
-		return false;
+		return TRUE;
 	}
 	private function ejecutarTareaServicio($valor) {
 		// llama servicio si se ejecutó retorna true;
