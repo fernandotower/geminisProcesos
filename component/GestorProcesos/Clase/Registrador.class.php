@@ -81,5 +81,10 @@ class Registrador implements IRegistrar {
 		$pasos =  new PasosTrabajo();
 		return $pasos->finalizarPasosTrabajo($idTrabajo);
 	}
+	
+	public function borrarPasosTrabajo($idTrabajo = ''){
+		$pasos =  new PasosTrabajo();
+		return $pasos->borrarPasosTrabajo($idTrabajo);
+	}
 
 }

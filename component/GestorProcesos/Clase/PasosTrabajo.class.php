@@ -90,33 +90,41 @@ class PasosTrabajo{
     		$parametros['pasos_trabajo_id'] = $fila['id'];
     		$ejecucion =  $dal->actualizarPasosTrabajo($parametros);
     		
-    		if(!$ejecucion) return false;
+    		
     	}
     	
     	return true;
     }
     
-    public function borrarPasosTrabajo($lista){
+    public function borrarPasosTrabajo($idTrabajo){
+    	
+    	    	if(is_null($idTrabajo)||$idTrabajo=='') return false;
     	
     	$dal = new \ DAL();
     	 
-    	 
-    	 
     	$dal->setConexion('academica');
     	 
-    	if(!is_array($lista)) return false;
-    	 
-    	$parametros = array();
+    	$parametros_consulta = array();
+    	$parametros_consulta['trabajo_id'] = $idTrabajo;
     	
-    	 
-    	foreach ($lista as $fila){
-    		$parametros['pasos_trabajo_id'] = $fila;
+    	//consulta lista de pasos trabajo
+    	$listado = $dal->consultarPasosTrabajo($parametros_consulta); 
+    	
+    	//cambia estado_registro_id de los pasos a 2
+
+    	if(!is_array($listado)) return false;
+    	
+    	$parametros = array();
+    	$parametros['estado_registro_id'] = 2;
+    	
+    	foreach ($listado as $fila){
+    		$parametros['pasos_trabajo_id'] = $fila['id'];
     		$ejecucion =  $dal->eliminarPasosTrabajo($parametros);
-    		if(!$ejecucion) return false;
+    		
+    		
     	}
-    	 
-    	return true;
-    }
+    	
+    	return true;}
     
     public function consultarPasosTrabajo($idTrabajo = '', $idActividad = '', $idEstadoPaso = '', $idEstadoRegistro= '', $fechaRegistro= ''){
     	

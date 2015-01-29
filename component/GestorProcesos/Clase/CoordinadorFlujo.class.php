@@ -228,6 +228,8 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 		if(!$actualizacion) return false;
 		$cambioRegistro = $this->registrador->finalizarPasosTrabajo($this->idTrabajo);
 		if(!$cambioRegistro) return false;
+		$fin = $this->registrador->borrarPasosTrabajo($this->idTrabajo);
+		if(!$cambioRegistro) return false;
 		return true; 
 		
 	}
