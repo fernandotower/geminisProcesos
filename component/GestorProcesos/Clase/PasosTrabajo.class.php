@@ -123,8 +123,9 @@ class PasosTrabajo{
     		
     		
     	}
-    	
-    	return true;}
+    	unset($dal);
+    	return true;
+    }
     
     public function consultarPasosTrabajo($idTrabajo = '', $idActividad = '', $idEstadoPaso = '', $idEstadoRegistro= '', $fechaRegistro= ''){
     	

@@ -373,6 +373,10 @@ class Persistencia {
     	return $this->esquema;
     }
     
+    public function  setEsquema($esquema = ''){
+    	$this->esquema = $esquema;
+    }
+    
     public function columnaEnTabla($columna='',$tabla= null,$esquema = null){
     	
     	if($columna==''||is_null($columna)) return false;

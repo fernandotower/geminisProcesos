@@ -28,12 +28,29 @@ class Trabajo{
     	
     }
     
+    public function finalizarTrabajo($idTrabajo = ''){
+    	if($idTrabajo==''||is_null($idTrabajo)) return false;
+    	$parametros = array();
+    	 
+    	$parametros['id'] = $idTrabajo;
+    	$parametros['estado_registro_id'] = 2;
+    	 
+    	$obj =  new \DAL();
+    	$obj->setConexion('academica');
+    	return $obj->crearTrabajo($parametros);
+
+    }
+    
     public function actualizarTrabajo(){
     	
     }
     
     public function consultarTrabajo(){
     	
+    }
+    
+    public function borrarTrabajo(){
+    	 
     }
     
     
