@@ -26,7 +26,7 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 		
 		// 1. Consultar flujo
 		$this->flujoTrabajo = $this->modelador->consultarFlujo ( $idProceso );
-		//var_dump ( $this->flujoTrabajo );
+		// var_dump ( $this->flujoTrabajo );
 		if (! is_array ( $this->flujoTrabajo ))
 			return false;
 			
@@ -43,7 +43,7 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 			return false;
 		$this->idTrabajo = $idTrabajo;
 		// var_dump ( $this->idTrabajo );
-		// crear paso con la primera actividad		
+		// crear paso con la primera actividad
 		
 		$idPaso = $this->registrador->crearPaso ( $this->idTrabajo, $idActividadInicio, 1 );
 		// var_dump ( $idPaso );
@@ -52,13 +52,14 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 		// se solicita la ejecución de las actividades.
 		$resultadoEjecucion = TRUE;
 		while ( $resultadoEjecucion == TRUE ) {
-						
-			$pasosNoEjecutados = $this->registrador->consultarPasos ( $this->idTrabajo, '', '1' );			
+			
+			$pasosNoEjecutados = $this->registrador->consultarPasos ( $this->idTrabajo, '', '1' );
 			echo '<b>INICIO ITERACION</b><br>';
 			echo '1. pasos no ejecutados';
 			var_dump ( $pasosNoEjecutados );
 			$resultadoEjecucion = $this->ejecutarActividades ( $pasosNoEjecutados );
-			echo 'resultado iteracion';var_dump ( $resultadoEjecucion );
+			echo 'resultado iteracion';
+			var_dump ( $resultadoEjecucion );
 			unset ( $pasosNoEjecutados );
 		}
 		// var_dump ( $pasos );
@@ -86,36 +87,39 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 			$actividad = $this->modelador->consultarActividad ( $paso ['actividad_id'] );
 			
 			echo 'actividad: ';
-			var_dump($actividad);
+			var_dump ( $actividad );
 			
 			$resultadoEjecucionActividad = $this->ejecutarActividad ( $actividad [0] );
 			
 			echo 'resultado actividad';
-			var_dump($resultadoEjecucionActividad);
+			var_dump ( $resultadoEjecucionActividad );
 			
 			if ($resultadoEjecucionActividad == TRUE) {
 				
 				// actualizar estado del paso
 				$actualiza = $this->registrador->actualizarEstadoPaso ( $this->idTrabajo, $paso ['actividad_id'], '4' );
-				if(!$actualiza) return false;
-				// consultar las hijos
+				if (! $actualiza)
+					return false;
+					// consultar las hijos
 				$hijos = $this->consultarAtividadesHijo ( $paso ['actividad_id'] );
-				if(!$hijos) return  false;
+				if (! $hijos)
+					return false;
 				echo 'hijos';
-				var_dump($hijos);
+				var_dump ( $hijos );
 				echo "<br><br>";
-		
+				
 				// registrar hijos en la tabla de pasos_trabajo
 				foreach ( $hijos as $hijo ) {
 					$paso = $this->registrador->crearPaso ( $this->idTrabajo, $hijo, '1' );
-					if(!$paso) return false;
+					if (! $paso)
+						return false;
 				}
 				
 				$avanzar = TRUE;
 			}
-			//echo 'pasos registrados despues de ejecutar una actividad';
-			//$pasosRegistrados = $this->registrador->consultarPasos ( $this->idTrabajo );
-			//var_dump ( $pasosRegistrados );
+			// echo 'pasos registrados despues de ejecutar una actividad';
+			// $pasosRegistrados = $this->registrador->consultarPasos ( $this->idTrabajo );
+			// var_dump ( $pasosRegistrados );
 			unset ( $hijos );
 		}
 		
@@ -150,6 +154,7 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 		
 		// id elemento bpmn de la actividad
 		$idElementoBpmn = $actividad ['elemento_bpmn_id'];
+		$paso = $actividad ['id'];
 		
 		$nombreElementoBpmn = $this->registrador->getElementoBpmn ( $idElementoBpmn, 'id', 'nombre' );
 		
@@ -162,7 +167,7 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 				return $this->ejecutarEventoIntermedio ();
 				break;
 			case 'eventoFin' :
-				return $this->ejecutarEventoFin ($actividad);
+				return $this->ejecutarEventoFin ( $actividad );
 				break;
 			case 'tareaHumana' :
 				return $this->ejecutarTareaHumana ();
@@ -219,19 +224,21 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 	 * @param unknown $valor        	
 	 */
 	private function ejecutarEventoFin($actividad) {
-		
+		return FALSE;
 		// 1. borrar todos los pasos del trabajo
 		// 2. se actualiza el estado del trabajo como terminado
 		// 3. Si realiza todo con éxito
 		echo 'ejecutarEventoFin';
 		$actualizacion = $this->registrador->actualizarEstadoPaso ( $this->idTrabajo, $actividad ['id'], '4' );
-		if(!$actualizacion) return false;
-		$cambioRegistro = $this->registrador->finalizarPasosTrabajo($this->idTrabajo);
-		if(!$cambioRegistro) return false;
-		$fin = $this->registrador->borrarPasosTrabajo($this->idTrabajo);
-		if(!$cambioRegistro) return false;
-		return true; 
-		
+		if (! $actualizacion)
+			return false;
+		$cambioRegistro = $this->registrador->finalizarPasosTrabajo ( $this->idTrabajo );
+		if (! $cambioRegistro)
+			return false;
+		$fin = $this->registrador->borrarPasosTrabajo ( $this->idTrabajo );
+		if (! $cambioRegistro)
+			return false;
+		return true;
 	}
 	private function ejecutarTareaHumana() {
 		// 1. La tarea humana consulta si se ha realizado
@@ -282,35 +289,34 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 		// 5. Si ninguna condición es verdadera activa la actividad asociada la condición Default y return=TRUE
 		return FALSE;
 	}
+	
+	/**
+	 * Consulta las actividades padre
+	 * verifica si estan terminadas (estado 4)
+	 * si alguna esta sin terminar retorna falso
+	 * si todas estan terminadas
+	 * actualiza el estado de la actividad actual (and)
+	 * consulta las actividades hijo
+	 * activa todas las actividades hijo
+	 * 
+	 * @param unknown $paso
+	 * @return boolean
+	 */
 	private function ejecutarCompuertaAnd($paso) {
-		echo 'estoy en la compuestaAnd';
-		return FALSE;
-		$paso = 3;
-		// Consulta todas las actividades padre del paso del flujo
 		$padres = $this->consultarAtividadesPadre ( $paso );
-		// consulta si estan terminadas
-		// $actividades='aqui va la consulta';
-		// Si alguna esta sin terminar retorna FALSE
-		/**
-		 * foreach ( $actividades as $actividad ) {
-		 * if ($actividad == 'terminada') {
-		 * } else {
-		 * return FALSE;
-		 * }
-		 * }
-		 */
 		
-		// si todas estan terminadas
-		// Activa todas las salidas ¿como?
-		// 1. consulta todos los hijos
-		// $hijos=$this->consultarAtividadesHijo($paso);
-		// 2. activa todos los hijos
+		// consulta las actividades padre y verifica si esta terminada
+		// si todas estan terminadas activa las salidas
+		$resultado = NULL;
+		foreach ( $padres as $padre ) {
+			$actividad = $this->registrador->consultarPasos ( $this->idTrabajo, $padre );
+			if ($actividad [0] ['estado_paso_id'] != 4) {
+				return FALSE;
+			}
+		}
+		echo 'verificar la compuerta and_merge, se está registrando en la base de datos tres veces<br>';	
+		return TRUE;
 		
-		var_dump ( $this->flujoTrabajo );
-		exit ();
-		
-		// si todas las entradas estan activas entonces activa todas las salidas
-		// Consulta todas las actividades padre de la compuerta
 	}
 	
 	//
@@ -346,15 +352,13 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 	 * @return string
 	 */
 	private function consultarAtividadesHijo($id_actividadPadre) {
-		 
 		foreach ( $this->flujoTrabajo as $relacion ) {
 			if ($relacion ['actividad_padre_id'] == $id_actividadPadre) {
 				$hijos [] = $relacion ['actividad_hijo_id'];
 			}
 		}
-		if (isset($hijos)&&is_array ( $hijos )) {
+		if (isset ( $hijos ) && is_array ( $hijos )) {
 			return $hijos;
-			
 		} else {
 			return FALSE;
 		}
