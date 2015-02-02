@@ -28,6 +28,10 @@ use component\GestorProcesos\Clase\Registrador as Registrador;
 include 'component/GestorProcesos/Clase/ModeladorProceso.class.php';
 use component\GestorProcesos\Clase\ModeladorProceso as ModeladorProceso;
 
+include 'component/GestorProcesos/Clase/Modelo.class.php';
+use component\GestorProcesos\Clase\Modelo as Modelo;
+
+
 
 require_once ('component/Component.class.php');
 class Componente extends Component implements ICoordinadorFlujo, ICoordinadorProceso, IRegistrar, IModelarProceso {
@@ -175,6 +179,12 @@ class Componente extends Component implements ICoordinadorFlujo, ICoordinadorPro
 	 */
 	function consultarActividad($idActividad = '',$nombreActividad = '', $aliasActividad = '', $idElementoBpmn = '', $idTipoEjecucion = '', $estadoRegistroId = '', $fechaRegistro= '') {
 		$this->miModeloProceso->consultarActividad ( $idActividad, $nombreActividad, $aliasActividad, $idElementoBpmn, $idTipoEjecucion, $estadoRegistroId, $fechaRegistro );
+	}
+	
+	function probarFuncion(){
+		$obj =  new Modelo();
+		var_dump($obj->getListaElementoBpmn());
+		var_dump($obj->getQuery());
 	}
 }
 

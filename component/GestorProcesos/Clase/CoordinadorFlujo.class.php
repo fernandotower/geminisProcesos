@@ -224,15 +224,18 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 	 * @param unknown $valor        	
 	 */
 	private function ejecutarEventoFin($actividad) {
-		return FALSE;
+		
 		// 1. borrar todos los pasos del trabajo
 		// 2. se actualiza el estado del trabajo como terminado
 		// 3. Si realiza todo con éxito
 		echo 'ejecutarEventoFin';
+		
 		$actualizacion = $this->registrador->actualizarEstadoPaso ( $this->idTrabajo, $actividad ['id'], '4' );
+		
 		if (! $actualizacion)
 			return false;
 		$cambioRegistro = $this->registrador->finalizarPasosTrabajo ( $this->idTrabajo );
+		
 		if (! $cambioRegistro)
 			return false;
 		$fin = $this->registrador->borrarPasosTrabajo ( $this->idTrabajo );

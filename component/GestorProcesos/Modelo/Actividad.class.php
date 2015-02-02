@@ -1,10 +1,10 @@
 <?php
-namespace component\GestorProcesos\Clase;
+namespace component\GestorProcesos\Modelo;
 
-include_once ('core/connection/DAL.class.php');
+include_once ('component/GestorProcesos/Modelo/Base.class.php');
 
 
-class Actividad{
+class Actividad extends Base{
     
     
     public function __construct(){
@@ -33,10 +33,8 @@ class Actividad{
     	if(!is_null($estadoRegistroId)&&$estadoRegistroId!= '') $parametros['estado_registro_id'] = $estadoRegistroId;
     	if(!is_null($estadoRegistroId)&&$fechaRegistro!='') $parametros['fecha_registro'] = $fechaRegistro;
     	 
-    	$dal =  new \DAL();
-    	$dal->setConexion('academica');
-    	 
-    	return $dal-> actualizarActividad($parametros);
+    	
+    	return $this->dao-> actualizarActividad($parametros);
     	 
     	
     }
@@ -60,10 +58,8 @@ class Actividad{
     	if(!is_null($estadoRegistroId)&&$estadoRegistroId!= '') $parametros['estado_registro_id'] = $estadoRegistroId;
     	if(!is_null($estadoRegistroId)&&$fechaRegistro!='') $parametros['fecha_registro'] = $fechaRegistro;
     	
-    	$dal =  new \DAL();
-    	$dal->setConexion('academica');
     	
-    	return $dal-> actualizarActividad($parametros);
+    	return $this->dao-> actualizarActividad($parametros);
     	
     }
     
@@ -80,11 +76,45 @@ class Actividad{
     	if(!is_null($estadoRegistroId)&&$estadoRegistroId!= '') $parametros['estado_registro_id'] = $estadoRegistroId;
     	if(!is_null($estadoRegistroId)&&$fechaRegistro!='') $parametros['fecha_registro'] = $fechaRegistro;
     	 
-    	$dal =  new \DAL();
-    	$dal->setConexion('academica');
-    	 
-    	return $dal-> consultarActividad($parametros);
+    	return $this->dao-> consultarActividad($parametros);
     	
+    }
+    
+    public function activarInactivarActividad($id ){
+    
+    	if(is_null($id)||$id=='') return false;
+    
+    	$parametros = array();
+    
+    	$parametros['id'] = $id;
+    
+    	return $this->dao-> actualizarActividad($parametros);
+    
+    }
+    
+    public function duplicarActividad($id ){
+    
+    	if(is_null($id)||$id=='') return false;
+    
+    	$parametros = array();
+    
+    	$parametros['id'] = $id;
+    
+    	return $this->dao-> duplicarActividad($parametros);
+    
+    }
+    
+    
+    public function eliminarActividad($id ){
+    
+    	if(is_null($id)||$id=='') return false;
+    
+    	$parametros = array();
+    
+    	$parametros['id'] = $id;
+    
+    	return $this->dao-> eliminarActividad($parametros);
+    
     }
     
     

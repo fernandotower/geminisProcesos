@@ -2,16 +2,15 @@
 
 namespace component\GestorProcesos\Clase;
 
-use component\GestorUsuarios\interfaz\IGestionarUsuarios;
-use component\GestorUsuarios\Sql;
+
 use component\GestorProcesos\interfaz\IModelarProceso;
 
 
 include_once ('component/GestorProcesos/Interfaz/IModeladorProcesos.php');
 
 
-include_once ('component/GestorProcesos/Clase/Flujo.class.php');
-include_once ('component/GestorProcesos/Clase/Actividad.class.php');
+
+use component\GestorProcesos\Clase\Modelo as Modelo;
 
 class ModeladorProceso implements IModelarProceso {
 	
@@ -45,7 +44,7 @@ class ModeladorProceso implements IModelarProceso {
 		
 		if(is_null($idProceso)||$idProceso=='') return false;
 		
-		$objFlujo =  new Flujo();
+		$objFlujo =  new Modelo('Flujo');
 		
 		return $objFlujo->consultarFlujo('',$idProceso);
 		
@@ -65,7 +64,7 @@ class ModeladorProceso implements IModelarProceso {
 	 *
 	 */
 	public function consultarActividad($idActividad = '',$nombreActividad = '', $aliasActividad = '', $idElementoBpmn = '', $idTipoEjecucion = '', $estadoRegistroId = '', $fechaRegistro= '') {
-		$obj =  new Actividad();
+		$obj =   new Modelo('Actividad');
 		return $obj->consultarActividad($idActividad,$nombreActividad, $aliasActividad, $idElementoBpmn, $idTipoEjecucion, $estadoRegistroId, $fechaRegistro);
 	}
 }

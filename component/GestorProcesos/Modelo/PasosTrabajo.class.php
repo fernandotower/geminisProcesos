@@ -1,11 +1,11 @@
 <?php
 
-namespace component\GestorProcesos\Clase;
+namespace component\GestorProcesos\Modelo;
 
-include_once ('core/connection/DAL.class.php');
+include_once ('component/GestorProcesos/Modelo/Base.class.php');
 
 
-class PasosTrabajo{
+class PasosTrabajo extends Base{
     
     
     public function __construct(){
@@ -23,9 +23,7 @@ class PasosTrabajo{
     	$parametros['estado_registro_id'] = 1;
     	 
     	 
-    	$dal = new \ DAL();
-    	$dal->setConexion('academica');
-    	return $dal->crearPasosTrabajo($parametros);
+    	return $this->dao->crearPasosTrabajo($parametros);
     	
     }
     
@@ -43,11 +41,7 @@ class PasosTrabajo{
     	 
     	
     	
-    	$dal = new \ DAL();
     	
-    	
-    	
-    	$dal->setConexion('academica');
     	
     	
     	$parametros_consulta =  array();
@@ -56,28 +50,25 @@ class PasosTrabajo{
     	$parametros_consulta['estado_registro_id'] = 1;
     	
     	//consultar id
-    	$datosPasos =$dal->consultarPasosTrabajo($parametros_consulta);
+    	$datosPasos =$this->dao->consultarPasosTrabajo($parametros_consulta);
     	
     	if(!$datosPasos) return false;
     	
     	$parametros['pasos_trabajo_id'] = $datosPasos[0]['id'];
     	
-    	return $dal->actualizarPasosTrabajo($parametros);
+    	return $this->dao->actualizarPasosTrabajo($parametros);
     }
     
     public function finalizarPasosTrabajo($idTrabajo = ''){
     	
     	if(is_null($idTrabajo)||$idTrabajo=='') return false;
     	
-    	$dal = new \ DAL();
-    	 
-    	$dal->setConexion('academica');
-    	 
+    	
     	$parametros_consulta = array();
     	$parametros_consulta['trabajo_id'] = $idTrabajo;
     	
     	//consulta lista de pasos trabajo
-    	$listado = $dal->consultarPasosTrabajo($parametros_consulta); 
+    	$listado = $this->dao->consultarPasosTrabajo($parametros_consulta); 
     	
     	//cambia estado_registro_id de los pasos a 2
 
@@ -88,7 +79,7 @@ class PasosTrabajo{
     	
     	foreach ($listado as $fila){
     		$parametros['pasos_trabajo_id'] = $fila['id'];
-    		$ejecucion =  $dal->actualizarPasosTrabajo($parametros);
+    		$ejecucion =  $this->dao->actualizarPasosTrabajo($parametros);
     		
     		
     	}
@@ -100,15 +91,11 @@ class PasosTrabajo{
     	
     	    	if(is_null($idTrabajo)||$idTrabajo=='') return false;
     	
-    	$dal = new \ DAL();
-    	 
-    	$dal->setConexion('academica');
-    	 
     	$parametros_consulta = array();
     	$parametros_consulta['trabajo_id'] = $idTrabajo;
     	
     	//consulta lista de pasos trabajo
-    	$listado = $dal->consultarPasosTrabajo($parametros_consulta); 
+    	$listado = $this->dao->consultarPasosTrabajo($parametros_consulta); 
     	
     	//cambia estado_registro_id de los pasos a 2
 
@@ -119,11 +106,11 @@ class PasosTrabajo{
     	
     	foreach ($listado as $fila){
     		$parametros['pasos_trabajo_id'] = $fila['id'];
-    		$ejecucion =  $dal->eliminarPasosTrabajo($parametros);
+    		$ejecucion =  $this->dao->eliminarPasosTrabajo($parametros);
     		
     		
     	}
-    	unset($dal);
+    	
     	return true;
     }
     
@@ -140,12 +127,7 @@ class PasosTrabajo{
     	if(!is_null($fechaRegistro)&&$fechaRegistro!='') $parametros['fecha_registro'] = $fechaRegistro;
     	
     	 
-    	 
-    	$dal = new \ DAL();
-    	 
-    	 
-    	$dal->setConexion('academica');
-    	return $dal->consultarPasosTrabajo($parametros);
+    	return $this->dao->consultarPasosTrabajo($parametros);
     	
     }
     
