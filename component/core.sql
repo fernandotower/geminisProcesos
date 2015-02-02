@@ -2,7 +2,7 @@
 
 --Tabla de grupos Aplicaciones (esquema del core)
 
-  CREATE TABLE public.core_operacion
+  CREATE TABLE core.core_operacion
 (
   operacion_id serial NOT NULL ,
   operacion_nombre text NOT NULL,
@@ -13,11 +13,11 @@
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE public.core_operacion
+ALTER TABLE core.core_operacion
   OWNER TO ecosiis;
 
 
-INSERT INTO public.core_operacion
+INSERT INTO core.core_operacion
 (  operacion_id,  operacion_nombre,  operacion_alias,  operacion_descripcion)
 VALUES
 (1,'crear','Crear','Crear CRUD'),
@@ -27,7 +27,7 @@ VALUES
 (5,'activarInactivar','Cambiar Estado','Cambiar estado registro activo/inactivo'),
 (6,'eliminar','Eliminar','Eliminar CRUD');
 
-  CREATE TABLE public.core_grupo_aplicacion
+  CREATE TABLE core.core_grupo_aplicacion
 (
   grupo_aplicacion_id serial NOT NULL ,
   grupo_aplicacion_nombre text NOT NULL,
@@ -38,10 +38,10 @@ VALUES
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE public.core_grupo_aplicacion
+ALTER TABLE core.core_grupo_aplicacion
   OWNER TO ecosiis;
   
-  INSERT INTO public.core_grupo_aplicacion
+  INSERT INTO core.core_grupo_aplicacion
   (grupo_aplicacion_nombre,grupo_aplicacion_alias,grupo_aplicacion_descripcion)
   VALUES
   ('core','Core','Objetos a usar core'),
@@ -50,7 +50,7 @@ ALTER TABLE public.core_grupo_aplicacion
   ('procesos','Procesos','Objetos componente de procesos');
 
 --Tabla de objetos (esquema del core)----agregar el prefijo de las columnas .. tabla  
-  CREATE TABLE public.core_objetos
+  CREATE TABLE core.core_objetos
 (
   objetos_id serial NOT NULL ,
   objetos_nombre text NOT NULL,
@@ -69,40 +69,40 @@ ALTER TABLE public.core_grupo_aplicacion
   objetos_eliminar bool NOT NULL DEFAULT FALSE,
   objetos_historico bool NOT NULL DEFAULT FALSE,
   CONSTRAINT grupo_aplicacion_fk FOREIGN KEY (grupo_aplicacion_id)
-      REFERENCES public.core_grupo_aplicacion (grupo_aplicacion_id) MATCH SIMPLE
+      REFERENCES core.core_grupo_aplicacion (grupo_aplicacion_id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE SET NULL,
   CONSTRAINT objetos_pk PRIMARY KEY (objetos_id)
 )
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE public.core_objetos
+ALTER TABLE core.core_objetos
   OWNER TO ecosiis;
   
   
   ---Lnea Tabla de Objetos
   
-    INSERT INTO public.core_objetos(objetos_id,
+    INSERT INTO core.core_objetos(objetos_id,
             objetos_nombre,objetos_alias,objetos_ejecutar, objetos_descripcion , objetos_prefijo_columna, 
             grupo_aplicacion_id ,objetos_listar,objetos_visible,objetos_crear, objetos_consultar, objetos_actualizar , 
             objetos_cambiarEstado , objetos_duplicar , objetos_eliminar,objetos_historico)
    VALUES 
   ( 0 , 'todo','Todos los obejtos', 'TODOSOBJETOS','Comodin todos los objetos','estado_registro_',1,false,false,false,false,false,false,false,false,false)
     ;
-  INSERT INTO public.core_objetos(
+  INSERT INTO core.core_objetos(
             objetos_nombre,objetos_alias,objetos_ejecutar, objetos_descripcion , objetos_prefijo_columna, 
             grupo_aplicacion_id ,objetos_listar,objetos_visible,objetos_crear, objetos_consultar, objetos_actualizar , 
             objetos_cambiarEstado , objetos_duplicar , objetos_eliminar,objetos_historico)
    VALUES 
 
-( 'public.core_estado_registro','Estado Registro', 'estadoRegistro','Tabla parametrica core','estado_registro_',1,true ,false,false,false,false,false,false, false,false),
-( 'public.core_tipo_dato','Tipos de datos', 'tipoDato','Tabla parametrica core','tipo_dato_',1,true ,false,false,false,false,false,false,false,false),
-( 'public.core_objetos','Objetos', 'objetos','Tabla parametrica core','objetos_',1,true ,false,false,false,false,false,false,false,false),
-( 'public.core_grupo_aplicacion','Grupos de Aplicaciones', 'grupoAplicacion','Tabla parametrica core','grupo_aplicacion_',1,true ,false,false,false,false,false,false, false,false),
-( 'public.core_columnas','Columnas', 'columnas','Tabla parametrica core','columnas_',1,true ,true,true,true,true,false,false,false,false),
-( 'public.core_eventos_html','Eventos HTML', 'eventosHtml','Tabla parametrica core','eventos_html_',1,true ,false,false,false,false,false,false,false,false),
-( 'public.core_eventos_columnas','Eventos HTML de las columnas', 'eventosColumnas','Tabla parametrica core','eventos_columnas_',1,true ,true,true,true,true,false,false,false,false),
-( 'public.core_operacion','Operaciones', 'operacion','Tabla parametrica core','operacion_',1,true ,true,true,true,true,false,false,false,false),
+( 'core.core_estado_registro','Estado Registro', 'estadoRegistro','Tabla parametrica core','estado_registro_',1,true ,false,false,false,false,false,false, false,false),
+( 'core.core_tipo_dato','Tipos de datos', 'tipoDato','Tabla parametrica core','tipo_dato_',1,true ,false,false,false,false,false,false,false,false),
+( 'core.core_objetos','Objetos', 'objetos','Tabla parametrica core','objetos_',1,true ,false,false,false,false,false,false,false,false),
+( 'core.core_grupo_aplicacion','Grupos de Aplicaciones', 'grupoAplicacion','Tabla parametrica core','grupo_aplicacion_',1,true ,false,false,false,false,false,false, false,false),
+( 'core.core_columnas','Columnas', 'columnas','Tabla parametrica core','columnas_',1,true ,true,true,true,true,false,false,false,false),
+( 'core.core_eventos_html','Eventos HTML', 'eventosHtml','Tabla parametrica core','eventos_html_',1,true ,false,false,false,false,false,false,false,false),
+( 'core.core_eventos_columnas','Eventos HTML de las columnas', 'eventosColumnas','Tabla parametrica core','eventos_columnas_',1,true ,true,true,true,true,false,false,false,false),
+( 'core.core_operacion','Operaciones', 'operacion','Tabla parametrica core','operacion_',1,true ,true,true,true,true,false,false,false,false),
 
 ( 'usuarios.usuario','Usuario' ,'usuario','Tabla de usuario del gestor de usuarios','usuario_',2,false, true,true,true,true,true,true,false,false),
 ( 'usuarios.relaciones','Permisos', 'relacion','Tabla de relaciones entre usuarios, permisos, objetos y registros de los objetos','rel_',2,false,true,true,true,true,true,false,true,true),
@@ -116,7 +116,7 @@ ALTER TABLE public.core_objetos
 ( 'reglas.funciones','Funciones','funcion','Tabla de funciones de las reglas','fun_',3,false, true,true,true,true,true,true,false,true),
 ( 'reglas.reglas','Reglas','regla','Tabla de reglas de las reglas','reg_',3,false, true,true,true,true,true,true,false,true),
 ( 'reglas.operadores','Operadores','opreadores','Tabla de operadores de las reglas','ope_',3,true, false,false,false,false,false,false,false,false),
-( 'reglas.categoria_funcion','Categoria Funciï¿½n','categoriaFuncion','Tabla de categorias de las funciones','cfun_',3,true, false,false,false,false,false,false,false,false),
+( 'reglas.categoria_funcion','Categoria Función','categoriaFuncion','Tabla de categorias de las funciones','cfun_',3,true, false,false,false,false,false,false,false,false),
 
 ( 'proceso.grupo_elemento_bpmn','Grupo de elementos BPMN','grupoElementoBpmn','Tabla de grupos de elementos bpmn','grupo_elemento_bpmn_',4,true, false,false,false,false,false,false,false,false),
 ( 'proceso.elemento_bpmn','Elementos BPMN','elementoBpmn','Tabla elementos BPMN','elemento_bpmn_',4,true, false,false,false,false,false,false,false,false),
@@ -125,7 +125,7 @@ ALTER TABLE public.core_objetos
 
 ( 'proceso.actividad','Actividad','actividad','Tabla de actividades procesos','actividad_',4,false, true,true,true,true,true,true,false,true),
 ( 'proceso.actividad_rol','Permisos roles actividad','actividadRol','Tabla de permisos roles sobre la actividad','actividad_rol_',4,false, true,true,true,true,true,true,false,true),
-( 'proceso.proceso','Proceso','proceso','tabla de procesos','ï¿½proceso_',4,false, true,true,true,true,true,true,false,true),
+( 'proceso.proceso','Proceso','proceso','tabla de procesos','proceso_',4,false, true,true,true,true,true,true,false,true),
 ( 'proceso.flujo_proceso','Flujo','flujoProceso','tabla del flujo del proceso','flujo_proceso_',4,false, true,true,true,true,true,true,false,true),
 ( 'proceso.trabajo','Trabajo','trabajo','tabla de trabajos, instancia del proceso','trabajo_',4,false, true,true,true,true,true,true,false,true),
 ( 'proceso.pasos_trabajo','Pasos Trabajo','pasosTrabajo','registro de pasos que se ejecutan en el trabajo','pasos_trabajo_',4,false, true,true,true,true,true,true,false,true),
@@ -136,13 +136,16 @@ ALTER TABLE public.core_objetos
 
 --Tabla de columnas (esquema del core)
 --Crea tabla de Columnas  
-  CREATE TABLE public.core_columnas
+  CREATE TABLE core.core_columnas
 (
   columnas_id serial NOT NULL ,
   columnas_nombre text NOT NULL,
   columnas_alias text NOT NULL,
   columnas_input text NOT NULL DEFAULT FALSE,
+  tipo_dato_id integer NOT NULL DEFAULT 3,
   grupo_aplicacion_id integer NOT NULL,
+  objetos_id integer NOT NULL DEFAULT 0,
+  columnas_conexion_nombre text NOT NULL DEFAULT 'estructura',
   columnas_consultar bool NOT NULL DEFAULT FALSE,
   columnas_crear bool NOT NULL DEFAULT FALSE,
   columnas_actualizar bool NOT NULL DEFAULT FALSE,
@@ -157,7 +160,13 @@ ALTER TABLE public.core_objetos
   columnas_requerido_crear bool NOT NULL DEFAULT FALSE,
   columnas_requerido_actualizar bool NOT NULL DEFAULT FALSE,
   CONSTRAINT grupo_aplicacion_fk FOREIGN KEY (grupo_aplicacion_id)
-      REFERENCES public.core_grupo_aplicacion (grupo_aplicacion_id) MATCH SIMPLE
+      REFERENCES core.core_grupo_aplicacion (grupo_aplicacion_id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE SET NULL,
+  CONSTRAINT tipo_dato_fk FOREIGN KEY (tipo_dato_id)
+      REFERENCES core.core_tipo_dato (tipo_dato_id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE SET NULL,
+  CONSTRAINT objetos_fk FOREIGN KEY (objetos_id)
+      REFERENCES core.core_objetos (objetos_id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE SET NULL,
   
   CONSTRAINT columnas_pk PRIMARY KEY (columnas_id)
@@ -165,52 +174,54 @@ ALTER TABLE public.core_objetos
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE public.core_columnas
+ALTER TABLE core.core_columnas
   OWNER TO ecosiis;
 
-insert into public.core_columnas
+insert into core.core_columnas
 (
-columnas_nombre , columnas_alias ,  columnas_input , grupo_aplicacion_id , columnas_consultar ,
-  columnas_crear ,  columnas_actualizar ,  columnas_codificada , columnas_deshabilitado_consultar ,
-  columnas_deshabilitado_crear ,  columnas_deshabilitado_actualizar , columnas_autocompletar_consultar ,
-  columnas_autocompletar_crear ,  columnas_autocompletar_actualizar ,  columnas_requerido_consultar,
-  columnas_requerido_crear ,  columnas_requerido_actualizar 
+columnas_nombre , columnas_alias ,  columnas_input ,tipo_dato_id , grupo_aplicacion_id , objetos_id, columnas_conexion_nombre ,
+columnas_consultar ,  columnas_crear ,  columnas_actualizar ,  columnas_codificada , 
+columnas_deshabilitado_consultar ,  columnas_deshabilitado_crear ,  columnas_deshabilitado_actualizar , 
+columnas_autocompletar_consultar ,  columnas_autocompletar_crear ,  columnas_autocompletar_actualizar ,  
+columnas_requerido_consultar,  columnas_requerido_crear ,  columnas_requerido_actualizar 
 )
 VALUES
   ----core
-  ('id','Identificaciï¿½n','text',1,true,false,false,false,false,false,false,true,false,false,false,false,true),
-  ('nombre','Nombre','text',1,true,true,true,false,false,false,false,true,false,false,true, true, false),
-  ('alias','Alias','text',1,true,true,true,false,false,false,false,true,false,false,true, true, false),
-  ('descripcion','Descripciï¿½n','textarea',1,false,true,true,false,false,false,false,false,false,false,false, false, false),
-  ('estado_registro_id','Estado Registro','select',1,true,true,true,true,false,false,false, true,true,true, true,true,true),
-  ('fecha_registro','Fecha Registro','date',1,true,false,false,false,true,true,false,false,false,false,false, false, false),
+  ('id','Identificación','text', 2,1,0,'estructura',true,false,false,false,false,false,false,true,false,false,false,false,true),
+  ('nombre','Nombre','text', 6,1,0,'estructura',true,true,true,false,false,false,false,true,false,false,true, true, false),
+  ('alias','Alias','text',6,1,0,'estructura',true,true,true,false,false,false,false,true,false,false,true, true, false),
+  ('descripcion','Descripción','textarea',6,1,0,'estructura',false,true,true,false,false,false,false,false,false,false,false, false, false),
+  ('estado_registro_id','Estado Registro','select',2,1,1,'estructura',true,true,true,true,false,false,false, true,true,true, true,true,true),
+  ('fecha_registro','Fecha Registro','date',5,1,0,'estructura',true,false,false,false,true,true,false,false,false,false,false, false, false),
+  ('tipo_dato_id','Tipo Dato','select',2,1,2,'estructura',true,true,true,true,false,false,false, true,true,true, true,true,true),
   
   -----usuarios
-  ('usuario_id','Usuario','text',1,true,true,true,false,false,false,false,true,false,false,true, true, false),
-  ('objeto_id','Objeto','select',1,true,true,true,true,false,false,false, true,true,true, true,true,true),
-  ('registro','Registro','text',1,true,true,true,false,false,false,false,true,false,false,true, true, false),
-  ('permiso_id','Permiso','select',1,true,true,true,true,false,false,false, true,true,true, true,true,true),
-  ('rol_id','Permiso','select',1,true,true,true,true,false,false,false, true,true,true, true,true,true),
-  ('codigo','Codigo','text',1,true,true,true,false,false,false,false,true,false,false,true, true, false),
-  ('usuario','Usuario','text',1,true,true,true,false,false,false,false,true,false,false,true, true, false),
-  ('detalle','Detalle','text',1,true,true,true,false,false,false,false,true,false,false,true, true, false),
+  ('usuario_id','Usuario','text',2,1,9,'academica',true,true,true,false,false,false,false,true,false,false,true, true, false),
+  ('objetos_id','Objeto','select',2,1,3,'academica',true,true,true,true,false,false,false, true,true,true, true,true,true),
+  ('registro','Registro','text',2,1,0,'academica',true,true,true,false,false,false,false,true,false,false,true, true, false),
+  ('permiso_id','Permiso','text',2,1,14,'academica',true,true,true,true,false,false,false, true,true,true, true,true,true),
+  ('rol_id','Permiso','text',2,1,12,'academica',true,true,true,true,false,false,false, true,true,true, true,true,true),
+  ('codigo','Codigo','text',6,1,0,'academica',true,true,true,false,false,false,false,true,false,false,true, true, false),
+  ('usuario','Usuario','text',6,1,0,'academica',true,true,true,false,false,false,false,true,false,false,true, true, false),
+  ('detalle','Detalle','text',6,1,0,'academica',true,true,true,false,false,false,false,true,false,false,true, true, false),
   
   -----procesos
-  ('estado_paso_id','Id del estado del paso','select',3,true,true,true,true,false,false,false, true,true,true, true,true,true),
-  ('elemento_bpmn_id','Id de Objeto BPMN','select',3,true,true,true,true,false,false,false, true,true,true, true,true,true),
-  ('grupo_elemento_bpmn_id','Grupo del elemento BPMN','select',3,true,true,true,true,false,false,false, true,true,true, true,true,true),
-  ('tipo_ejecucion_id','Tipo de Ejecucion de actividad','select',3,true,true,true,true,false,false,false, true,true,true, true,true,true),
-  ('actividad_id','Id del objeto Actividad','select',3,true,true,true,true,false,false,false, true,true,true, true,true,true),
-  ('proceso_id','Id del objeto Proceso','select',3,true,true,true,true,false,false,false, true,true,true, true,true,true),
-  ('padre_id','Id del objeto Actividad padre','select',3,true,true,true,true,false,false,false, true,true,true, true,true,true),
-  ('hijo_id','Id del objeto Actividad hijo','select',3,true,true,true,true,false,false,false, true,true,true, true,true,true),
-  ('trabajo_id','Id del objeto Trabajo','select',3,true,true,true,true,false,false,false, true,true,true, true,true,true)
+  ('estado_paso_id','Id del estado del paso','select',2,3,24,'academica',true,true,true,true,false,false,false, true,true,true, true,true,true),
+  ('elemento_bpmn_id','Id de Objeto BPMN','select',2,3,22,'academica',true,true,true,true,false,false,false, true,true,true, true,true,true),
+  ('grupo_elemento_bpmn_id','Grupo del elemento BPMN','select',2,3,21,'academica',true,true,true,true,false,false,false, true,true,true, true,true,true),
+  ('tipo_ejecucion_id','Tipo de Ejecucion de actividad','select',2,3,23,'academica',true,true,true,true,false,false,false, true,true,true, true,true,true),
+  ('actividad_id','Id del objeto Actividad','text',2,3,25,'academica',true,true,true,true,false,false,false, true,true,true, true,true,true),
+  ('proceso_id','Id del objeto Proceso','text',2,3,27,'academica',true,true,true,true,false,false,false, true,true,true, true,true,true),
+  ('padre_id','Id del objeto Actividad padre','text',2,3,25,'academica',true,true,true,true,false,false,false, true,true,true, true,true,true),
+  ('hijo_id','Id del objeto Actividad hijo','text',2,3,25,'academica',true,true,true,true,false,false,false, true,true,true, true,true,true),
+  ('trabajo_id','Id del objeto Trabajo','text',2,3,29,'academica',true,true,true,true,false,false,false, true,true,true, true,true,true),
+  ('pasos_trabajo_id','Id de los pasos Trabajo','text',2,3,30,'academica',true,true,true,true,false,false,false, true,true,true, true,true,true)
   
   ;
   
 
 --Tabla de tipo_dato (esquema del core)
-CREATE TABLE public.core_tipo_dato
+CREATE TABLE core.core_tipo_dato
 (
   tipo_dato_id serial NOT NULL,
   tipo_dato_nombre text NOT NULL,
@@ -220,11 +231,11 @@ CREATE TABLE public.core_tipo_dato
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE public.core_tipo_dato
+ALTER TABLE core.core_tipo_dato
   OWNER TO ecosiis;
 
  --Llenar tabla
-  INSERT INTO public.core_tipo_dato(
+  INSERT INTO core.core_tipo_dato(
             tipo_dato_nombre, tipo_dato_alias)
     VALUES 
     ('boolean','Boleano'),
@@ -237,7 +248,7 @@ ALTER TABLE public.core_tipo_dato
     ('NULL','Vacio');
     
 --Tabla de estado_registro (esquema del core)
-CREATE TABLE public.core_estado_registro
+CREATE TABLE core.core_estado_registro
 (
   estado_registro_id serial NOT NULL,
   estado_registro_nombre text NOT NULL,
@@ -248,10 +259,10 @@ CREATE TABLE public.core_estado_registro
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE public.core_estado_registro
+ALTER TABLE core.core_estado_registro
   OWNER TO ecosiis;
 
-insert into public.core_estado_registro (estado_registro_nombre,estado_registro_alias,estado_registro_descripcion)
+insert into core.core_estado_registro (estado_registro_nombre,estado_registro_alias,estado_registro_descripcion)
 VALUES
 ('activo','Activo','Estado que indica que el registro es usable'),
 ('inactivo','Inactivo','Estado que indica que el registro no es usable'),

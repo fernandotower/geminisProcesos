@@ -646,15 +646,18 @@ class DAL{
 						
 			$objetoNombre =  ucfirst($objetoNombre);
 			
-			$this->setConexion($conexion);
-			
 			$ejecucion =  'get'.$objetoNombre;
 			
-			//$validacionIdEnLista = call_user_func_array(array($this,$ejecucion), array($nuevoValor,'id','id'));
+			$conexionObjeto = $this->getColumnas($columnaId, 'id', 'conexion_nombre');
 			
+			$this->setConexion($conexionObjeto);
 			
-			//if(!$validacionIdEnLista) return false;
-		    
+			$validacionIdEnLista = (bool) call_user_func_array(array($this,$ejecucion), array($nuevoValor,'id','id'));
+			
+			if(!$validacionIdEnLista) return false;
+			
+			$this->setConexion($conexion);
+				
 		}
 		
 		return true;
