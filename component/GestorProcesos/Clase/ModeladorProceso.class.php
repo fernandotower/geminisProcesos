@@ -10,7 +10,7 @@ include_once ('component/GestorProcesos/Interfaz/IModeladorProcesos.php');
 
 
 
-use component\GestorProcesos\Clase\Modelo as Modelo;
+use component\GestorProcesos\Modelo\Modelo as Modelo;
 
 class ModeladorProceso implements IModelarProceso {
 	

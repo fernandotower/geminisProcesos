@@ -28,8 +28,8 @@ use component\GestorProcesos\Clase\Registrador as Registrador;
 include 'component/GestorProcesos/Clase/ModeladorProceso.class.php';
 use component\GestorProcesos\Clase\ModeladorProceso as ModeladorProceso;
 
-include 'component/GestorProcesos/Clase/Modelo.class.php';
-use component\GestorProcesos\Clase\Modelo as Modelo;
+include 'component/GestorProcesos/Modelo/Modelo.class.php';
+use component\GestorProcesos\Modelo\Modelo as Modelo;
 
 
 

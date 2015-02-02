@@ -1,7 +1,7 @@
 <?php
 
 
-namespace component\GestorProcesos\Clase;
+namespace component\GestorProcesos\Modelo;
 
 
 include_once ('component/GestorProcesos/Modelo/Base.class.php');
@@ -28,7 +28,7 @@ class Modelo{
 	
 	CONST conexion = 'academica';
 	
-	CONST nameBase = 'component\\GestorProcesos\\Modelo\\';
+	private $nameBase  ;
 	
 	private $objeto =  null;
 	private $nombre;
@@ -37,6 +37,8 @@ class Modelo{
 
 
 	public function __construct($nombre = 'Base'){
+		
+		$this->nameBase = __NAMESPACE__.'\\';
 		
 		
 		if(!$this->seleccionarClase($nombre)) return false;
@@ -56,7 +58,7 @@ class Modelo{
 		
 		$nombre = ucfirst(strtolower($nombre));
 		$this->nombre =  $nombre;
-		$class = new \ReflectionClass(self::nameBase.$nombre);
+		$class = new \ReflectionClass($this->nameBase.$nombre);
 		$this->objeto = $class->newInstanceArgs(array(self::conexion));
 		$this->objeto->setDataAccessObject(self::conexion) ;
 		

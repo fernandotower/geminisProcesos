@@ -18,22 +18,11 @@ class Base{
 	
 
 	protected $dao =  NULL;
-
-	public $consultas =  array();
 	
-
 	public function __construct($conexion = ''){
 
-
 		if(!$this->setDataAccessObject($conexion)) return false;
-
 		 
-	}
-	
-	
-	
-	public function getConsultas(){
-		return $this->consultas;
 	}
 	
 	public function setDataAccessObject($conexion = ''){

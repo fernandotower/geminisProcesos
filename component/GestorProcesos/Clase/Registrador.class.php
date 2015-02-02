@@ -8,9 +8,10 @@ include_once ('component/GestorProcesos/Interfaz/IRegistrador.php');
 
 
 
-use component\GestorProcesos\Clase\Modelo as Modelo;
+
 include_once ('core/connection/DAL.class.php');
 
+use component\GestorProcesos\Modelo\Modelo as Modelo;
 
 class Registrador implements IRegistrar {
 	var $miSql;
