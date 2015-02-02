@@ -46,6 +46,7 @@ class Persistencia {
     		$this->mensaje->addMensaje("1","errorConexion",'error');
     		return false;
     	}
+    	
     	$this->conexion =  $conexion;   
     	$this->tabla =  $tabla;
     	$this->historico =  $historico;
@@ -180,10 +181,18 @@ class Persistencia {
     	  $this->validarWhere($where)){
     		
 	        $this->setQuery("DELETE FROM ".$this->tabla." WHERE ".$where);
+	        
+	        
+	        
 	    	$delete = $this->ejecutar() ;
 	          if($delete ==  false){
 	           	$this->mensaje->addMensaje("8","errorEliminar",'error');
 	           	return false;
+	           }
+	           
+	         if($this->historico){
+	           	$this->justificacion = 'delete';
+	           	//if(!$this->historico($arrayFields,$arrayValues)) return false;
 	           }
 	           
 	           return $delete;
@@ -254,7 +263,7 @@ class Persistencia {
     		
     		if($this->historico){
     			$this->justificacion = 'create';
-    			if(!$this->historico($arrayFields,$arrayValues)) return false;
+    			//if(!$this->historico($arrayFields,$arrayValues)) return false;
     		} 
     		
     		
@@ -626,8 +635,6 @@ class Persistencia {
     }
     
     public function getPrefijoColumna(){
-    	//$this->recuperarTablaEsquema();
-    	//return $this->tablaNombre;
     	return $this->prefijoColumna;
     }
     
@@ -640,8 +647,6 @@ class Persistencia {
     }
     
     public function getPrefijoColumnaH(){
-    	//$this->recuperarTablaEsquema();
-    	//return $this->tablaNombre."_h";
     	return $this->prefijoColumnaH;
     }
     

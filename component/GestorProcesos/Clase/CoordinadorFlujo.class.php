@@ -214,6 +214,7 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 	private function ejecutarEventoInicio() {
 		return TRUE;
 	}
+	
 	private function ejecutarEventoIntermedio($valor) {
 		return true;
 	}
@@ -243,6 +244,7 @@ class CoordinadorFlujo implements ICoordinadorFlujo {
 			return false;
 		return true;
 	}
+	
 	private function ejecutarTareaHumana() {
 		// 1. La tarea humana consulta si se ha realizado
 		// 2. si NO hace una parada

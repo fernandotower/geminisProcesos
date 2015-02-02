@@ -108,6 +108,7 @@ if (!class_exists ( '\\proceso\\procesoLista\\Bloque' )) {
 			$gp = new GestorProcesos;
 			$idProceso = 1;
 			var_dump($gp->ejecutarProceso($idProceso));
+			//var_dump($gp->probarFuncion());
 			
 			
 			
