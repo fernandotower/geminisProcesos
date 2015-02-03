@@ -14,7 +14,9 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE core.core_operacion
-  OWNER TO ecosiis;
+  OWNER TO geminis;
+
+
 
 
 INSERT INTO core.core_operacion
@@ -26,6 +28,35 @@ VALUES
 (4,'duplicar','Consultar','Consultar CRUD'),
 (5,'activarInactivar','Cambiar Estado','Cambiar estado registro activo/inactivo'),
 (6,'eliminar','Eliminar','Eliminar CRUD');
+
+
+--Tabla de tipo_dato (esquema del core)
+CREATE TABLE core.core_tipo_dato
+(
+  tipo_dato_id serial NOT NULL,
+  tipo_dato_nombre text NOT NULL,
+  tipo_dato_alias text NOT NULL,
+  CONSTRAINT tipo_dato_pk PRIMARY KEY (tipo_dato_id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE core.core_tipo_dato
+  OWNER TO geminis;
+
+ --Llenar tabla
+  INSERT INTO core.core_tipo_dato(
+            tipo_dato_nombre, tipo_dato_alias)
+    VALUES 
+    ('boolean','Boleano'),
+    ('integer','Entero'),
+    ('double','Doble'),
+    ('percent','Porcentaje'),
+    ('date','Fecha'),
+    ('string','Texto'),
+    ('array','Lista'),
+    ('NULL','Vacio');
+
 
   CREATE TABLE core.core_grupo_aplicacion
 (
@@ -39,7 +70,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE core.core_grupo_aplicacion
-  OWNER TO ecosiis;
+  OWNER TO geminis;
   
   INSERT INTO core.core_grupo_aplicacion
   (grupo_aplicacion_nombre,grupo_aplicacion_alias,grupo_aplicacion_descripcion)
@@ -77,7 +108,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE core.core_objetos
-  OWNER TO ecosiis;
+  OWNER TO geminis;
   
   
   ---Lnea Tabla de Objetos
@@ -175,7 +206,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE core.core_columnas
-  OWNER TO ecosiis;
+  OWNER TO geminis;
 
 insert into core.core_columnas
 (
@@ -219,33 +250,6 @@ VALUES
   
   ;
   
-
---Tabla de tipo_dato (esquema del core)
-CREATE TABLE core.core_tipo_dato
-(
-  tipo_dato_id serial NOT NULL,
-  tipo_dato_nombre text NOT NULL,
-  tipo_dato_alias text NOT NULL,
-  CONSTRAINT tipo_dato_pk PRIMARY KEY (tipo_dato_id)
-)
-WITH (
-  OIDS=FALSE
-);
-ALTER TABLE core.core_tipo_dato
-  OWNER TO ecosiis;
-
- --Llenar tabla
-  INSERT INTO core.core_tipo_dato(
-            tipo_dato_nombre, tipo_dato_alias)
-    VALUES 
-    ('boolean','Boleano'),
-    ('integer','Entero'),
-    ('double','Doble'),
-    ('percent','Porcentaje'),
-    ('date','Fecha'),
-    ('string','Texto'),
-    ('array','Lista'),
-    ('NULL','Vacio');
     
 --Tabla de estado_registro (esquema del core)
 CREATE TABLE core.core_estado_registro
@@ -260,7 +264,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE core.core_estado_registro
-  OWNER TO ecosiis;
+  OWNER TO geminis;
 
 insert into core.core_estado_registro (estado_registro_nombre,estado_registro_alias,estado_registro_descripcion)
 VALUES

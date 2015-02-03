@@ -1,6 +1,6 @@
  --Crea esquema y asigna permisos
 CREATE SCHEMA usuarios
-  AUTHORIZATION ecosiis;
+  AUTHORIZATION geminis;
 
 --Tabla de acceso (esquema de usuarios)
 --Tabla de Acceso	   
@@ -17,7 +17,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE usuarios.acceso
-  OWNER TO ecosiis;
+  OWNER TO geminis;
 
 --Tabla de permisos (esquema de usuarios)
 --------------Tabla permiso
@@ -33,7 +33,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE usuarios.permiso
-  OWNER TO ecosiis;
+  OWNER TO geminis;
 
 insert into usuarios.permiso
 (permiso_id,permiso_nombre, permiso_alias, permiso_descripcion)
@@ -61,7 +61,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE usuarios.usuario
-  OWNER TO ecosiis;
+  OWNER TO geminis;
 --Tabla de rol  (esquema de usuarios)
 ------Tabla Rol
 CREATE TABLE usuarios.rol
@@ -76,7 +76,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE usuarios.rol
-  OWNER TO ecosiis;
+  OWNER TO geminis;
   
 --Tabla de usuario_rol  (esquema de usuarios)
 -----------------tabla rol_usuario
@@ -99,7 +99,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE usuarios.rol_usuario
-  OWNER TO ecosiis;
+  OWNER TO geminis;
 
 
 --Tabla de relaciones o de permisos_usuarios_objeto_registro  (esquema de usuarios)
@@ -133,7 +133,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE usuarios.relaciones
-  OWNER TO ecosiis;
+  OWNER TO geminis;
   
   --se agrega un usuario como administrador para poder probar
 ----INSERT INTO reglas.relaciones (usuario_id , objetos_id ,rel_registro, rel_permiso , rel_estado)
@@ -160,7 +160,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE usuarios.relaciones_h
-  OWNER TO ecosiis;
+  OWNER TO geminis;
   
 
 ---------------------

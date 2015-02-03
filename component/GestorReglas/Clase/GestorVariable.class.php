@@ -245,10 +245,9 @@ class GestorVariable{
     
     	 
     
-    $ejecutar = $this->registrador->ejecutar(self::ID_OBJETO,$parametros,4);
+    $ejecutar = $this->registrador->duplicarVariable(self::ID_OBJETO,$parametros,4);
      	if(!$ejecutar){
     		
-    		$this->mensaje = &$this->registrador->mensaje;
     		return false;
     	}
     	

@@ -1,6 +1,6 @@
  --Crea esquema y asigna permisos
 CREATE SCHEMA proceso
-  AUTHORIZATION ecosiis;
+  AUTHORIZATION geminis;
 
 --------Tabla grupo_elemento_bpmn
 CREATE TABLE proceso.grupo_elemento_bpmn
@@ -15,7 +15,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE proceso.grupo_elemento_bpmn
-  OWNER TO ecosiis;
+  OWNER TO geminis;
 
 insert into proceso.grupo_elemento_bpmn (grupo_elemento_bpmn_nombre,grupo_elemento_bpmn_alias,grupo_elemento_bpmn_descripcion)
 VALUES
@@ -41,7 +41,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE proceso.elemento_bpmn
-  OWNER TO ecosiis;
+  OWNER TO geminis;
 
 insert into proceso.elemento_bpmn
 (elemento_bpmn_nombre,elemento_bpmn_alias,grupo_elemento_bpmn_id,elemento_bpmn_descripcion)
@@ -75,7 +75,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE proceso.tipo_ejecucion
-  OWNER TO ecosiis;
+  OWNER TO geminis;
 
 
 insert into proceso.tipo_ejecucion
@@ -108,16 +108,14 @@ CREATE TABLE proceso.actividad
   CONSTRAINT elemento_bpmn_fk FOREIGN KEY (elemento_bpmn_id)
       REFERENCES proceso.elemento_bpmn (elemento_bpmn_id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE SET NULL,
-  CONSTRAINT estado_registro_fk FOREIGN KEY (estado_registro_id)
-      REFERENCES core.core_estado_registro (estado_registro_id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE SET NULL,
+      
   CONSTRAINT actividad_pk PRIMARY KEY (actividad_id)
 )
 WITH (
   OIDS=FALSE
 );
 ALTER TABLE proceso.actividad
-  OWNER TO ecosiis;
+  OWNER TO geminis;
 
 
 ---------------Tabla actividad HHHH
@@ -142,7 +140,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE proceso.actividad_h
-  OWNER TO ecosiis;
+  OWNER TO geminis;
 
 
 ----actividad_rol
@@ -163,16 +161,13 @@ CREATE TABLE proceso.actividad_rol
   CONSTRAINT actividad_fk FOREIGN KEY (actividad_id)
       REFERENCES proceso.actividad (actividad_id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE SET NULL,
-  CONSTRAINT estado_registro_fk FOREIGN KEY (estado_registro_id)
-      REFERENCES core.core_estado_registro (estado_registro_id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE SET NULL,
   CONSTRAINT actividad_rol_pk PRIMARY KEY (actividad_rol_id)
 )
 WITH (
   OIDS=FALSE
 );
 ALTER TABLE proceso.actividad_rol
-  OWNER TO ecosiis;
+  OWNER TO geminis;
 
 
 ------tabla h actividad_rol_h
@@ -193,7 +188,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE proceso.actividad_rol
-  OWNER TO ecosiis;
+  OWNER TO geminis;
 
 
 ---------tabla proceso
@@ -205,16 +200,13 @@ CREATE TABLE proceso.proceso
   proceso_descripcion text NOT NULL,
   estado_registro_id integer NOT NULL,
   proceso_fecha_registro DATE NOT NULL DEFAULT ('now'::text)::date,
-  CONSTRAINT estado_registro_fk FOREIGN KEY (estado_registro_id)
-      REFERENCES core.core_estado_registro (estado_registro_id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE SET NULL,
   CONSTRAINT proceso_pk PRIMARY KEY (proceso_id)
 )
 WITH (
   OIDS=FALSE
 );
 ALTER TABLE proceso.proceso
-  OWNER TO ecosiis;
+  OWNER TO geminis;
 
 -----------proceso h
 CREATE TABLE proceso.proceso_h
@@ -235,7 +227,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE proceso.proceso_h
-  OWNER TO ecosiis;
+  OWNER TO geminis;
 
 ----------- tabla flujo_proceso
 CREATE TABLE proceso.flujo_proceso
@@ -259,16 +251,13 @@ CREATE TABLE proceso.flujo_proceso
   CONSTRAINT proceso_fk FOREIGN KEY (proceso_id)
       REFERENCES proceso.proceso (proceso_id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE SET NULL,
-  CONSTRAINT estado_registro_fk FOREIGN KEY (estado_registro_id)
-      REFERENCES core.core_estado_registro (estado_registro_id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE SET NULL,
   CONSTRAINT flujo_proceso_pk PRIMARY KEY (flujo_proceso_id)
 )
 WITH (
   OIDS=FALSE
 );
 ALTER TABLE proceso.flujo_proceso
-  OWNER TO ecosiis;
+  OWNER TO geminis;
 
 
 ---------------------------tabla flujo_proceso_h
@@ -294,7 +283,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE proceso.flujo_proceso_h
-  OWNER TO ecosiis;
+  OWNER TO geminis;
 
 -----------------tabla trabajo
 CREATE TABLE proceso.trabajo
@@ -306,16 +295,13 @@ CREATE TABLE proceso.trabajo
   CONSTRAINT proceso_fk FOREIGN KEY (proceso_id)
       REFERENCES proceso.proceso (proceso_id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE SET NULL,
-  CONSTRAINT estado_registro_fk FOREIGN KEY (estado_registro_id)
-      REFERENCES core.core_estado_registro (estado_registro_id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE SET NULL,
   CONSTRAINT trabajo_pk PRIMARY KEY (trabajo_id)
 )
 WITH (
   OIDS=FALSE
 );
 ALTER TABLE proceso.trabajo
-  OWNER TO ecosiis;
+  OWNER TO geminis;
 
 ----------------tabla trabajo_h
 CREATE TABLE proceso.trabajo_h
@@ -334,7 +320,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE proceso.trabajo_h
-  OWNER TO ecosiis;
+  OWNER TO geminis;
 
 
 
@@ -351,7 +337,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE proceso.estado_paso
-  OWNER TO ecosiis;
+  OWNER TO geminis;
 
 insert into proceso.estado_paso
 (estado_paso_nombre,estado_paso_alias,estado_paso_descripcion)
@@ -384,16 +370,13 @@ CREATE TABLE proceso.pasos_trabajo
   CONSTRAINT estado_paso_fk FOREIGN KEY (estado_paso_id)
       REFERENCES proceso.estado_paso (estado_paso_id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE SET NULL,
-  CONSTRAINT estado_registro_fk FOREIGN KEY (estado_registro_id)
-      REFERENCES core.core_estado_registro (estado_registro_id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE SET NULL,
   CONSTRAINT pasos_trabajo_pk PRIMARY KEY (pasos_trabajo_id)
 )
 WITH (
   OIDS=FALSE
 );
 ALTER TABLE proceso.pasos_trabajo
-  OWNER TO ecosiis;
+  OWNER TO geminis;
 
 
 ----------tabla  pasos_trabajo_h
@@ -416,7 +399,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE proceso.pasos_trabajo_h
-  OWNER TO ecosiis;
+  OWNER TO geminis;
 
 ------------trabajo usuario
 
@@ -433,16 +416,13 @@ CREATE TABLE proceso.trabajo_usuario
   CONSTRAINT usuario_fk FOREIGN KEY (usuario_id)
       REFERENCES usuarios.usuario (usuario_id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE SET NULL,
-  CONSTRAINT estado_registro_fk FOREIGN KEY (estado_registro_id)
-      REFERENCES core.core_estado_registro (estado_registro_id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE SET NULL,
   CONSTRAINT trabajo_usuario_pk PRIMARY KEY (trabajo_usuario_id)
 )
 WITH (
   OIDS=FALSE
 );
 ALTER TABLE proceso.trabajo_usuario
-  OWNER TO ecosiis;
+  OWNER TO geminis;
 
 -------------trabajo_usuario_h
 
@@ -463,7 +443,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE proceso.trabajo_usuario_h
-  OWNER TO ecosiis;
+  OWNER TO geminis;
 
 
 ---------------proceso_rol
@@ -484,16 +464,13 @@ CREATE TABLE proceso.proceso_rol
   CONSTRAINT permiso_fk FOREIGN KEY (permiso_id)
       REFERENCES usuarios.permiso (permiso_id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE SET NULL,
-  CONSTRAINT estado_registro_fk FOREIGN KEY (estado_registro_id)
-      REFERENCES core.core_estado_registro (estado_registro_id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE SET NULL,
   CONSTRAINT proceso_rol_pk PRIMARY KEY (proceso_rol_id)
 )
 WITH (
   OIDS=FALSE
 );
 ALTER TABLE proceso.proceso_rol
-  OWNER TO ecosiis;
+  OWNER TO geminis;
 
 
 ----proceso_rol_h
@@ -515,7 +492,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE proceso.proceso_rol_h
-  OWNER TO ecosiis;
+  OWNER TO geminis;
 
   
   
