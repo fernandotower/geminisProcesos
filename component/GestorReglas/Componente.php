@@ -1,16 +1,18 @@
 <?php
 
-namespace component\GestorUsuarios;
+namespace component\GestorReglas;
 
 
 require_once ('component/Component.class.php');
 use component\Component as Component;
 
-require_once ('component/GestorUsuarios/Clase/GestorUsuariosComponentes.class.php');
-require_once ('component/GestorUsuarios/Interfaz/IGestorUsuarios.php');
+require_once ('component/GestorReglas/Clase/GestorReglas.class.php');
+require_once ('component/GestorReglas/Interfaz/IGestorReglas.php');
 
-use component\GestorUsuarios\interfaz\IGestionarUsuarios as IGestionarUsuarios;
-use component\GestorUsuarios\clase\GestorUsuariosComponentes as GestorUsuariosComponentes;
+include_once ("component\GestorUsuarios\Componente.class.php");
+
+
+use component\GestorUsuarios\Componente as GestorUsuariosComponentes;
 
 class Componente extends Component implements IGestionarUsuarios {
 	private $miUsuario;

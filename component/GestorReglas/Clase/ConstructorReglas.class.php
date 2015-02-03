@@ -1,6 +1,6 @@
 <?php
 
-namespace reglas;
+namespace component\GestorReglas\Clase;
 
 if (! isset ( $GLOBALS ["autorizado"] )) {
     include ("../index.php");
@@ -8,9 +8,12 @@ if (! isset ( $GLOBALS ["autorizado"] )) {
 }
 
 
-include_once ("Mensaje.class.php");
-include_once ("Registrador.class.php");
-include_once ("GestorUsuariosComponentes.class.php");
+include_once ("core/builder/Mensaje.class.php");
+use \Mensaje as Mensaje;
+include_once ("core/connection/DAL.class.php");
+use \DAL as DAL;
+
+use component\GestorUsuarios\Componente as GestorUsuariosComponentes;
 
 class ConstructorReglas{
     
@@ -23,8 +26,8 @@ class ConstructorReglas{
     private $verificadorAcceso ;
     
     function __construct(){
-    	$this->registrador = new Registrador();
-    	$this->mensaje = new Mensaje();
+    	$this->registrador = new DAL();
+    	$this->mensaje =  Mensaje::singleton();
     	
     	//configurar usuario
     	$this->usuario = $_REQUEST['usuario'];
@@ -58,11 +61,11 @@ class ConstructorReglas{
     	$parametros['estado'] = 3;
     	
     	 
-    	$ejecutar = $this->registrador->ejecutar(self::ID_OBJETO,$parametros,1);
+    	$ejecutar = $this->registrador->crearRegla($parametros);
     	
     	if(!$ejecutar){
     	
-    		$this->mensaje = &$this->registrador->mensaje;
+    		
     		return false;
     	}
     	 
@@ -88,9 +91,9 @@ class ConstructorReglas{
     	$parametros['id'] = $id;
     	$parametros['justificacion'] = $justificacion;
     	 
-    	if(!$this->registrador->ejecutar(self::ID_OBJETO,$parametros,3)){
+    	if(!$this->registrador->actualizarRegla($parametros)){
     
-    		$this->mensaje = &$this->registrador->mensaje;
+    		
     		return false;
     	}
     	 
@@ -113,11 +116,11 @@ class ConstructorReglas{
     	if($fecha!='') $parametros['fecha_registro'] = $fecha;
     	
         
-    	$consulta = $this->registrador->ejecutar(self::ID_OBJETO,$parametros,2);
+    	$consulta = $this->registrador->consultarRegla($parametros);
     	
     	if(!$consulta){
     
-    		$this->mensaje = &$this->registrador->mensaje;
+    		
     		return false;
     	}
     
@@ -139,9 +142,9 @@ class ConstructorReglas{
     
     	
     	 
-    	if(!$this->registrador->ejecutar(self::ID_OBJETO,$parametros,5)){
+    	if(!$this->registrador->activarInactivarRegla($parametros)){
     
-    		$this->mensaje = &$this->registrador->mensaje;
+    		
     		return false;
     	}
     
@@ -163,10 +166,10 @@ class ConstructorReglas{
     
     	 
     
-    	$ejecutar = $this->registrador->ejecutar(self::ID_OBJETO,$parametros,4);
+    	$ejecutar = $this->registrador->duplicarRegla($parametros);
      	if(!$ejecutar){
     		
-    		$this->mensaje = &$this->registrador->mensaje;
+    		
     		return false;
     	}
     	

@@ -1,5 +1,16 @@
 <?php
-namespace reglas;
+
+/**
+ * 
+ * @author
+ * 
+ * las sigueintes variables deben ser configuradas en el bloque para poder usar el componente
+ * $bloqueNombre = $this->miConfigurador->getVariableConfiguracion ( "bloqueActualNombre" );
+ * $bloqueGrupo = $this->miConfigurador->getVariableConfiguracion ( "bloqueActualGrupo" );        
+ *
+ */
+
+namespace component\GestorSoap\Clase;
 
 
 if (! isset ( $GLOBALS ["autorizado"] )) {
@@ -8,32 +19,27 @@ if (! isset ( $GLOBALS ["autorizado"] )) {
 }
 
 include_once ("core/manager/Configurador.class.php");
-
-
 include_once ("core/crypto/Encriptador.class.php");
 
 
-include_once("GestorUsuariosComponentes.class.php");
-include_once("Envoltura.class.php");
 
-
-
-include_once (dirname(__FILE__)."/class/wsdl/class.phpwsdl.php");
+include_once ("plugin/wsdl/class.phpwsdl.php");
 use \PhpWsdl as PhpWsdl;
 
 
-class MediadorReglas {
+class Servidor {
     
 	
-	const SERVICIOS = '\Envoltura';
-	
-	
     var $crypto;
-    var $miFabricaSoap;
+
     var $miConfigurador;
     
     //Array de direcciones de clases a incluir
-    var $definiciones;
+    private $definiciones;
+    private $namespace;
+    private $cache;
+    private $clase;
+    
     
     //Objetos 
     var $parametro;
@@ -42,15 +48,52 @@ class MediadorReglas {
     var $variable;
     var $usuario;
    
-    function __construct() {
+    function __construct($datos) {
     	$this->miConfigurador = \Configurador::singleton ();
     	$this->ruta = $this->miConfigurador->getVariableConfiguracion ( "rutaBloque" );
     	
-    	$this->definiciones = Array(								
-        				$this->ruta.'definiciones/Definiciones.php'
+    	if(!$this->setAmbiente($datos)) return false;
+    	
+    	
+    	
    
-        		);
     
+    }
+    
+    public function setAmbiente($datos){
+    	
+
+    	if(!is_array($datos)) return false;
+    	 
+    	if(!isset($datos['definiciones'])&&!is_array($datos['definiciones'])) return false;
+    	$this->definiciones = $datos['definiciones'];
+    	 
+    	if(!isset($datos['namespace'])) return false;
+    	$this->namespace = $datos['namespace'];
+    	
+    	if(isset($datos['cache'])) 	$this->cache = $datos['cache'];
+    	
+    	if(!isset($datos['clase'])) return false;
+    	$this->clase = $datos['clase'];
+    	 
+    	 
+    	
+    }
+    
+    private function validarAmbiente(){
+
+    	
+    	if(!isset($this->definiciones)||!is_array($this->definiciones)) return false;
+    	
+    	
+    	if(!isset($this->namespace)&&is_null($this->namespace)) return false;
+    	
+    	if(!isset($this->clase)&&is_null($this->clase)) return false;
+    	
+    	
+    	return true;
+    	 
+    	
     }
     
 	
@@ -68,10 +111,12 @@ class MediadorReglas {
         		
         }
      
+        
+        
         $bloqueNombre = $this->miConfigurador->getVariableConfiguracion ( "bloqueActualNombre" );
         $bloqueGrupo = $this->miConfigurador->getVariableConfiguracion ( "bloqueActualGrupo" );
             //variale wsSoap
-            $resultado.="&wsSoap";
+            //$resultado.="&wsSoap";
         	
             $resultado.="pagina=".$this->miConfigurador->getVariableConfiguracion("pagina");
         	$resultado.="&procesarAjax=true";
@@ -86,7 +131,7 @@ class MediadorReglas {
     }
     
     
-    function action() {
+    function initServer() {
     	
         $this->soap=PhpWsdl::CreateInstance(
         		(string) __NAMESPACE__,								// PhpWsdl will determine a good namespace

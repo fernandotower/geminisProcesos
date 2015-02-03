@@ -10,11 +10,17 @@ if (! isset ( $GLOBALS ["autorizado"] )) {
 }
 
 
-include_once ("Tipos.class.php");
-include_once ("Rango.class.php");
-include_once ("Mensaje.class.php");
-include_once ("Registrador.class.php");
-include_once ("GestorUsuariosComponentes.class.php");
+include_once ("core/general/Tipos.class.php");
+use \Tipos as Tipos;
+include_once ("core/general/Rango.class.php");
+use \Rango as Rango;
+
+include_once ("core/builder/Mensaje.class.php");
+use \Mensaje as Mensaje;
+include_once ("core/connection/DAL.class.php");
+use \DAL as DAL;
+
+use component\GestorUsuarios\Componente as GestorUsuariosComponentes;
 
 class GestorVariable{
     
@@ -28,7 +34,7 @@ class GestorVariable{
     
     function __construct(){
     	
-    	$this->registrador = new Registrador();
+    	$this->registrador = new DAL();
     	$this->mensaje =  &$this->registrador->mensaje;
     	
     	
@@ -110,10 +116,10 @@ class GestorVariable{
     	$parametros['estado'] = $estado;
     	
          	
-    	$ejecutar = $this->registrador->ejecutar(self::ID_OBJETO,$parametros,1);
+    	$ejecutar = $this->registrador->crearVariable($parametros);
     	
     	if(!$ejecutar){	
-    		$this->mensaje = &$this->registrador->mensaje;
+    		
     		return false;
     	}
     	
@@ -166,9 +172,9 @@ class GestorVariable{
     	$parametros['justificacion'] = $justificacion;
     	
     	 
-    	if(!$this->registrador->ejecutar(self::ID_OBJETO,$parametros,3)){
+    	if(!$this->registrador->actualizarVariable($parametros)){
             
-    		$this->mensaje = &$this->registrador->mensaje;
+    		
     		echo $this->mensaje->getLastMensaje();
     		return false;
     	}
@@ -190,11 +196,11 @@ class GestorVariable{
     	if($id!='') $parametros['id'] = $id;
     	if($fecha!='') $parametros['fecha_registro'] = $fecha;
         
-    	$consulta = $this->registrador->ejecutar(self::ID_OBJETO,$parametros,2);
+    	$consulta = $this->registrador->consultarVariable($parametros);
     	
     	if(!$consulta){
     
-    		$this->mensaje = &$this->registrador->mensaje;
+    		
     		return false;
     	}
     
@@ -215,9 +221,9 @@ class GestorVariable{
     
     	
     	 
-    	if(!$this->registrador->ejecutar(self::ID_OBJETO,$parametros,5)){
+    	if(!$this->registrador->activarInactivarVariable($parametros)){
     
-    		$this->mensaje = &$this->registrador->mensaje;
+    		
     		return false;
     	}
     

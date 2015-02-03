@@ -1,6 +1,6 @@
 <?php
 
-namespace reglas;
+namespace component\GestorReglas\Clase;
 
 use \SoapClient as SoapClient;
 
@@ -10,16 +10,27 @@ if (! isset ( $GLOBALS ["autorizado"] )) {
 }
 
 
-include_once ("Mensaje.class.php");
-include_once ("Tipos.class.php");
-include_once ("Rango.class.php");
-include_once ("Persistencia.class.php");
-include_once (dirname(__FILE__)."/class/evalmath.class.php");
+
+include_once ("core/builder/Mensaje.class.php");
+use \Mensaje as Mensaje;
+include_once ("core/connection/DAL.class.php");
+use \DAL as DAL;
+
+
+include_once ("core/general/Tipos.class.php");
+use \Tipos as Tipos;
+include_once ("core/general/Rango.class.php");
+use \Rango as Rango;
+
+include_once ("plugin/evalmath.class.php");
+
 include_once ("ConstructorReglas.class.php");
 include_once ("GestorFuncion.class.php");
 include_once ("GestorParametro.class.php");
 include_once ("GestorVariable.class.php");
-include_once ("GestorUsuariosComponentes.class.php");
+
+
+use component\GestorUsuarios\Componente as GestorUsuariosComponentes;
 
 class EvaluadorReglas{
     
@@ -37,7 +48,7 @@ class EvaluadorReglas{
     
     function __construct(){
     	$this->evaluador = new \EvalMath();
-    	$this->mensaje = new Mensaje();
+    	$this->mensaje =  Mensaje::singleton();
     	$this->usuario = $_REQUEST['usuario'];
     	
     	//esto debe cambairse por los valores dela bd

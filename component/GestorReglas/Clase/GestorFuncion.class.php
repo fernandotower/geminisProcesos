@@ -1,6 +1,6 @@
 <?php
 
-namespace reglas;
+namespace component\GestorReglas\Clase;
 
 
 
@@ -9,12 +9,19 @@ if (! isset ( $GLOBALS ["autorizado"] )) {
     exit ();
 }
 
-include_once ("Tipos.class.php");
-include_once ("Rango.class.php");
 
-include_once ("Mensaje.class.php");
-include_once ("Registrador.class.php");
-include_once ("GestorUsuariosComponentes.class.php");
+include_once ("core/general/Tipos.class.php");
+use \Tipos as Tipos;
+include_once ("core/general/Rango.class.php");
+use \Rango as Rango;
+
+include_once ("core/builder/Mensaje.class.php");
+use \Mensaje as Mensaje;
+include_once ("core/connection/DAL.class.php");
+use \DAL as DAL;
+
+
+use component\GestorUsuarios\Componente as GestorUsuariosComponentes;
 
 class GestorFuncion{
     
@@ -29,8 +36,8 @@ class GestorFuncion{
     
     function __construct(){
     	
-    	$this->registrador = new Registrador();
-    	$this->mensaje =  &$this->registrador->mensaje;
+    	$this->registrador = new DAL();
+    	$this->mensaje =  Mensaje::singleton();
     	
     	
     	//configurar usuario
@@ -100,10 +107,10 @@ class GestorFuncion{
     	$parametros['estado'] = $estado;
     	
     	
-    	$ejecutar = $this->registrador->ejecutar(self::ID_OBJETO,$parametros,1);
+    	$ejecutar = $this->registrador->crearFuncion($parametros);
     	   	if(!$ejecutar){
     		
-    		$this->mensaje = &$this->registrador->mensaje;
+    		
     		return false;
     	}
     	
@@ -140,11 +147,11 @@ class GestorFuncion{
     	$parametros['id'] = $id;
     	$parametros['justificacion'] = $justificacion;
     	 
-    	return $this->registrador->ejecutar(self::ID_OBJETO,$parametros,3);
+    	return $this->registrador->actualizarFuncion(self::ID_OBJETO,$parametros,3);
     	if(!$this->registrador->ejecutar(self::ID_OBJETO,$parametros,3)){
     
-    		$this->mensaje = &$this->registrador->mensaje;
-    		echo $this->mensaje->getLastMensaje();
+    		
+    		
     		return false;
     	}
     	 
@@ -165,11 +172,11 @@ class GestorFuncion{
     	if($id!='') $parametros['id'] = $id;
     	if($fecha!='') $parametros['fecha_registro'] = $fecha;
     	
-    	$consulta = $this->registrador->ejecutar(self::ID_OBJETO,$parametros,2);
+    	$consulta = $this->registrador->consultarFuncion($parametros);
     	
     	if(!$consulta){
     
-    		$this->mensaje = &$this->registrador->mensaje;
+    		
     		return false;
     	}
     
@@ -190,9 +197,9 @@ class GestorFuncion{
     
     	
     	 
-    	if(!$this->registrador->ejecutar(self::ID_OBJETO,$parametros,5)){
+    	if(!$this->registrador->activarInactivarFuncion($parametros)){
     
-    		$this->mensaje = &$this->registrador->mensaje;
+    		
     		return false;
     	}
     
@@ -213,10 +220,10 @@ class GestorFuncion{
     
     	 
     
-    	$ejecutar = $this->registrador->ejecutar(self::ID_OBJETO,$parametros,4);
+    	$ejecutar = $this->registrador->duplicarFuncion($parametros);
      	if(!$ejecutar){
     		
-    		$this->mensaje = &$this->registrador->mensaje;
+    		
     		return false;
     	}
     	
