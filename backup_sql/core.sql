@@ -78,7 +78,8 @@ ALTER TABLE core.core_grupo_aplicacion
   ('core','Core','Objetos a usar core'),
   ('usuarios','Usuarios','Objetos componente de usuarios'),
   ('reglas','Reglas','Objetos componente de reglas'),
-  ('procesos','Procesos','Objetos componente de procesos');
+  ('procesos','Procesos','Objetos componente de procesos'),
+  ('documentos','Documentos','Objetos componente documentos');
 
 --Tabla de objetos (esquema del core)----agregar el prefijo de las columnas .. tabla  
   CREATE TABLE core.core_objetos
@@ -125,7 +126,7 @@ ALTER TABLE core.core_objetos
             grupo_aplicacion_id ,objetos_listar,objetos_visible,objetos_crear, objetos_consultar, objetos_actualizar , 
             objetos_cambiarEstado , objetos_duplicar , objetos_eliminar,objetos_historico)
    VALUES 
-
+--core
 ( 'core.core_estado_registro','Estado Registro', 'estadoRegistro','Tabla parametrica core','estado_registro_',1,true ,false,false,false,false,false,false, false,false),
 ( 'core.core_tipo_dato','Tipos de datos', 'tipoDato','Tabla parametrica core','tipo_dato_',1,true ,false,false,false,false,false,false,false,false),
 ( 'core.core_objetos','Objetos', 'objetos','Tabla parametrica core','objetos_',1,true ,false,false,false,false,false,false,false,false),
@@ -135,6 +136,7 @@ ALTER TABLE core.core_objetos
 ( 'core.core_eventos_columnas','Eventos HTML de las columnas', 'eventosColumnas','Tabla parametrica core','eventos_columnas_',1,true ,true,true,true,true,false,false,false,false),
 ( 'core.core_operacion','Operaciones', 'operacion','Tabla parametrica core','operacion_',1,true ,true,true,true,true,false,false,false,false),
 
+--usuarios y accesos
 ( 'usuarios.usuario','Usuario' ,'usuario','Tabla de usuario del gestor de usuarios','usuario_',2,false, true,true,true,true,true,true,false,false),
 ( 'usuarios.relaciones','Permisos', 'relacion','Tabla de relaciones entre usuarios, permisos, objetos y registros de los objetos','rel_',2,false,true,true,true,true,true,false,true,true),
 ( 'usuarios.acceso','Acceso', 'acceso','Tabla de log de acceso del gestor de usuarios','acc_',2,false,false,true,false,false,false,false,false,false),
@@ -142,6 +144,7 @@ ALTER TABLE core.core_objetos
 ( 'usuarios.usuario_rol','Rol', 'usuarioRol','Tabla de roles del gestor de usuarios','usuario_rol_',2,false ,true,true,true,true,false,false,false,false),
 ( 'usuarios.permiso','Permisos', 'permiso','Tabla lista permisos del gestor de usuarios','permiso_',2,true ,false,false,false,false,false,false,false,false),
 
+--reglas
 ( 'reglas.parametros','Parametros','parametro','Tabla de parametros de las reglas','par_',3,false, true,true,true,true,true,true,false,true),
 ( 'reglas.variables','Variables','variable','Tabla de variables de las reglas','var_',3,false, true,true,true,true,true,true,false,true),
 ( 'reglas.funciones','Funciones','funcion','Tabla de funciones de las reglas','fun_',3,false, true,true,true,true,true,true,false,true),
@@ -149,6 +152,7 @@ ALTER TABLE core.core_objetos
 ( 'reglas.operadores','Operadores','opreadores','Tabla de operadores de las reglas','ope_',3,true, false,false,false,false,false,false,false,false),
 ( 'reglas.categoria_funcion','Categoria Función','categoriaFuncion','Tabla de categorias de las funciones','cfun_',3,true, false,false,false,false,false,false,false,false),
 
+--proceso
 ( 'proceso.grupo_elemento_bpmn','Grupo de elementos BPMN','grupoElementoBpmn','Tabla de grupos de elementos bpmn','grupo_elemento_bpmn_',4,true, false,false,false,false,false,false,false,false),
 ( 'proceso.elemento_bpmn','Elementos BPMN','elementoBpmn','Tabla elementos BPMN','elemento_bpmn_',4,true, false,false,false,false,false,false,false,false),
 ( 'proceso.tipo_ejecucion','Tipo Ejecucion','tipoEjecucion','Tabla tipo de ejecucion','tipo_ejecucion_',4,true, false,false,false,false,false,false,false,false),
@@ -162,6 +166,12 @@ ALTER TABLE core.core_objetos
 ( 'proceso.pasos_trabajo','Pasos Trabajo','pasosTrabajo','registro de pasos que se ejecutan en el trabajo','pasos_trabajo_',4,false, true,true,true,true,true,true,false,true),
 ( 'proceso.trabajo_usuario','Permisos trabajos usuario','trabajoUsuario','tabla de permisis trabajos usuarios','trabajo_usuario_',4,false, true,true,true,true,true,true,false,true),
 ( 'proceso.proceso_rol','Permisos proceso Rol','procesoRol','tabla de permisos roles sobre procesos','proceso_rol_',4,false, true,true,true,true,true,true,false,true)
+
+--documentos
+( 'documento.ruta','Rutas ubicacion documentos','ruta','Tabla de rutas documentos','ruta_',5,true, false,false,false,false,false,false,false,false),
+( 'documento.tipo_mime','Tipos MIME','tipoMIME','Tabla de tipos MIME','tipo_mime_',5,true, false,false,false,false,false,false,false,false),
+( 'documento.documento','Documento','documento','Tabla de documentos','documento_',5,false, true,true,true,true,true,true,false,true),
+( 'documento.documento_tipo_mime','Documento Tipo MIME','documentoTipoMIME','Tabla de documentos tipos MIME','documento_tipo_mime_',5,false, true,true,true,true,true,true,false,true)
 
 ;
 
@@ -246,7 +256,12 @@ VALUES
   ('padre_id','Id del objeto Actividad padre','text',2,3,25,'academica',true,true,true,true,false,false,false, true,true,true, true,true,true),
   ('hijo_id','Id del objeto Actividad hijo','text',2,3,25,'academica',true,true,true,true,false,false,false, true,true,true, true,true,true),
   ('trabajo_id','Id del objeto Trabajo','text',2,3,29,'academica',true,true,true,true,false,false,false, true,true,true, true,true,true),
-  ('pasos_trabajo_id','Id de los pasos Trabajo','text',2,3,30,'academica',true,true,true,true,false,false,false, true,true,true, true,true,true)
+  ('pasos_trabajo_id','Id de los pasos Trabajo','text',2,3,30,'academica',true,true,true,true,false,false,false, true,true,true, true,true,true),
+ 
+  ----Documentos
+  ('ruta_id','Id del objeto Ruta','text',2,3,33,'academica',true,true,true,true,false,false,false, true,true,true, true,true,true),
+  ('tipo_mime_id','Id del objeto Tipo MIME','text',2,3,34,'academica',true,true,true,true,false,false,false, true,true,true, true,true,true),
+  ('documento_id','Id del objeto Documento','text',2,3,35,'academica',true,true,true,true,false,false,false, true,true,true, true,true,true),
   
   ;
   
