@@ -11,7 +11,7 @@ class Actividad extends Base{
     	
     }
     
-    public function crearActividad($nombre = '', $alias = '',$descripcion = '', $idElementoBpmn = '',$rutaEjecucion = '', $idTipoEjecucion = '', $estadoRegistroId = '', $fechaRegistro = ''){
+    public function crearActividad($nombre = '', $alias = '',$descripcion = '', $idElementoBpmn = '',$rutaEjecucion = '', $idTipoEjecucion = '', $estadoRegistroId = ''){
     	
     	$parametros = array();
     	 
@@ -31,10 +31,11 @@ class Actividad extends Base{
     	 
     	if(!is_null($idTipoEjecucion)&&$idTipoEjecucion!= '') $parametros['tipo_ejecucion_id'] = $idTipoEjecucion;
     	if(!is_null($estadoRegistroId)&&$estadoRegistroId!= '') $parametros['estado_registro_id'] = $estadoRegistroId;
-    	if(!is_null($estadoRegistroId)&&$fechaRegistro!='') $parametros['fecha_registro'] = $fechaRegistro;
+    	else $parametros['estado_registro_id'] =1;
+    	
     	 
     	
-    	return $this->dao-> actualizarActividad($parametros);
+    	return $this->dao-> crearActividad($parametros);
     	 
     	
     }
@@ -88,7 +89,7 @@ class Actividad extends Base{
     
     	$parametros['id'] = $id;
     
-    	return $this->dao-> actualizarActividad($parametros);
+    	return $this->dao-> activarInactivarActividad($parametros);
     
     }
     

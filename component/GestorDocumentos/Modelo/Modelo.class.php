@@ -1,22 +1,16 @@
 <?php
 
 
-namespace component\GestorProcesos\Modelo;
+namespace component\GestorDocumentos\Modelo;
 
 
 include_once ('component/GestorProcesos/Modelo/Base.class.php');
-include_once ('component/GestorProcesos/Modelo/Actividad.class.php');
-include_once ('component/GestorProcesos/Modelo/Flujo.class.php');
-include_once ('component/GestorProcesos/Modelo/Proceso.class.php');
-include_once ('component/GestorProcesos/Modelo/Trabajo.class.php');
-include_once ('component/GestorProcesos/Modelo/PasosTrabajo.class.php');
+include_once ('component/GestorProcesos/Modelo/Documento.class.php');
+include_once ('component/GestorProcesos/Modelo/DocumentoTipoMIME.class.php');
 
 use component\GestorProcesos\Modelo\Base as Base;
-use component\GestorProcesos\Modelo\Actividad as Actividad;
-use component\GestorProcesos\Modelo\Flujo as Flujo;
-use component\GestorProcesos\Modelo\Proceso as Proceso;
-use component\GestorProcesos\Modelo\Trabajo as Trabajo;
-use component\GestorProcesos\Modelo\PasosTrabajo as PasosTrabajo;
+use component\GestorProcesos\Modelo\Documento as Documento;
+use component\GestorProcesos\Modelo\DocumentoTipoMIME as DocumentoTipoMIME;
 
 if (! isset ( $GLOBALS ["autorizado"] )) {
 	include ("../index.php");

@@ -65,7 +65,7 @@ class Trabajo extends Base{
     	if(!is_null($fecha)&&$fecha!='') $parametros['fecha_registro'] = $fecha;
     	   	
     	
-    	return $this->dao-> actualizarTrabajo($parametros);
+    	return $this->dao-> consultarTrabajo($parametros);
     	
     }
     

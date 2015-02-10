@@ -233,6 +233,7 @@ VALUES
   ('alias','Alias','text',6,1,0,'estructura',true,true,true,false,false,false,false,true,false,false,true, true, false),
   ('descripcion','Descripción','textarea',6,1,0,'estructura',false,true,true,false,false,false,false,false,false,false,false, false, false),
   ('etiquetas','Etiquetas','tags',6,1,0,'estructura',false,true,true,false,false,false,false,false,false,false,false, false, false),
+  ('nombre_real','Nombre Real','text',6,1,0,'estructura',false,true,true,false,false,false,false,false,false,false,false, false, false),
   ('estado_registro_id','Estado Registro','select',2,1,1,'estructura',true,true,true,true,false,false,false, true,true,true, true,true,true),
   ('fecha_registro','Fecha Registro','date',5,1,0,'estructura',true,false,false,false,true,true,false,false,false,false,false, false, false),
   ('tipo_dato_id','Tipo Dato','select',2,1,2,'estructura',true,true,true,true,false,false,false, true,true,true, true,true,true),

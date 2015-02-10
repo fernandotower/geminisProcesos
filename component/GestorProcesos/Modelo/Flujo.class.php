@@ -34,7 +34,8 @@ class Flujo extends Base{
     	 $parametros['ruta_ejecucion_condicion'] = $rutaEjecucionCondicion;
     	if(!is_null($estadoRegistroId)||$estadoRegistroId!= '') $parametros['estado_registro_id'] = 3;
     	 $parametros['estado_registro_id'] = $estadoRegistroId;
-    	 
+
+    	 return $this->dao-> crearFlujoProceso($parametros);
     	
     }
     
@@ -57,7 +58,7 @@ class Flujo extends Base{
     	
     	 
     	 
-    	return $this->dao-> consultarFlujoProceso($parametros);
+    	return $this->dao-> actualizarFlujoProceso($parametros);
     	 
     	
     }
@@ -89,7 +90,7 @@ class Flujo extends Base{
     
     	$parametros['id'] = $id;
     
-    	return $this->dao-> actualizarFlujoProceso($parametros);
+    	return $this->dao-> activarInactivarFlujoProceso($parametros);
     
     }
     

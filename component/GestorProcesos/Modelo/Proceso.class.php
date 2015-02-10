@@ -65,7 +65,7 @@ class Proceso extends Base{
     
     	$parametros['id'] = $id;
     
-    	return $this->dao-> actualizarProceso($parametros);
+    	return $this->dao-> activarInactivarProceso($parametros);
     	 
     }
     
