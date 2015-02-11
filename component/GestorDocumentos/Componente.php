@@ -31,8 +31,8 @@ class Componente extends Component implements IGestionarDocumentos {
 		
 	}
 	
-	public function guardarDocumento($nombre, $ruta, $alias = '', $descripcion = '', $etiquetas, $tipoMime, $estadoRegistro = 1){
-		return $this->miGestor->guardarDocumento($nombre, $ruta, $alias, $descripcion, $etiquetas, $tipoMime, $estadoRegistro) ;
+	public function guardarDocumento( $ruta, $alias = '', $descripcion = '', $etiquetas, $tipoMime, $estadoRegistro = 1){
+		return $this->miGestor->guardarDocumento($ruta, $alias, $descripcion, $etiquetas, $tipoMime, $estadoRegistro) ;
 	}
 	
 	

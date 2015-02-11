@@ -166,6 +166,7 @@ $this->idioma["errorTipoMime"] = "Error, tipo MIME Iválido";
 $this->idioma["errorExtension"] = "Error, extension Iválida";
 $this->idioma["errorMime"] = "Error, tipo MIME documento incorrecto";
 $this->idioma["errorMoverArchivo"] = "Error, no fue posible mover el archivo";
+$this->idioma["errorLocalizacionArchivo"] = "Error, no fue posible encontrar el archivo";
 //tablas
 $this->idioma["errorCreacionDocumento"] = "Error Creando Documento";
 $this->idioma["errorLecturaDocumento"] = "No se encontraron registros de Documentos";

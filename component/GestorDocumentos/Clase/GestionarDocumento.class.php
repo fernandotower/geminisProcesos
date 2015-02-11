@@ -22,6 +22,7 @@ class GestionarDocumentos implements IGestionarDocumentos {
 	private $prefijo;
 	private $tamannoMaximo;
 	private $mensaje;
+	private $ruta =  null;
 	
 	public function __construct($prefijo = self::PREFIJO, $tamanno = self::TAMANNO_MAX){
 		
@@ -40,20 +41,14 @@ class GestionarDocumentos implements IGestionarDocumentos {
 		$this->tamannoMaximo = $tamanno;
 	}
 	
-	public function guardarDocumento($nombre, $ruta = 1, $alias = '', $descripcion = '', $etiquetas, $tipoMime, $estadoRegistro = 1){
+	public function guardarDocumento($ruta = 1, $alias = '', $descripcion = '', $etiquetas, $tipoMime, $estadoRegistro = 1){
 	   
 		if(count($_FILES)<1) {
 			$this->mensaje->addMensaje("101","errorVariableArchivoVacia",'error');
 			return false;
 		}
 		
-		if(count($_FILES)>1&&$nombre!=''){
-			if(!is_array($nombre)||count($nombre)!=count($_FILES)) {
-				$this->mensaje->addMensaje("101","errorNombreArray",'error');
-				return false;
-			}
-			
-		}
+		
 		
 		if($ruta == ''||$etiquetas == ''||$tipoMime ==''||$estadoRegistro==''){
 			$this->mensaje->addMensaje("101","errorParametrosEntrada",'error');
@@ -181,9 +176,44 @@ class GestionarDocumentos implements IGestionarDocumentos {
 	
 	
 	public function abrirDocumento($idDocumento){
-		;
+		
+		
+		//consultar nombre documento
+		$consulta =  $this->documento->consultarDocumento($idDocumento,'','','','','','',1,'');
+		
+		
+		if(!is_array($consulta)) return false;
+		
+		$nombre_real = $consulta[0]['nombre_real'];
+		$nombre = $consulta[0]['nombre'];;
+		$alias = $consulta[0]['alias'];
+		$idRuta = $consulta[0]['ruta_id'];
+		
+		$rutaL = $this->documento->getRuta($idRuta,'id','valor');
+		if(!$rutaL) return false;
+		$rutaL .=DIRECTORY_SEPARATOR;
+		
+		$extension  = pathinfo($nombre,PATHINFO_EXTENSION);;
+		$file = $rutaL.$nombre_real;
+		
+		if (file_exists($file)) {
+			header('Content-Description: File Transfer');
+			header('Content-Type: application/octet-stream');
+			header('Content-Disposition: attachment; filename="'.$nombre.'"');
+			header('Expires: 0');
+			header('Cache-Control: must-revalidate');
+			header('Pragma: public');
+			header('Content-Length: ' . filesize($file));
+			readfile($file);
+			exit;
+		}else {
+			$this->mensaje->addMensaje("101","errorLocalizacionArchivo",'error');
+			return false;
+		}
+		
 	}
 	
+	//no se va a usar
 	public function validarDocumento($tipoMime, $idDocumento){
 		;
 	}
@@ -200,11 +230,11 @@ class GestionarDocumentos implements IGestionarDocumentos {
 	}
 	
 	public function getListaTipoMIME(){
-		;
+		return $this->documento->getListaTipoMIME() ;
 	}
 	
 	public function setRuta($idRuta){
-		;
+		$this->ruta = $idRuta;
 	}
 	
 
