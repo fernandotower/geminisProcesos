@@ -4,11 +4,11 @@ namespace component\GestorDocumentos;
 
 use component\Component;
 
-include 'component/GestorDocumentos/Interfaz/IGestorDocumentos.php';
+include 'component/GestorDocumentos/Interfaz/IGestionarDocumento.php';
 use component\GestorDocumentos\interfaz\IGestionarDocumentos as IGestionarDocumentos;
 
 include 'component/GestorDocumentos/Clase/GestionarDocumento.class.php';
-use component\GestorDocumentos\Modelo\GestionarDocumentos as GestorDocumentos;
+use component\GestorDocumentos\Clase\GestionarDocumentos as GestorDocumentos;
 
 
 include 'component/GestorDocumentos/Modelo/Modelo.class.php';

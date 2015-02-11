@@ -263,7 +263,7 @@ class Persistencia {
     		
     		if($this->historico){
     			$this->justificacion = 'create';
-    			//if(!$this->historico($arrayFields,$arrayValues)) return false;
+    			if(!$this->historico($arrayFields,$arrayValues)) return false;
     		} 
     		
     		

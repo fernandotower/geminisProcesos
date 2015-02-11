@@ -14,12 +14,14 @@ class Documento extends Base{
     public function crearDocumento($nombre = '', $alias = '',$nombreReal = '',$descripcion = '', $etiquetas = '',$rutaId = '',  $estadoRegistroId = ''){
     	
     	$parametros = array();
-    	 
-    	if(!is_null($nombre)||$nombre!= '') return false;
     	
-    	if(!is_null($nombreReal)||$nombreReal!= '') return false;
-    	if(!is_null($etiquetas)||$etiquetas!= '') return false;
-    	if(!is_null($rutaId)||$rutaId!= '') return false;
+    	
+    	if(is_null($nombre)||$nombre== '') return false;
+    	
+    	if(is_null($nombreReal)||$nombreReal== '') return false;
+    	
+    	if(is_null($etiquetas)||$etiquetas== '') return false;
+    	if(is_null($rutaId)||$rutaId== '') return false;
     	
     	 
     	if(!is_null($nombre)&&$nombre!= '') $parametros['nombre'] = $nombre;
@@ -28,11 +30,8 @@ class Documento extends Base{
     	if(!is_null($etiquetas)&&$etiquetas!= '') $parametros['etiquetas'] = $etiquetas;
     	if(!is_null($rutaId)&&$rutaId!= '') $parametros['ruta_id'] = $rutaId;
     	if(!is_null($descripcion)&&$descripcion!= '') $parametros['descripcion'] = $descripcion;
-    	
-    	 
     	 
     	if(!is_null($estadoRegistroId)&&$estadoRegistroId!= '') $parametros['estado_registro_id'] = $estadoRegistroId;
-    	 
     	
     	return $this->dao-> crearDocumento($parametros);
     	 
@@ -43,7 +42,7 @@ class Documento extends Base{
 
     	$parametros = array();
     	
-    	if(!is_null($id)||$id!= '') return false; 
+    	if(is_null($id)||$id== '') return false; 
     	$parametros['id'] = $id;
     	
     	 

@@ -4,13 +4,13 @@
 namespace component\GestorDocumentos\Modelo;
 
 
-include_once ('component/GestorProcesos/Modelo/Base.class.php');
-include_once ('component/GestorProcesos/Modelo/Documento.class.php');
-include_once ('component/GestorProcesos/Modelo/DocumentoTipoMIME.class.php');
+include_once ('component/GestorDocumentos/Modelo/Base.class.php');
+include_once ('component/GestorDocumentos/Modelo/Documento.class.php');
+include_once ('component/GestorDocumentos/Modelo/DocumentoTipoMIME.class.php');
 
-use component\GestorProcesos\Modelo\Base as Base;
-use component\GestorProcesos\Modelo\Documento as Documento;
-use component\GestorProcesos\Modelo\DocumentoTipoMIME as DocumentoTipoMIME;
+use component\GestorDocumentos\Modelo\Base as Base;
+use component\GestorDocumentos\Modelo\Documento as Documento;
+use component\GestorDocumentos\Modelo\DocumentoTipoMIME as DocumentoTipoMIME;
 
 if (! isset ( $GLOBALS ["autorizado"] )) {
 	include ("../index.php");
@@ -67,7 +67,7 @@ class Modelo{
 		
 		if(!isset($this->objeto)||is_null($this->objeto)) return false;
 		
-		
+		$this->objeto->setDataAccessObject(self::conexion) ;
 		$ejecucion = call_user_func_array(array($this->objeto , $method_name), $arguments);
 		$this->consulta[] = $this->objeto->getQuery();
 		//$this->objeto->unsetDao();

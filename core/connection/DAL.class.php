@@ -131,6 +131,7 @@ class DAL{
 			//$conexion = $this->getConexion();
 			//$this->setConexion('estructura'); 
 			$this->recuperarColumnas();
+			
 			//$this->setConexion($conexion);
 			
 		}
@@ -189,7 +190,7 @@ class DAL{
 	
 	private	function recuperarColumnas(){
 		$this->columnas = $this->persistencia->getListaColumnas($this->excluidos);
-		
+		if(!is_array($this->columnas)) return false;
 		foreach($this->columnas as $columna)
 			$this->columnasNoPrefijo[] = str_replace($this->prefijoColumnas, "", $columna);
 	}
@@ -237,6 +238,7 @@ class DAL{
 		//popula $this->objetos
 		$this->persistencia =  new Persistencia(self::CONEXION,$nombreFinal);
 		$listaColumnas = $this->persistencia->getListaColumnas();
+		
 		if(is_array($listaColumnas)){
 			$this->objetos = $this->persistencia->read($listaColumnas);
 			return true;
@@ -404,21 +406,23 @@ class DAL{
 		
 		if (strpos($method_name,$operacionSeleccion) !== false&&$operacionSeleccion!='') {
 		
+			$conexionActual =  $this->conexion;
+			$this->setConexion('estructura');
+			
 			$objeto = str_replace($operacionSeleccion,'',$method_name);
 			$idObjeto = $this->getObjeto($objeto,'ejecutar','id');
 			
-				
+			
 			if(!$idObjeto) {
+				
 				$this->mensaje->addMensaje("103","objetoNoEncontrado",'information');
 				return false;
 			}
 		
-			$conexionActual =  $this->conexion;
-			$this->setConexion('estructura');
+			
 		    $idOperacion = $this->getOperacion($operacionSeleccion,'nombre','id');
 		    
 		    $this->setConexion($conexionActual);
-		    
 		    
 		    
 			return $this->ejecutar($idObjeto,$arguments,$idOperacion);
@@ -607,7 +611,11 @@ class DAL{
 	
 	private function validarColumna($colIndex = '', $valor = ''){
 		
-		if(is_null($colIndex)||$colIndex==''||is_null($valor)||$valor=='') return false;
+		
+		if(is_null($colIndex)||$colIndex==''||is_null($valor)||$valor=='') {
+			$this->mensaje->addMensaje("101","errorEntradaParametros",'error');
+			return false;
+		}
 		
 		$conexion =  $this->getConexion();
 		$this->setConexion('estructura');
@@ -618,31 +626,56 @@ class DAL{
 		
 		
 		
-		if(!$tipoDatoID||!$columnaId) return false;
+		if(!$tipoDatoID||!$columnaId){
+			$this->mensaje->addMensaje("101","errorEntradaColumnaInvalida",'error');
+			$this->setConexion($conexion);
+			return false;
+		}
 		
 		
-		if(!Tipos::validarTipo($valor,$tipoDatoID)) return false;
+		if(!Tipos::validarTipo($valor,$tipoDatoID)){
+			$this->mensaje->addMensaje("101","errorTipoDatoColumna",'error');
+			$this->setConexion($conexion);
+			return false;
+		}
 		
 		$nuevoValor =  Tipos::evaluarTipo($valor,$tipoDatoID);
 		
-		if(!$nuevoValor) return false;
+		if(!$nuevoValor){
+			$this->mensaje->addMensaje("101","errorValorColumna",'error');
+			$this->setConexion($conexion);
+			return false;
+		}
 		
 		//validar si es una lista, si el id de la lista existe
 		$tipoInput = $this->getColumnas($columnaId, 'id', 'input');
-		if(!$tipoInput) return false;
+		if(!$tipoInput){
+			$this->mensaje->addMensaje("101","errorInput",'error');
+			$this->setConexion($conexion);
+			return false;
+		}
 		
 		$this->setConexion($conexion);
 		if(strtolower($tipoInput)=='select'){
 
+			
 			$conexion =  $this->getConexion();
 			$this->setConexion('estructura');
 			
 			$objetoId =  $this->getColumnas($columnaId, 'id', 'objetos_id');
-			if(!$objetoId) return false;
+			if(!$objetoId){
+				$this->mensaje->addMensaje("101","registroObjetoNoExiste",'error');
+				$this->setConexion($conexion);
+				return false;
+			}
 			
 			$objetoNombre = $this->getObjeto($objetoId, 'id', 'ejecutar');
 			
-			if(!$objetoNombre) return false;
+			if(!$objetoNombre){
+				$this->mensaje->addMensaje("101","registroObjetoNoExiste",'error');
+				$this->setConexion($conexion);
+				return false;
+			}
 						
 			$objetoNombre =  ucfirst($objetoNombre);
 			
@@ -654,12 +687,16 @@ class DAL{
 			
 			$validacionIdEnLista = (bool) call_user_func_array(array($this,$ejecucion), array($nuevoValor,'id','id'));
 			
-			if(!$validacionIdEnLista) return false;
+			if(!$validacionIdEnLista){
+				$this->mensaje->addMensaje("101","errorFk",'error');
+				$this->setConexion($conexion);
+				return false;
+			}
 			
 			$this->setConexion($conexion);
 				
 		}
-		
+		$this->setConexion($conexion);
 		return true;
 		
 	}
@@ -681,13 +718,16 @@ class DAL{
 		
 		foreach($param as $a=>$b){
 			
-			if($this->persistencia->columnaEnTabla($this->prefijoColumnas.$a))
+			if($this->persistencia->columnaEnTabla($this->prefijoColumnas.$a)){
 				$colIndex = $this->prefijoColumnas.$a;
-			elseif ($this->persistencia->columnaEnTabla($a))
-			$colIndex = $a;
-			else {
+				
+			}elseif ($this->persistencia->columnaEnTabla($a)){
 				$colIndex = $a;
-				$this->mensaje->addMensaje("101",":Columna no existe en tabla ".$this->tablaAlias,'information');
+				
+			}else {
+				$colIndex = $a;
+				$this->mensaje->addMensaje("101","columnaNoExiste".$this->tablaAlias,'information');
+				
 			}
 			
 			$tabla = $this->tabla;
@@ -695,22 +735,25 @@ class DAL{
 			$prefijo = $this->prefijoColumnas;
 			
 			
-			$validacion =  $this->validarColumna($colIndex, $b);
+			$validacion =  $this->validarColumna($a, $b);
 			
 				
 			$this->setAmbiente($tabla, $historico, $prefijo);
+
 			
 			if(!$validacion) return false;
+			
+			
 			
 			switch($a){
 				case 'id':
 					if(!$this->validarId($b)) return false;
 					$valor = $b;
 					break;
-				case 'nombre':
+				/*case 'nombre':
 					if(!$this->validarNombre($b)) return false;
 					$valor = "'".$b."'";
-					break;
+					break;*/
 				case 'descripcion':
 					if(!$this->validarDescripcion($b)) return false;
 					$valor = "'".$b."'";
@@ -831,7 +874,7 @@ class DAL{
 		
 		
 		if($this->usuario=='-1'){
-			$this->mensaje->addMensaje("101",":Usuario Indefinido",'information');
+			$this->mensaje->addMensaje("101","usuarioIndefinido",'information');
 			return true;
 		}
 		
@@ -921,18 +964,22 @@ class DAL{
 				
 				
 				if(!$this->procesarParametros($parametros)){
+					
 					return false;
 					
 					
 				}
 				$justificacion =  'create';
 				$this->persistencia->setJustificacion($justificacion);
+				
 				if(!$this->persistencia->create($this->parametros,$this->valores)){
+					
 					
 					$this->mensaje->addMensaje("101","errorCreacion".$this->tablaAlias,'error');
 					return false;
 				}
 				$ultimoId =  $this->recuperarUltimoId();
+				
 				 
 				//registrar propietario
 						
@@ -961,6 +1008,7 @@ class DAL{
 					
 					$leido = $this->persistencia->read($this->columnas,$this->where);
 
+					
 					if(!$leido){
 						
 						$this->mensaje->addMensaje("101","errorLectura".$this->tablaAlias,'information');

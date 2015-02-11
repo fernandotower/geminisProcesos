@@ -1,7 +1,7 @@
 <?php
 
 
-namespace component\GestorProcesos\Modelo;
+namespace component\GestorDocumentos\Modelo;
 
 include_once ('core/connection/DAL.class.php');
 

@@ -277,7 +277,7 @@ CREATE TABLE documento.documento_tipo_mime_h
   documento_id_h text NOT NULL,
   tipo_mime_id_h text ,
   estado_registro_id_h integer NOT NULL,
-  documento_fecha_registro_h DATE NOT NULL,
+  documento_tipo_mime_fecha_registro_h DATE NOT NULL,
   documento_tipo_mime_h_justificacion text,
   documento_tipo_mime_h_usuario text,
   documento_tipo_mime_h_fecha_registro DATE NOT NULL DEFAULT ('now'::text)::date,

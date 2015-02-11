@@ -15,9 +15,9 @@ class DocumentoTipoMIME extends Base{
     	
     	$parametros = array();
     	 
-    	if(!is_null($documentoId)||$documentoId!= '') return false;
+    	if(is_null($documentoId)||$documentoId== '') return false;
     	
-    	if(!is_null($tipoMIMEId)||$tipoMIMEId!= '') return false;
+    	if(is_null($tipoMIMEId)||$tipoMIMEId== '') return false;
     	
     	 
     	if(!is_null($documentoId)&&$documentoId!= '') $parametros['documento_id'] = $documentoId;

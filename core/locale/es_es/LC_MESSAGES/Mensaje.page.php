@@ -32,4 +32,159 @@ $this->idioma["errorConteo"] = "La tabla esta vacia ó no existe";
 
 //fin valores 
 
+
+//valores clase DAL para mensajes
+
+$this->idioma["errorRecuperarObjetos"] = "Error recuperando Objetos de la base de datos";
+$this->idioma["objetoNoEncontrado"] = "Objeto no encontrado";
+$this->idioma["errorValorInvalido"] = "Error valor inválido";
+$this->idioma["errorSeleccionInvalido"] = "Error indice a seleccionar inválido";
+$this->idioma["errorTipoInvalido"] = "Error indice fuente inválido";
+$this->idioma["erroridObjetoEntrada"] = "Error en el formato de entrada del Id Objeto";
+$this->idioma["errorParametrosEntrada"] = "Error en el formato de entrada de los parámetros";
+$this->idioma["errorOperacionEntrada"] = "Error en el formato de entrada de la operación";
+$this->idioma["errorParametrosEntradaIdObjeto"] = "Error id objeto no existe";
+$this->idioma["errorColumnaNoExiste"] = "Error atributo no existe";
+$this->idioma["errorEntradaParametrosId"] = "Error Id Inválido";
+$this->idioma["errorEntradaParametrosNombre"] = "Error Nombre Inválido";
+$this->idioma["errorEntradaParametrosDescripcion"] = "Error Descripción Inválida";
+$this->idioma["errorEntradaParametrosTipo"] = "Error Tipo Inválido";
+$this->idioma["errorEntradaParametrosValor"] = "Error Valor Inválido";
+$this->idioma["errorEntradaParametrosEstado"] = "Error Estado Inválido";
+$this->idioma["errorEntradaParametrosFechas"] = "Error Fechas Inválidas";
+$this->idioma["errorEntradaParametrosGeneral"] = "Error en la Entrada de elementos";
+
+//columnas
+$this->idioma["errorEntradaColumnaInvalida"] = "Error, columna no válida";
+$this->idioma["errorTipoDatoColumna"] = "Error, tipo dato columna no válido";
+$this->idioma["errorValorColumna"] = 'Error, valor columna no válido';
+$this->idioma["errorInput"] = 'Error, recuperando input columna ';
+$this->idioma["errorFk"] = 'Error, valor llave foranea incorrecto ';
+
+//por tablas
+$this->idioma["errorCreacion"] = "Error Creando ";
+$this->idioma["errorLectura"] = "No se encontraron registros de ";
+$this->idioma["errorIdNoDefinido"] = "Identificador no definido para el ";
+$this->idioma["errorActualizar"] = "Error Actualizando ";
+$this->idioma["errorIdNoExiste"] = "Identificador no Existe para el ";
+$this->idioma["errorDuplicar"] = "Error Duplicando ";
+$this->idioma["errorEliminar"] = "Error Eliminando ";
+$this->idioma["errorCambiarEstado"] = "Error Cambiando Estados ";
+$this->idioma["errorRegistroPropietario"]="Error, registro propietario ";
+
+$this->idioma["errorCreacionParametros"] = "Error Creando Parámetros";
+$this->idioma["errorLecturaParametros"] = "No se encontraron registros de Parámetros";
+$this->idioma["errorIdNoDefinidoParametros"] = "Identificador del parámetro no definido";
+$this->idioma["errorActualizarParametros"] = "Error Actualizando Parámetros";
+$this->idioma["errorIdNoExisteParametros"] = "Identificador del parámetro no Existe";
+$this->idioma["errorDuplicarParametros"] = "Error Duplicando Parámetros";
+$this->idioma["errorEliminarParametros"] = "Error Eliminando Parámetros";
+$this->idioma["errorCambiarEstadoParametros"] = "Error Cambiando Estados Parámetros";
+
+
+$this->idioma["errorCreacionFunciones"] = "Error Creando Funciones";
+$this->idioma["errorLecturaFunciones"] = "No se encontraron registros de Funciones";
+$this->idioma["errorIdNoDefinidoFunciones"] = "Identificador de la Función no definido";
+$this->idioma["errorActualizarFunciones"] = "Error Actualizando Función";
+$this->idioma["errorIdNoExisteFunciones"] = "Identificador de la función no Existe";
+$this->idioma["errorDuplicarFunciones"] = "Error Duplicando Funciones";
+$this->idioma["errorEliminarFunciones"] = "Error Eliminando Funciones";
+$this->idioma["errorCambiarEstadoFunciones"] = "Error Cambiando Estados Funciones";
+
+$this->idioma["errorCreacionVariables"] = "Error Creando Variables";
+$this->idioma["errorLecturaVariables"] = "No se encontraron registros de Variables";
+$this->idioma["errorIdNoDefinidoVariables"] = "Identificador de la Variable no definido";
+$this->idioma["errorActualizarVariables"] = "Error Actualizando Variable";
+$this->idioma["errorIdNoExisteVariables"] = "Identificador de la Variable no Existe";
+$this->idioma["errorDuplicarVariables"] = "Error Duplicando Variable";
+$this->idioma["errorEliminarVariables"] = "Error Eliminando Variable";
+$this->idioma["errorCambiarEstadoVariables"] = "Error Cambiando Estados Variable";
+
+$this->idioma["errorCreacionPermisos"] = "Error Creando Permisos";
+$this->idioma["errorLecturaPermisos"] = "No se encontraron registros de Permisos";
+$this->idioma["errorIdNoDefinidoPermisos"] = "Identificador del permiso no definido";
+$this->idioma["errorActualizarPermisos"] = "Error Actualizando Permisos";
+$this->idioma["errorIdNoExistePermisos"] = "Identificador de la permiso no Existe";
+$this->idioma["errorDuplicarPermisos"] = "Error Duplicando Permisos";
+$this->idioma["errorEliminarPermisos"] = "Error Eliminando Permisos";
+$this->idioma["errorCambiarEstadoPermisos"] = "Error Cambiando Estados Permisos";
+
+$this->idioma["errorCreacionReglas"] = "Error Creando Reglas";
+$this->idioma["errorLecturaReglas"] = "No se encontraron registros de Reglas";
+$this->idioma["errorIdNoDefinidoReglas"] = "Identificador de la regla no definido";
+$this->idioma["errorActualizarReglas"] = "Error Actualizando Reglas";
+$this->idioma["errorIdNoExisteReglas"] = "Identificador de la regla no Existe";
+$this->idioma["errorDuplicarReglas"] = "Error Duplicando Reglas";
+$this->idioma["errorEliminarReglas"] = "Error Eliminando Reglas";
+$this->idioma["errorCambiarEstadoReglas"] = "Error Cambiando Estados Reglas";
+
+$this->idioma["errorCreacionRelaciones"] = "Error Creando Permiso";
+$this->idioma["errorLecturaRelaciones"] = "No se encontraron registros de Permisos";
+$this->idioma["errorIdNoDefinidoRelaciones"] = "Identificador del permiso no definido";
+$this->idioma["errorActualizarRelaciones"] = "Error Actualizando Permiso";
+$this->idioma["errorIdNoExisteRelaciones"] = "Identificador del permiso no Existe";
+$this->idioma["errorDuplicarRelaciones"] = "Error Duplicando Permiso";
+$this->idioma["errorEliminarRelaciones"] = "Error Eliminando Permiso";
+$this->idioma["errorCambiarEstadoRelaciones"] = "Error Cambiando Estados Permiso";
+
+
+$this->idioma["columnaNoExiste"] ="Columna no existe en tabla ";
+$this->idioma["usuarioIndefinido"]="Usuario Indefinido";
+
+
+//fin valores
+
+
+//valores componente usuario y acceso
+////////////////////////////////////////////////////////////////////////////////////////////
+
+$this->idioma["registroObjetoNoExiste"] = "Registro objeto no existe";
+$this->idioma["permisoNoEncontrado"] = "Permiso no encontrado";
+$this->idioma["usuarioNoExiste"] = "Usuario no existe";
+$this->idioma["errorRecuperarPermisos"] = "error recuperando permisos";
+$this->idioma["errorRecuperarColumnas"] = "error recuperando columnas";
+$this->idioma["errorRecuperarObjetos"] = "error recuperando objetos";
+$this->idioma["objetoNoEncontrado"] = "error objeto no encontrado";
+$this->idioma["relacionNoExiste"] = "relación no existe";
+$this->idioma["usuarioNoAutorizado"]="Error, usuario no autorizado";
+$this->idioma["errorPermisosGeneral"]="Error, el usuario no tiene permisos para ejecutar esta operacion";
+$this->idioma["usuarioSinPermisos"]="Error, usuario no posee permisos";
+$this->idioma["errorCadenaMalFormada"]="Error, cadena mal formada";
+$this->idioma["errorSoapCall"]="Error, en llamada al metodo soap";
+$this->idioma["errorRecuperarOperadores"]="Error, recuperando operadores";
+$this->idioma["errorRegistroPropietario"]="Error, registro propietario";
+//fin valores
+
+
+//valores para el componente de documentos
+$this->idioma["errorVariableArchivoVacia"]="Error, variable FILES vacia";
+$this->idioma["errorNombreArray"]="Error, variable nombre debe ser un array";
+$this->idioma["errorRutaFisica"]="Error, ruta fisica Invalida, revise si existe y que tenga permisos de escritura";
+$this->idioma["errorArchivoExiste"]="Error, Archivo existe con ese nombre";
+$this->idioma["errorExtensionTipo"]="Error, extension ó o tipo documento inválido  ";
+$this->idioma["errorTipoMime"] = "Error, tipo MIME Iválido";
+$this->idioma["errorExtension"] = "Error, extension Iválida";
+$this->idioma["errorMime"] = "Error, tipo MIME documento incorrecto";
+$this->idioma["errorMoverArchivo"] = "Error, no fue posible mover el archivo";
+//tablas
+$this->idioma["errorCreacionDocumento"] = "Error Creando Documento";
+$this->idioma["errorLecturaDocumento"] = "No se encontraron registros de Documentos";
+$this->idioma["errorIdNoDefinidoDocumento"] = "Identificador del documento no definido";
+$this->idioma["errorActualizarDocumento"] = "Error Actualizando documento";
+$this->idioma["errorIdNoExisteDocumento"] = "Identificador del documento no Existe";
+$this->idioma["errorDuplicarDocumento"] = "Error Duplicando documento";
+$this->idioma["errorEliminarDocumento"] = "Error Eliminando documento";
+$this->idioma["errorCambiarEstadoDocumento"] = "Error Cambiando Estados documento";
+//
+$this->idioma["errorCreacionDocumentoTipoMIME"] = "Error Creando Documentos Tipos MIME";
+$this->idioma["errorLecturaDocumentoTipoMIME"] = "No se encontraron registros de Documentos  Tipos MIME";
+$this->idioma["errorIdNoDefinidoDocumentoTipoMIME"] = "Identificador del documento Tipos MIME no definido";
+$this->idioma["errorActualizarDocumentoTipoMIME"] = "Error Actualizando documento Tipos MIME";
+$this->idioma["errorIdNoExisteDocumentoTipoMIME"] = "Identificador del documento Tipos MIME no Existe";
+$this->idioma["errorDuplicarDocumentoTipoMIME"] = "Error Duplicando documento Tipos MIME";
+$this->idioma["errorEliminarDocumentoTipoMIME"] = "Error Eliminando documento Tipos MIME";
+$this->idioma["errorCambiarEstadoDocumentoTipoMIME"] = "Error Cambiando Estados documento Tipos MIME";
+//fin valores
+
+
 ?>
