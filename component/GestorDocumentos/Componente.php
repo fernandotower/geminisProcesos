@@ -48,8 +48,8 @@ class Componente extends Component implements IGestionarDocumentos {
 		return $this->miGestor->actualizarDocumento($idDocumento, $nombre, $ruta, $alias, $descripcion, $etiquetas, $tipoMime, $estadoRegistro);
 	}
 	
-	public function consultarDocumento($idDocumento='', $nombre='', $ruta = '', $alias, $descripcion, $etiquetas, $tipoMime, $estadoRegistro, $fechaRegistro){
-		return $this->miGestor->consultarDocumento($idDocumento, $nombre, $ruta, $alias, $descripcion, $etiquetas, $tipoMime, $estadoRegistro, $fechaRegistro);
+	public function consultarDocumento($idDocumento='', $nombre='', $ruta = '', $alias, $etiquetas, $tipoMime, $estadoRegistro, $fechaRegistro){
+		return $this->miGestor->consultarDocumento($idDocumento, $nombre, $ruta, $alias, $etiquetas, $tipoMime, $estadoRegistro, $fechaRegistro);
 	}
 	
 	public function archivarDocumento($idDocumento){
@@ -57,7 +57,7 @@ class Componente extends Component implements IGestionarDocumentos {
 	}
 	
 	public function getListaTipoMIME(){
-		return $this->miGestor->getListaTipoMIME;
+		return $this->miGestor->getListaTipoMIME();
 	}
 	
 	public function setRuta($idRuta){
