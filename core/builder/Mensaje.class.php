@@ -172,7 +172,7 @@ function __construct($salidaTipo = '', $lenguaje = '') {
     		$mensaje->texto = substr($cadena,1,strlen($cadena)-2);
     	}elseif ($cadena[0]!=':'&&count(explode(':',trim($cadena)))>1){
     		$listasCadenas = explode(':',trim($cadena));
-    		$mensaje->texto = $this->recuperarCadena($listasCadenas[0])." ".$listasCadenas[1];
+    		$mensaje->texto = $this->recuperarCadena($listasCadenas[0]).$listasCadenas[1];
     	}else $mensaje->texto = $this->recuperarCadena($cadena);
     	//set tipo de mensaje
     	$mensaje->tipoMensaje = $tipoMensaje;
