@@ -168,8 +168,12 @@ function __construct($salidaTipo = '', $lenguaje = '') {
     	//set cadena de entrada en el obje
     	$mensaje->entrada = $cadena;
     	//recupera cadena de la clase lenguaje
-    	if($cadena[0]==':') $mensaje->texto = substr($cadena,1,strlen($cadena)-2);
-    	else $mensaje->texto = $this->recuperarCadena($cadena);
+    	if($cadena[0]==':') {
+    		$mensaje->texto = substr($cadena,1,strlen($cadena)-2);
+    	}elseif ($cadena[0]!=':'&&count(explode(':',trim($cadena)))>1){
+    		$listasCadenas = explode(':',trim($cadena));
+    		$mensaje->texto = $this->recuperarCadena($listasCadenas[0])." ".$listasCadenas[1];
+    	}else $mensaje->texto = $this->recuperarCadena($cadena);
     	//set tipo de mensaje
     	$mensaje->tipoMensaje = $tipoMensaje;
     	//set objeto de error
