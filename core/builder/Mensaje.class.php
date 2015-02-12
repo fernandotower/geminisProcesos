@@ -178,8 +178,6 @@ function __construct($salidaTipo = '', $lenguaje = '') {
     	$this->mensajeArray[$id] = $mensaje;
     	 
     	if($this->debug) echo $this->getLastMensaje();
-    		
-    
     
     	return true;
     

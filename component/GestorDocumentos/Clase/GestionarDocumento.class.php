@@ -60,8 +60,6 @@ class GestionarDocumentos implements IGestionarDocumentos {
 			return false;
 		}
 		
-		
-		
 		if($ruta == ''||$etiquetas == ''||$tipoMime ==''||$estadoRegistro==''){
 			$this->mensaje->addMensaje("101","errorParametrosEntrada",'error');
 			return false;
@@ -82,6 +80,8 @@ class GestionarDocumentos implements IGestionarDocumentos {
 		 * $idDocumento
 		 * $rutaFisica
 		 * $tipoMime
+		 * 
+		 * hay que primero hacer actualizarTipoMime
 		 */
 		
 		
@@ -300,7 +300,7 @@ class GestionarDocumentos implements IGestionarDocumentos {
 		
 	}
 	
-	public function consultarDocumento($idDocumento, $nombre, $ruta, $alias, $etiquetas, $tipoMime, $estadoRegistro, $fechaRegistro){
+	public function consultarDocumento($idDocumento = '', $nombre = '', $ruta = '', $alias = '', $etiquetas = '', $tipoMime='', $estadoRegistro = '', $fechaRegistro = ''){
 	
 	}
 	
@@ -309,8 +309,10 @@ class GestionarDocumentos implements IGestionarDocumentos {
 		//cambia de ruta, nombre y 
 		if(!$this->moverDocumento($idDocumento, 0 , '.old' )) return false;
 		
-		// eliminar
-		return $this->documento->eliminarDocumento($idDocumento);
+		// eliminar.... falta eliminar los tipos mimes
+		
+		return $this->documento->eliminarDocumentoTipoMIME($idDocumento)
+		       &&$this->documento->eliminarDocumento($idDocumento);
 		
 	}
 	

@@ -12,7 +12,7 @@ interface IGestionarDocumentos{
 	
 	public function actualizarDocumento($idDocumento, $nombre, $ruta, $alias, $descripcion, $etiquetas, $tipoMime, $estadoRegistro);
 	
-	public function consultarDocumento($idDocumento, $nombre, $ruta, $alias, $descripcion, $etiquetas, $tipoMime, $estadoRegistro, $fechaRegistro);
+	public function consultarDocumento($idDocumento, $nombre, $ruta, $alias,  $etiquetas, $tipoMime, $estadoRegistro, $fechaRegistro);
 	
 	public function archivarDocumento($idDocumento);
 	

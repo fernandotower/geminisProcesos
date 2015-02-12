@@ -179,20 +179,20 @@ class Persistencia {
     
     	if($this->probarTabla()&&
     	  $this->validarWhere($where)){
-    		
-	        $this->setQuery("DELETE FROM ".$this->tabla." WHERE ".$where);
-	        
-	        
-	        
-	    	$delete = $this->ejecutar() ;
-	          if($delete ==  false){
-	           	$this->mensaje->addMensaje("8","errorEliminar",'error');
-	           	return false;
+
+    		if($this->historico){
+	           	$this->justificacion = 'delete';
+	           	if(!$this->historico('','',$where)) return false;
 	           }
 	           
-	         if($this->historico){
-	           	$this->justificacion = 'delete';
-	           	//if(!$this->historico($arrayFields,$arrayValues)) return false;
+	           $this->setQuery("DELETE FROM ".$this->tabla." WHERE ".$where);
+	            
+	            
+	            
+	           $delete = $this->ejecutar() ;
+	           if($delete ==  false){
+	           	$this->mensaje->addMensaje("8","errorEliminar",'error');
+	           	return false;
 	           }
 	           
 	           return $delete;
@@ -526,7 +526,7 @@ class Persistencia {
     	$this->esquema = $esquema;
     }
     
-    private function historico($arrayFields , $arrayValues ,$where = null){
+    private function historico($arrayFields = '' , $arrayValues = '' ,$where = null){
     	//tener en cuenta que si va a ser publica ha que agregar mas validaciones
     	
     	if($this->historico){
