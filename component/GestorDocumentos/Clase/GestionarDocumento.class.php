@@ -138,6 +138,8 @@ class GestionarDocumentos implements IGestionarDocumentos {
 			
 			$guardar =$this-> guardarArchivo($file,$ruta, $alias, $descripcion, $etiquetas, $tipoMime, $estadoRegistro);
 
+			
+			
 			if($guardar === false) return false;
 			
 			return $guardar;

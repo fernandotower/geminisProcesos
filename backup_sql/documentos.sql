@@ -184,9 +184,9 @@ ALTER TABLE documento.ruta
 insert into documento.ruta
 (ruta_id, ruta_nombre, ruta_alias, ruta_valor, ruta_descripcion)
 VALUES
-(0, 'Archivo','Ruta de los Archivos','/usr/local/apache/htdocs/geminis/component/GestorDocumentos/Archivos/Historico/','Ruta de los historicos'),
-(1, 'Predeterminada','Ruta Predeterminada','/usr/local/apache/htdocs/geminis/component/GestorDocumentos/Archivos/Default/','Ruta pedeterminada'),
-(2, 'Ruta1','Ruta de los Archivos','/usr/local/apache/htdocs/geminis/component/GestorDocumentos/Ruta1/','Ruta 2')
+(0, 'Archivo','Ruta de los Archivos','/usr/local/apache/htdocs/geminis/component/GestorDocumentos/Archivos/Historico','Ruta de los historicos'),
+(1, 'Predeterminada','Ruta Predeterminada','/usr/local/apache/htdocs/geminis/component/GestorDocumentos/Archivos/Default','Ruta pedeterminada'),
+(2, 'Ruta1','Ruta de los Archivos','/usr/local/apache/htdocs/geminis/component/GestorDocumentos/Archivos/Ruta1','Ruta 2')
 --(3, 'predeterminada1','Ruta p','C:\Developer\WAPP\apache2\htdocs\geminisProcesos\component\GestorDocumentos\Archivos\Default\','Ruta pre')
 
 ;
