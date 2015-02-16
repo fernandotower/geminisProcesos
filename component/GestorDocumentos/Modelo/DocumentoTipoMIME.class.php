@@ -54,7 +54,7 @@ class DocumentoTipoMIME extends Base{
     	
     }
     
-    public function consultarDocumentoTipoMIME($documentoId = '', $tipoMIMEId = '',$estadoRegistroId = '', $fechaRegistro = ''){
+    public function consultarDocumentoTipoMIME($id = '',$documentoId = '', $tipoMIMEId = '',$estadoRegistroId = '', $fechaRegistro = ''){
 
     	$parametros = array();
     	 

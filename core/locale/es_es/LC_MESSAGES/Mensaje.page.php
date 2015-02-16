@@ -61,6 +61,7 @@ $this->idioma["errorValorColumna"] = 'Error, valor columna no válido';
 $this->idioma["errorInput"] = 'Error, recuperando input columna ';
 $this->idioma["errorFk"] = 'Error, valor llave foranea incorrecto ';
 
+/*
 //por tablas
 $this->idioma["errorCreacion"] = "Error Creando ";
 $this->idioma["errorLectura"] = "No se encontraron registros de ";
@@ -126,7 +127,7 @@ $this->idioma["errorIdNoExisteRelaciones"] = "Identificador del permiso no Exist
 $this->idioma["errorDuplicarRelaciones"] = "Error Duplicando Permiso";
 $this->idioma["errorEliminarRelaciones"] = "Error Eliminando Permiso";
 $this->idioma["errorCambiarEstadoRelaciones"] = "Error Cambiando Estados Permiso";
-
+*/
 
 $this->idioma["columnaNoExiste"] ="Columna no existe en tabla ";
 $this->idioma["usuarioIndefinido"]="Usuario Indefinido";
@@ -167,6 +168,7 @@ $this->idioma["errorExtension"] = "Error, extension Iválida";
 $this->idioma["errorMime"] = "Error, tipo MIME documento incorrecto";
 $this->idioma["errorMoverArchivo"] = "Error, no fue posible mover el archivo";
 $this->idioma["errorLocalizacionArchivo"] = "Error, no fue posible encontrar el archivo";
+$this->idioma["errorNombreHTML"] = 'Error, nombre archivo no valido, no existe en la variable de Archivos';
 //tablas
 $this->idioma["errorCreacionDocumento"] = "Error Creando Documento";
 $this->idioma["errorLecturaDocumento"] = "No se encontraron registros de Documentos";

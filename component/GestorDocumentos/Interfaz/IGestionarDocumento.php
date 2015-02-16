@@ -3,12 +3,12 @@ namespace component\GestorDocumentos\interfaz;
 
 interface IGestionarDocumentos{
 
-	public function guardarDocumento($ruta, $alias, $descripcion, $etiquetas, $tipoMime, $estadoRegistro);
+	public function guardarDocumento($nombre,$ruta, $alias, $descripcion, $etiquetas, $tipoMime, $estadoRegistro);
 	
 	
 	public function abrirDocumento($idDocumento);
 	
-	//public function validarDocumento($tipoMime, $idDocumento);
+	public function validarDocumento($tipoMime, $idDocumento);
 	
 	public function actualizarDocumento($idDocumento, $nombre, $ruta, $alias, $descripcion, $etiquetas, $tipoMime, $estadoRegistro);
 	
@@ -18,7 +18,9 @@ interface IGestionarDocumentos{
 	
 	public function getListaTipoMIME();
 	
-	public function setRuta($idRuta);
+	public function actualizarTiposMIME($idDocumento,$tipoMime);
+	
+	
 	
 }
 

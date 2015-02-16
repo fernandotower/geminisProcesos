@@ -62,7 +62,7 @@ class Documento extends Base{
     	
     }
     
-    public function consultarDocumento($id = '',$nombre = '', $alias = '',$nombreReal = '',$descripcion = '', $etiquetas = '',$rutaId = '',  $estadoRegistroId = '', $fechaRegistro = ''){
+    public function consultarDocumento($id = '',$nombre = '', $alias = '',$nombreReal = '', $etiquetas = '',$rutaId = '',  $estadoRegistroId = '', $fechaRegistro = ''){
 
     	$parametros = array();
     	 
@@ -73,12 +73,13 @@ class Documento extends Base{
     	if(!is_null($nombreReal)&&$nombreReal!= '') $parametros['nombre_real'] = $nombreReal;
     	if(!is_null($etiquetas)&&$etiquetas!= '') $parametros['etiquetas'] = $etiquetas;
     	if(!is_null($rutaId)&&$rutaId!= '') $parametros['ruta_id'] = $rutaId;
-    	if(!is_null($descripcion)&&$descripcion!= '') $parametros['descripcion'] = $descripcion;
+    	
     	 
     	
     	if(!is_null($estadoRegistroId)&&$estadoRegistroId!= '') $parametros['estado_registro_id'] = $estadoRegistroId;
     	if(!is_null($estadoRegistroId)&&$fechaRegistro!='') $parametros['fecha_registro'] = $fechaRegistro;
     	 
+    	
     	return $this->dao-> consultarDocumento($parametros);
     	
     }

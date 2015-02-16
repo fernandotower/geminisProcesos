@@ -186,8 +186,8 @@ insert into documento.ruta
 VALUES
 (0, 'Archivo','Ruta de los Archivos','/usr/local/apache/htdocs/geminis/component/GestorDocumentos/Archivos/Historico/','Ruta de los historicos'),
 (1, 'Predeterminada','Ruta Predeterminada','/usr/local/apache/htdocs/geminis/component/GestorDocumentos/Archivos/Default/','Ruta pedeterminada'),
-(2, 'Archivo1','Ruta de los Archivos','C:\Developer\WAPP\apache2\htdocs\geminisProcesos\component\GestorDocumentos\Archivos\Historico\','Ruta de los historicos'),
-(3, 'predeterminada1','Ruta p','C:\Developer\WAPP\apache2\htdocs\geminisProcesos\component\GestorDocumentos\Archivos\Default\','Ruta pre')
+(2, 'Ruta1','Ruta de los Archivos','/usr/local/apache/htdocs/geminis/component/GestorDocumentos/Ruta1/','Ruta 2')
+--(3, 'predeterminada1','Ruta p','C:\Developer\WAPP\apache2\htdocs\geminisProcesos\component\GestorDocumentos\Archivos\Default\','Ruta pre')
 
 ;
 

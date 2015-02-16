@@ -165,7 +165,7 @@ ALTER TABLE core.core_objetos
 ( 'proceso.trabajo','Trabajo','trabajo','tabla de trabajos, instancia del proceso','trabajo_',4,false, true,true,true,true,true,true,false,true),
 ( 'proceso.pasos_trabajo','Pasos Trabajo','pasosTrabajo','registro de pasos que se ejecutan en el trabajo','pasos_trabajo_',4,false, true,true,true,true,true,true,false,true),
 ( 'proceso.trabajo_usuario','Permisos trabajos usuario','trabajoUsuario','tabla de permisis trabajos usuarios','trabajo_usuario_',4,false, true,true,true,true,true,true,false,true),
-( 'proceso.proceso_rol','Permisos proceso Rol','procesoRol','tabla de permisos roles sobre procesos','proceso_rol_',4,false, true,true,true,true,true,true,false,true)
+( 'proceso.proceso_rol','Permisos proceso Rol','procesoRol','tabla de permisos roles sobre procesos','proceso_rol_',4,false, true,true,true,true,true,true,false,true),
 
 --documentos
 ( 'documento.ruta','Rutas ubicacion documentos','ruta','Tabla de rutas documentos','ruta_',5,true, false,false,false,false,false,false,false,false),

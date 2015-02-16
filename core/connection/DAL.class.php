@@ -433,19 +433,19 @@ class DAL{
 	
 	private function selectTipo($prefijo='',$tipo = ''){
 		
-		if($prefijo==''||$tipo=='') return false;
+		if($prefijo===''||$tipo==='') return false;
 
 		return $prefijo.$tipo;
 	}
 	
 	private function validarEntradaSeleccion($var = null,$tipo = null,$seleccion=null){
-		if(is_null($var)||$var==''){
+		if(is_null($var)||$var===''){
 			$this->mensaje->addMensaje("101","errorValorInvalido",'error');
 			return false;
-		}if(is_null($tipo)||$tipo==''){
+		}if(is_null($tipo)||$tipo===''){
 			$this->mensaje->addMensaje("101","errorTipoInvalido",'error');
 			return false;
-		}if(is_null($seleccion)||$seleccion==''){
+		}if(is_null($seleccion)||$seleccion===''){
 			$this->mensaje->addMensaje("101","errorSeleccionInvalido",'error');
 			return false;
 		}
